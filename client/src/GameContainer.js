@@ -38,47 +38,36 @@ class GameContainer extends Component {
                 //quiz Questions will be held outside the component so we can go through the questions/answers
                 //with an index value
                 quizQuestions = res.data;
-                console.log("QUIZ QUESTIONS: " + JSON.stringify(quizQuestions));
+                // console.log("QUIZ QUESTIONS: " + JSON.stringify(quizQuestions));
                 this.setQuestionState(res.data)
-                console.log(this.state);
+                // console.log(this.state);
             });
     }
 
     // Setting the state of the game
-    setQuestionState (data) {
+    setQuestionState(data) {
         let index = this.state.index;
-        const title = data.title;
-        const category = data.category;
-        const answers = data.questions[index].answers;
-        const correctAnswer = data.questions[index].correctAnswer;
-        const questionCount = data.questions.length;
-        console.log(title, category, answers, correctAnswer, questionCount);
+        this.setState({
+            title: data.title,
+            category: data.category,
+            question: data.questions[index].question,
+            answers: data.questions[index].answers,
+            correctAnswer: data.questions[index].correctAnswer,
+            questionCount: data.questions.length
+        })
+        console.log(this.state);
+        this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
-    // setQuestionsState() {
-    //     //Take all Answer Options
-    //     const answerOptions = quizQuestions.map(question => {
-    //       question.incorrect_answers.splice(
-    //         Math.round(Math.random() * 3) + 1,
-    //         0,
-    //         question.correct_answer
-    //       );
-    //       return question.incorrect_answers;
-    //     });
-    
-    //     // Set First Question and Answer Options
-    
-    //     this.setState({
-    //       question: quizQuestions[0].question,
-    //       answerOptions: answerOptions[0],
-    //       questionCount: quizQuestions.length
-    //     });
-    //     this.timerID = setInterval(() => this.decrimentTime(), 1000);
-    
-    //     this.setState({
-    //       isFetching: false
-    //     });
-    //   }
+    decrimentTime() {
+        if (this.state.timer !== 0) {
+          this.setState({
+            timer: this.state.timer - 1
+          });
+        } else {
+          this.setUserAnswer();
+        }
+      }
 
     //Click Handler
     handleClick = id => {
