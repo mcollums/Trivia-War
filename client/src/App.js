@@ -1,9 +1,9 @@
 import React from 'react';
-import TriviaContainer from './TriviaContainer';
+import GameContainer from './GameContainer';
 
 function App() {
   return (
-  <TriviaContainer/>
+  <GameContainer/>
   );
 }
 
