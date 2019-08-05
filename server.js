@@ -2,9 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const app = express();
-const PORT = process.env.PORT || 3003;
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const PORT = process.env.PORT || 3001;
+// const http = require('http').createServer(app);
+// const io = require('socket.io')(http);
 
 
 // Define middleware here
