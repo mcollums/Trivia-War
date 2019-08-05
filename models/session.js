@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const sessionSchema = new Schema({
     //User 1 id
     //User 2 id
-    //Quiz information
+    //Quiz id
     //User 1 score
     //User 2 score
     //End result

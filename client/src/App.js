@@ -2,6 +2,7 @@ import React from "react";
 import Nav from "./components/Nav";
 import UserHome from "./pages/UserHome";
 import MultiPlayer from "./pages/MultiPlayer";
+import GameContainer from "./GameContainer";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Nav />
         <UserHome />
         <MultiPlayer />
+        <GameContainer/>
       </div>
       
   );
