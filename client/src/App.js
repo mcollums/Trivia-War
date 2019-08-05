@@ -11,6 +11,9 @@ import GameContainer from "./GameContainer";
 import NoMatch from "./pages/NoMatch";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+// added by jyoti for scoket.io
+import openSocket from 'socket.io-client';
+const socket = openSocket("http://localhost:3001");
 
 function App() {
   return (
@@ -36,7 +39,7 @@ function App() {
 
       </div>
     </Router>
-  );
+  )
 }
 
 export default App;
