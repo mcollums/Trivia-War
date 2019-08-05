@@ -27,7 +27,7 @@ class GameContainer extends Component {
     };
 
     componentDidMount() {
-        this.getGame("5d487a4906fcbe5b82066f9d")
+        this.getGame("5d4879f49b36da1948280722");
     }
 
     //Getting the game information from the Database based on the game's ID
