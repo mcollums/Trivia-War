@@ -97,8 +97,6 @@ class GameContainer extends Component {
     //Send back to user's homepage
 
 
-
-
     render() {
         return (
             <div>
@@ -110,14 +108,16 @@ class GameContainer extends Component {
                     </Row>
                     <Row>
                         <GameCol size="10">
-                            {/* {this.state.questions.map(question => (
+                            <h2>{this.state.question}</h2>
+                            <h2>{this.state.timer}</h2>
+                            {this.state.answers.map(answer => (
                                 <GameCard
-                                    key={question.q_id}
-                                    id={question.q_id}
-                                    question={question.question}
-                                    handleClick={this.handleClick}
+                                    id={answer}
+                                    key={answer}
+                                    answer={answer}
+                                    handleSelection={this.handleSelection}
                                 />
-                            ))} */}
+                            ))}
                         </GameCol>
                     </Row>
                 </Container>
