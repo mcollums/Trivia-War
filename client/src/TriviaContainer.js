@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import API from "./utils/API";
-
 import Container from "./Container";
 import Row from "./Row";
 import Col from "./Col";
-import GameCard from "./GameCard";
-import GameCol from "./GameCol";
+import TriviaCard from "./TriviaCard";
+import TriviaCol from "./TriviaCol";
 
 class TriviaContainer extends Component {
     state = {
@@ -19,15 +18,8 @@ class TriviaContainer extends Component {
     };
 
     componentDidMount() {
-        // this.loadGame();
-        // API.getGames()
-        // .then( function (res) {
-        //   console.log("Response from LoadGame: " + JSON.stringify(res.data));
-        //   this.setState({ quesions: res.data })
-        // })
-        // .catch(err => console.log(err));
-
-        API.getOneGame("5d4725637bad28162c028a5b")
+        //When the page loads I've hard coded the page to get the first DB Quiz
+        API.getOneGame("5d4766a48deabe07ba32892f")
         .then(res => {
         console.log(res.data);
         this.setState(
@@ -38,31 +30,38 @@ class TriviaContainer extends Component {
         console.log(this.state);
         });
       }
-    
-    //   loadGame = () => {
-    //     API.getGames()
-    //       .then( function (res) {
-    //         console.log("Response from LoadGame: " + res);
-    //         // this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-    //       })
-    //       .catch(err => console.log(err));
-    //   };
 
-    // handleClick = id => {
-    //     console.log(id);
-    //     if (this.state.clicked.indexOf(id) === -1) {
-    //         this.setState({ clicked: this.state.clicked.concat(id) }, function () {
-    //             console.log("Added to array " + this.state.clicked);
-    //             this.handleIncrement();
-    //         });
-    //     } else {
-    //         console.log("Already in the array " + this.state.clicked);
-    //         let currentLosses = this.state.losses;
-    //         this.setState({ losses: currentLosses + 1 })
-    //         console.log("Score: " + this.state.losses);
-    //         this.handleReset();
-    //     }
-    // };
+    handleClick = id => {
+        console.log(id);
+        this.setState({
+            clicked: id
+        });
+    };
+
+    //Timer goes here
+
+    //When game starts
+    //First question and it's answers are populated to the page
+    //Timer starts
+    //User selects an answer that stays highlighted when clicked (give class of chosen)
+        //If user clicks another section, the old selected isn't highlighted anymore
+        //New selected is highlighted
+    //At the end of the timer the answer is logged
+        //If user selection == correct Index then add a point to correct
+        //Else add a point to incorrect
+    //When the last question is answered, push data to the database:
+        //correct, incorrect => session model as user_score
+
+
+    //Query the db to compare user's scores and determine a winner
+    //If this user is the winner, display "winner"
+    //Else display "Try again next time"
+    //PUT result in db
+    //Set timer for 5 seconds and then...  
+        //Send back to user's homepage
+
+
+
 
     render() {
         return (
@@ -70,22 +69,20 @@ class TriviaContainer extends Component {
                 <Container fluid="-fluid">
                     <Row>
                         <Col size="10" id="titleCol">
-                            <h5 className="text-center">Don't click the same card twice and you win!</h5>
-                            {/* <h5 className="text-center"> {this.state.message} </h5> */}
+                            <h5 className="text-center"> {this.state.title} </h5>
                         </Col>
                     </Row>
                     <Row>
-                        <GameCol size="10">
-                            {/* {this.state.questions.map(pokemon => ( */}
-                                <GameCard
-                                    // key={pokemon.id}
-                                    // id={pokemon.id}
-                                    // name={pokemon.name}
-                                    // image={pokemon.image}
-                                    // handleClick={this.handleClick}
+                        <TriviaCol size="10">
+                            {this.state.questions.map(question => (
+                                <TriviaCard
+                                    key={question.q_id}
+                                    id={question.q_id}
+                                    question={question.question}
+                                    handleClick={this.handleClick}
                                 />
-                            {/* ))} */}
-                        </GameCol>
+                            ))}
+                        </TriviaCol>
                     </Row>
                 </Container>
             </div>

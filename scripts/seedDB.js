@@ -15,7 +15,7 @@ const gameSeed = [
     questions: [
       {
         "q_id" : 0,
-        "question1": "What color is a lion?",
+        "question": "What color is a lion?",
         "answers" : [
           "red",
           "black",
@@ -26,7 +26,7 @@ const gameSeed = [
       },
       {
         "q_id" : 1,
-        "question1": "What color is a tiger?",
+        "question": "What color is a tiger?",
         "answers" : [
           "orange",
           "black",
@@ -37,7 +37,7 @@ const gameSeed = [
       },
       {
         "q_id" : 2,
-        "question1": "What color is an elephant?",
+        "question": "What color is an elephant?",
         "answers" : [
           "orange",
           "grey",
@@ -54,7 +54,7 @@ const gameSeed = [
     questions: [
       {
         "q_id" : 0,
-        "question1": "What is Sleeping Beauty's name?",
+        "question": "What is Sleeping Beauty's name?",
         "answers" : [
           "Johanna",
           "Aurora",
@@ -65,7 +65,7 @@ const gameSeed = [
       },
       {
         "q_id" : 1,
-        "question1": "What country is the movie Frozen modeled after?",
+        "question": "What country is the movie Frozen modeled after?",
         "answers" : [
           "Germany",
           "Switzerland",
@@ -76,7 +76,7 @@ const gameSeed = [
       },
       {
         "q_id" : 2,
-        "question1": "How many mice friends does Cinderella have?",
+        "question": "How many mice friends does Cinderella have?",
         "answers" : [
           "2",
           "3",
