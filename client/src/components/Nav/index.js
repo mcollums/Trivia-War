@@ -2,7 +2,7 @@ import React from "react";
 
 function Nav() {
   return (
-<nav className="navbar navbar-expand-lg navbar-light bg-light">
+<nav className="navbar navbar-light bg-light">
   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>
   </button>
@@ -12,7 +12,7 @@ function Nav() {
         <a className="nav-link" href="#">Home <span class="sr-only"></span></a>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href="#">Play Now</a>
+        <a className="nav-link" href="/play">Play Now</a>
       </li>
       <li className="nav-item">
         <a className="nav-link" href="#">Logout</a>
