@@ -20,7 +20,7 @@ class GameContainer extends Component {
         correctAnswer: "",
         correct: 0,
         incorrect: 0,
-        clicked: "",
+        userSelect: "",
         outcome: "",
         index: 0,
         timer: 10
@@ -61,30 +61,22 @@ class GameContainer extends Component {
 
     decrimentTime() {
         if (this.state.timer !== 0) {
-          this.setState({
-            timer: this.state.timer - 1
-          });
+            this.setState({
+                timer: this.state.timer - 1
+            });
         } else {
-          this.setUserAnswer();
+            // this.setUserAnswer();
         }
-      }
+    }
 
     //Click Handler
-    handleClick = id => {
+    handleSelection = id => {
         console.log(id);
         this.setState({
             clicked: id
         });
     };
 
-    //Timer goes here
-
-    //When game starts
-    gameStart = () => {
-
-
-
-    }
     //First question and it's answers are populated to the page
     //Timer starts
     //User selects an answer that stays highlighted when clicked (give class of chosen)
