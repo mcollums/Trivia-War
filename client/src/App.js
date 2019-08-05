@@ -2,6 +2,7 @@ import React from 'react';
 import Container from "./components/Container";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Nav from "./components/Nav";
 import './App.css';
 
 function App() {
@@ -25,7 +26,10 @@ function App() {
     
       
     <div className="App">
-      <Header> Trivia Game </Header>
+      <Header> 
+        Trivia Game
+      <Nav></Nav>
+      </Header>
       <Container> </Container>
       <Footer></Footer>
     </div> 
