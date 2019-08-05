@@ -24,6 +24,27 @@ function App() {
     //   </header>
     // </div>
     
+    
+  // import React from "react";
+// import Nav from "./components/Nav";
+// import UserHome from "./pages/UserHome";
+// import MultiPlayer from "./pages/MultiPlayer";
+// import GameContainer from "./GameContainer";
+
+// function App() {
+//   return (
+//       <div>
+//         <Nav />
+//         <UserHome />
+//         <MultiPlayer />
+//         <GameContainer/>
+//       </div>
+      
+
+//   );
+// }
+
+// export default App;
       
     <div className="App">
       <Header> 
@@ -33,13 +54,20 @@ function App() {
       <Container> </Container>
       <Footer></Footer>
     </div> 
+
+  )
+};
+
+  
+
+
+
+export default App;
       
       
 
       
 
     
-  );
-}
 
-export default App;
+
