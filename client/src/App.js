@@ -1,73 +1,50 @@
 import React from 'react';
-import Container from "./components/Container";
-import Header from "./components/Header";
+// import Container from "./components/Container";
+// import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 import './App.css';
+import PlayNow from "./pages/PlayNow";
+import UserHome from "./pages/UserHome";
+import MultiPlayer from "./pages/MultiPlayer";
+import GameContainer from "./GameContainer";
+import NoMatch from "./pages/NoMatch";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 
 function App() {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
+    // <div>
+
+    //   <Nav />
+    //   <GameContainer/>
+
+    //   <UserHome />
+    //   <MultiPlayer />
     // </div>
-    
-    
-  // import React from "react";
-// import Nav from "./components/Nav";
-// import UserHome from "./pages/UserHome";
-// import MultiPlayer from "./pages/MultiPlayer";
-// import GameContainer from "./GameContainer";
+    <Router>
+      <div>
+        <Nav />
+        <Switch>
+          <Route exact path="/" component={UserHome} />
+          <Route exact path="/play" component={PlayNow} />
+          <Route exact path="/game" component={GameContainer} />
+          <Route exact path="/multi/" component={MultiPlayer} />
+          <Route component={NoMatch} />
+        </Switch>
+        <Footer></Footer>
 
-// function App() {
-//   return (
-//       <div>
-//         <Nav />
-//         <UserHome />
-//         <MultiPlayer />
-//         <GameContainer/>
-//       </div>
-      
-
-//   );
-// }
-
-// export default App;
-      
-    <div className="App">
-      <Header> 
-        Trivia Game
-      <Nav></Nav>
-      </Header>
-      <Container> </Container>
-      <Footer></Footer>
-    </div> 
-
-  )
-};
-
-  
-
-
+      </div>
+    </Router>
+  );
+}
 
 export default App;
-      
-      
 
-      
 
-    
+
+
+
+
 
 
