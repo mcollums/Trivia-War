@@ -1,9 +1,18 @@
-import React from 'react';
-import GameContainer from './GameContainer';
+import React from "react";
+import Nav from "./components/Nav";
+import UserHome from "./pages/UserHome";
+import MultiPlayer from "./pages/MultiPlayer";
+import GameContainer from "./GameContainer";
 
 function App() {
   return (
-  <GameContainer/>
+      <div>
+        <Nav />
+        <UserHome />
+        <MultiPlayer />
+        <GameContainer/>
+      </div>
+      
   );
 }
 
