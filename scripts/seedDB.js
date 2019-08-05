@@ -22,7 +22,7 @@ const gameSeed = [
           "green",
           "yellow"
         ],
-        "correctIndex" : 3
+        "correctAnswer" : "yellow"
       },
       {
         "q_id" : 1,
@@ -33,7 +33,7 @@ const gameSeed = [
           "green",
           "blue"
         ],
-        "correctIndex" : 0
+        "correctAnswer" : "orange"
       },
       {
         "q_id" : 2,
@@ -44,7 +44,7 @@ const gameSeed = [
           "green",
           "blue"
         ],
-        "correctIndex" : 1
+        "correctAnswer" : "grey"
       }
     ]
   },
@@ -61,7 +61,7 @@ const gameSeed = [
           "Elizabeth",
           "Anna"
         ],
-        "correctIndex" : 1
+        "correctAnswer" : "Aurora"
       },
       {
         "q_id" : 1,
@@ -72,7 +72,7 @@ const gameSeed = [
           "Norway",
           "Iceland"
         ],
-        "correctIndex" : 2
+        "correctAnswer" : "Norway"
       },
       {
         "q_id" : 2,
@@ -83,7 +83,7 @@ const gameSeed = [
           "4",
           "5"
         ],
-        "correctIndex" : 0
+        "correctAnswer" : "2"
       }
     ]
   }

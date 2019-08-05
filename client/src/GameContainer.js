@@ -15,6 +15,7 @@ class GameContainer extends Component {
         title: "",
         category: "",
         question: "",
+        questionCount: 0,
         answers: [],
         correctAnswer: "",
         correct: 0,
@@ -26,7 +27,7 @@ class GameContainer extends Component {
     };
 
     componentDidMount() {
-        this.getGame("5d4766a48deabe07ba32892f")
+        this.getGame("5d47aeac6793d50a1005670f")
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -34,42 +35,50 @@ class GameContainer extends Component {
     getGame(gameId) {
         API.getOneGame(gameId)
             .then(res => {
+                //quiz Questions will be held outside the component so we can go through the questions/answers
+                //with an index value
                 quizQuestions = res.data;
-                console.log("QUIZ QUESTIONS: " + quizQuestions);
-                this.setGameState(res.data)
+                console.log("QUIZ QUESTIONS: " + JSON.stringify(quizQuestions));
+                this.setQuestionState(res.data)
                 console.log(this.state);
             });
     }
 
-    //Setting the state of the game
-    setGameState (data) {
-        const 
+    // Setting the state of the game
+    setQuestionState (data) {
+        let index = this.state.index;
+        const title = data.title;
+        const category = data.category;
+        const answers = data.questions[index].answers;
+        const correctAnswer = data.questions[index].correctAnswer;
+        const questionCount = data.questions.length;
+        console.log(title, category, answers, correctAnswer, questionCount);
     }
 
-    setQuestionsState() {
-        //Take all Answer Options
-        const answerOptions = quizQuestions.map(question => {
-          question.incorrect_answers.splice(
-            Math.round(Math.random() * 3) + 1,
-            0,
-            question.correct_answer
-          );
-          return question.incorrect_answers;
-        });
+    // setQuestionsState() {
+    //     //Take all Answer Options
+    //     const answerOptions = quizQuestions.map(question => {
+    //       question.incorrect_answers.splice(
+    //         Math.round(Math.random() * 3) + 1,
+    //         0,
+    //         question.correct_answer
+    //       );
+    //       return question.incorrect_answers;
+    //     });
     
-        // Set First Question and Answer Options
+    //     // Set First Question and Answer Options
     
-        this.setState({
-          question: quizQuestions[0].question,
-          answerOptions: answerOptions[0],
-          questionCount: quizQuestions.length
-        });
-        this.timerID = setInterval(() => this.decrimentTime(), 1000);
+    //     this.setState({
+    //       question: quizQuestions[0].question,
+    //       answerOptions: answerOptions[0],
+    //       questionCount: quizQuestions.length
+    //     });
+    //     this.timerID = setInterval(() => this.decrimentTime(), 1000);
     
-        this.setState({
-          isFetching: false
-        });
-      }
+    //     this.setState({
+    //       isFetching: false
+    //     });
+    //   }
 
     //Click Handler
     handleClick = id => {
@@ -120,14 +129,14 @@ class GameContainer extends Component {
                     </Row>
                     <Row>
                         <GameCol size="10">
-                            {this.state.questions.map(question => (
+                            {/* {this.state.questions.map(question => (
                                 <GameCard
                                     key={question.q_id}
                                     id={question.q_id}
                                     question={question.question}
                                     handleClick={this.handleClick}
                                 />
-                            ))}
+                            ))} */}
                         </GameCol>
                     </Row>
                 </Container>
