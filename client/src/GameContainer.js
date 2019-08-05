@@ -27,7 +27,7 @@ class GameContainer extends Component {
     };
 
     componentDidMount() {
-        this.getGame("5d47aeac6793d50a1005670f")
+        this.getGame("5d4879f49b36da1948280722");
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -39,13 +39,14 @@ class GameContainer extends Component {
                 //with an index value
                 quizQuestions = res.data;
                 // console.log("QUIZ QUESTIONS: " + JSON.stringify(quizQuestions));
-                this.setQuestionState(res.data)
+                this.setQuestionState(res.data);
                 // console.log(this.state);
             });
     }
 
     // Setting the state of the game
     setQuestionState(data) {
+        console.log(data);
         let index = this.state.index;
         this.setState({
             title: data.title,
@@ -54,8 +55,8 @@ class GameContainer extends Component {
             answers: data.questions[index].answers,
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
-        })
-        console.log(this.state);
+        }, () => console.log(this.state));
+
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
