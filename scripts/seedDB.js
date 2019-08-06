@@ -14,37 +14,37 @@ const gameSeed = [
     category: "animals",
     questions: [
       {
-        "q_id" : 0,
+        "q_id": 0,
         "question": "What color is a lion?",
-        "answers" : [
+        "answers": [
           "red",
           "black",
           "green",
           "yellow"
         ],
-        "correctAnswer" : "yellow"
+        "correctAnswer": "yellow"
       },
       {
-        "q_id" : 1,
+        "q_id": 1,
         "question": "What color is a tiger?",
-        "answers" : [
+        "answers": [
           "orange",
           "black",
           "green",
           "blue"
         ],
-        "correctAnswer" : "orange"
+        "correctAnswer": "orange"
       },
       {
-        "q_id" : 2,
+        "q_id": 2,
         "question": "What color is an elephant?",
-        "answers" : [
+        "answers": [
           "orange",
           "grey",
           "green",
           "blue"
         ],
-        "correctAnswer" : "grey"
+        "correctAnswer": "grey"
       }
     ]
   },
@@ -53,37 +53,37 @@ const gameSeed = [
     category: "pop-culture",
     questions: [
       {
-        "q_id" : 0,
+        "q_id": 0,
         "question": "What is Sleeping Beauty's name?",
-        "answers" : [
+        "answers": [
           "Johanna",
           "Aurora",
           "Elizabeth",
           "Anna"
         ],
-        "correctAnswer" : "Aurora"
+        "correctAnswer": "Aurora"
       },
       {
-        "q_id" : 1,
+        "q_id": 1,
         "question": "What country is the movie Frozen modeled after?",
-        "answers" : [
+        "answers": [
           "Germany",
           "Switzerland",
           "Norway",
           "Iceland"
         ],
-        "correctAnswer" : "Norway"
+        "correctAnswer": "Norway"
       },
       {
-        "q_id" : 2,
+        "q_id": 2,
         "question": "How many mice friends does Cinderella have?",
-        "answers" : [
+        "answers": [
           "2",
           "3",
           "4",
           "5"
         ],
-        "correctAnswer" : "2"
+        "correctAnswer": "2"
       }
     ]
   }
