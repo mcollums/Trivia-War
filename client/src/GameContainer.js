@@ -77,20 +77,20 @@ class GameContainer extends Component {
         this.setState({
             userSelect: id
         }, () => {
-            let thisIndex = Number.parseInt(this.state.index);
+            // let thisIndex = Number.parseInt(this.state.index, 10);
+            // console.log("thisIndex is number? " + Number.isInteger(thisIndex));
             console.log("Handle Selection state of Clicked: " + this.state.userSelect);
-            console.log("THIS INDEX = " + this.state.index);
+            // console.log("THIS INDEX = " + thisIndex);
             console.log("THIS QuestionCount = " + this.state.questionCount);
-            console.log("THIS state INDEX + 1 = " + (thisIndex + 1));
+            console.log("THIS state INDEX + 1 = " + (this.state.index + 1));
+            let nextIndex = (this.state.index + 1);
 
-
-            if (this.state.index === this.state.questionCount) {
+            if (nextIndex === this.state.questionCount) {
                 console.log("GAME OVER");
                 // this.endGame();
             } else {
                 console.log("MORE QUESTIONS!");
-
-                // this.setUserAnswer();
+                this.setUserAnswer();
             }
         });
     };
