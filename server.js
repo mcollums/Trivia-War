@@ -5,8 +5,18 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 var socketArr = [];
 
-// Added by jyoti for scoket connection 
+let clients = 0;
+let users = [];
+//Users will keep track of all socket users, their status and their name (?)
 
+let sessions = [];
+//Sessions will hold all the needed game information for the server
+  //Player 1
+  //Player 2
+  //isOpen true/false
+  //
+
+// Added by jyoti for scoket connection 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 //Added by jyoti
@@ -26,7 +36,8 @@ app.use(routes);
 
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters");
-var clients = 0;
+
+
 io.on('connection', function (socket) {
   clients++;
   console.log('A user connected!', socket.id);
@@ -40,7 +51,15 @@ io.on('connection', function (socket) {
     console.log(data);
     io.sockets.emit('clicked', { data: socket.id });
   });
-
+  socket.on('disconnect', function(data){
+    let id = data.id
+    console.log(data);
+    socket.broadcast.emit('Client Disconnect', {data: socket.id});
+    var thisUser = users.find(function(id) {
+      return id;
+    });
+    console.log("User that disconnected: " + thisUser)
+  });
 
 });
 

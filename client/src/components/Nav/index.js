@@ -27,7 +27,7 @@ function Nav() {
     </form> */}
       </div>
       <a style={{ fontSize: "30px", fontFamily: "'Yatra One', cursive", marginRight: "45%" }} className="navbar-brand" >TRIVIA WAR</a>
-
+  </nav>
 
       );
     }

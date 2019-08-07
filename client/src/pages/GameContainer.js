@@ -32,7 +32,9 @@ class GameContainer extends Component {
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
         this.setSocketId();
-        this.getGame("5d47aeac6793d50a1005670f");
+        this.getGame("5d4b4ea92021254d5bc86b99");
+        this.timerID = setInterval(() => this.decrimentTime(), 1000);
+
     }
 
     // added by jyoti for getting the socket id after a user connected.
@@ -75,16 +77,17 @@ class GameContainer extends Component {
         });
     }
 
-    //This function decreases the time limit of the game 
-    // decrimentTime() {
-    //     if (this.state.timer !== 0) {
-    //         this.setState({
-    //             timer: this.state.timer - 1
-    //         });
-    //     } else {
-    //         // this.setUserAnswer();
-    //     }
-    // }
+    // This function decreases the time limit of the game 
+    decrimentTime() {
+        if (this.state.timer !== 0) {
+            this.setState({
+                timer: this.state.timer - 1
+            });
+        } else {
+            this.setUserAnswer();
+        }
+    }
+
     //Click Handler
     handleSelection(id, socketid) {
         console.log(id);
@@ -107,9 +110,6 @@ class GameContainer extends Component {
         socket.on('clicked', function (data) {
             console.log("This Socket id" + data.data + " user clicked first");
         });
-
-
-
     };
 
 
@@ -181,6 +181,7 @@ class GameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
+        clearInterval(this.timerID);
     }
 
 
