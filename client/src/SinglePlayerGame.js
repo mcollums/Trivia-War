@@ -8,7 +8,7 @@ import GameCol from "./GameCol";
 
 let quizQuestions = [];
 
-class GameContainer extends Component {
+class SinglePlayerGameContainer extends Component {
     state = {
         // userId: this.props.params.userId,
         // gameId: this.props.params.gameId,
@@ -178,4 +178,4 @@ class GameContainer extends Component {
     }
 }
 
-export default GameContainer
+export default SinglePlayerGameContainer
