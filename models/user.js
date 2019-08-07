@@ -9,14 +9,14 @@ const userSchema = new Schema({
     picLink: { type: String },
     //PicBinary is here for later if we want to store a user's image in Mongo... 
     //ask Michelle for article link when ready.
-    picBinary: {data: Buffer, type: String},
+    // picBinary: {data: Buffer, type: String},
     totalWins: { type: Number, default: 0 },
     totalLosses: {type: Number, default: 0},
     //totalPoints is here for later if we have time to implement
     //a points system based on difficulty instead of total wins.
-    totalPoints: {type: Number, default: 0},
     authType: {type:String},
     googleId: {type:String}
+    // totalPoints: {type: Number, default: 0}
   });
 
 userSchema.methods.checkPassword = function(password){

@@ -181,6 +181,7 @@ app.get('/api/google/callback', function(req, res){
 // Start the API server
 server.listen(PORT, function () {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
+// <<<<<<< HEAD
 });
 
 //Make sure Mongoose connection is disconnected
@@ -190,4 +191,5 @@ process.on('SIGINT', () => {
       process.exit(0);
   })
 })
+
 

@@ -1,5 +1,11 @@
 const router = require("express").Router();
-const gameController = require("../../controllers/gameController");
+const userController = require("../../controllers/userController");
 
+// // Matches with "/api/user"
+router.route("/")
+    .get(userController.findAll);
 
+// // Matches with "/api/user/:id"
+router.route("/:userId")
+  .get(userController.findById)
 module.exports = router;

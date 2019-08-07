@@ -21,7 +21,6 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/user/me', function(req, res){
-  console.log("asdfasdf: ", req.user);
   if(req.user){
       res.json({
           email: req.user.email
@@ -29,7 +28,6 @@ router.get('/user/me', function(req, res){
   } else {
       res.status(401).json({})
   }
-  
 })
 // If no API routes are hit, send the React app
 router.use(function(req, res) {
