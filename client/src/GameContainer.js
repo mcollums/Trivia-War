@@ -23,11 +23,12 @@ class GameContainer extends Component {
         userSelect: "",
         outcome: "",
         index: 0,
-        timer: 10
+        timer: 10,
+        socketArr: ""
     };
 
     componentDidMount() {
-        this.getGame("5d4879f49b36da1948280722");
+        this.getGame("5d47aeac6793d50a1005670f");
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -38,9 +39,8 @@ class GameContainer extends Component {
                 //quiz Questions will be held outside the component so we can go through the questions/answers
                 //with an index value
                 quizQuestions = res.data;
-                // console.log("QUIZ QUESTIONS: " + JSON.stringify(quizQuestions));
                 this.setQuestionState(res.data);
-                // console.log(this.state);
+                console.log(this.state);
             });
     }
 
@@ -55,20 +55,21 @@ class GameContainer extends Component {
             answers: data.questions[index].answers,
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
-        }, () => console.log(this.state));
-
-        this.timerID = setInterval(() => this.decrimentTime(), 1000);
+        }, () => {
+            console.log("STATE" + JSON.stringify(this.state));
+            console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
+        });
     }
 
-    decrimentTime() {
-        if (this.state.timer !== 0) {
-            this.setState({
-                timer: this.state.timer - 1
-            });
-        } else {
-            // this.setUserAnswer();
-        }
-    }
+    // decrimentTime() {
+    //     if (this.state.timer !== 0) {
+    //         this.setState({
+    //             timer: this.state.timer - 1
+    //         });
+    //     } else {
+    //         // this.setUserAnswer();
+    //     }
+    // }
 
     //Click Handler
     handleSelection = id => {
@@ -76,7 +77,45 @@ class GameContainer extends Component {
         this.setState({
             clicked: id
         });
+        this.setUserAnswer();
     };
+
+    setUserAnswer = () => {
+        if (this.state.userSelect === "") {
+            console.log("No answer selected");
+            let newIncorrect = this.state.incorrect + 1;
+            this.setState({
+                incorrect: newIncorrect
+            })
+        } else if (this.state.userSelect === this.state.correctAnswer) {
+            console.log("Correct answer selected")
+            let newCorrect = this.state.correct + 1;
+            this.setState({
+                correct: newCorrect
+            })
+        } else if (this.state.userSelect !== this.state.correctAnswer) {
+            console.log("Incorrect Answer selected")
+            let newIncorrect = this.state.incorrect + 1;
+            this.setState({
+                incorrect: newIncorrect
+            })
+        }
+        this.setNextQuestion();
+    }
+
+    setNextQuestion() {
+        let newIndex = this.state.index + 1;
+        this.setState({
+            index: newIndex,
+            timer: 10,
+            question: quizQuestions.questions[newIndex].question,
+            answers: quizQuestions.questions[newIndex].answers,
+            correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
+            userSelect: ""
+        }, function(){
+            console.log(this.state);
+        });
+    }
 
     //First question and it's answers are populated to the page
     //Timer starts
