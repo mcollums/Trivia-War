@@ -5,8 +5,12 @@ import Row from "./Row";
 import Col from "./Col";
 import GameCard from "./GameCard";
 import GameCol from "./GameCol";
+// added by jyoti for scoket.io
+import openSocket from 'socket.io-client';
+const socket = openSocket("http://localhost:3001");
 
 let quizQuestions = [];
+let socketid;
 
 class GameContainer extends Component {
     state = {
@@ -23,12 +27,29 @@ class GameContainer extends Component {
         userSelect: "",
         outcome: "",
         index: 0,
-        timer: 10
+        timer: 10,
+        clicked: ""
+
+
     };
 
     componentDidMount() {
+        this.setSocketId();
         this.getGame("5d4879f49b36da1948280722");
+
     }
+    // added by jyoti for getting the socket id after a user connected.
+
+    setSocketId() {
+        socket.on('userConnected', socketData => {
+            socketid = socketData.socketId;
+            console.log(" this is the socket id " + socketid);
+            socket.on('newclientconnect', data => {
+                console.log(data.description);
+            });
+        });
+    }
+
 
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
@@ -71,12 +92,52 @@ class GameContainer extends Component {
     }
 
     //Click Handler
-    handleSelection = id => {
+    handleSelection(id, socketid) {
         console.log(id);
-        this.setState({
-            clicked: id
+        console.log("Socket id", socketid);
+        if (id) {
+            this.setState({
+                clicked: id
+            });
+        }
+        socket.emit('clicked',
+            {
+                socketid: socketid
+                // will add user name here later on
+
+            });
+        socket.on('clicked', function (data) {
+            console.log("This Socket id" + data.data + " user clicked first");
         });
+
+
+
     };
+
+
+
+    setUserAnswer = () => {
+        if (this.state.userSelect === "") {
+            console.log("No answer selected");
+            let newIncorrect = this.state.incorrect + 1;
+            this.setState({
+                incorrect: newIncorrect
+            })
+        } else if (this.state.userSelect === this.state.correctAnswer) {
+            console.log("Correct answer selected");
+            let newCorrect = this.state.correct + 1;
+            this.setState({
+                correct: newCorrect
+            })
+        } else if (this.state.userSelect !== this.state.correctAnswer) {
+            console.log("Incorrect Answer selected");
+            let newIncorrect = this.state.incorrect + 1;
+            this.setState({
+
+
+            });
+        }
+    }
 
     //First question and it's answers are populated to the page
     //Timer starts
@@ -116,7 +177,9 @@ class GameContainer extends Component {
                                     id={answer}
                                     key={answer}
                                     answer={answer}
-                                    handleSelection={this.handleSelection}
+                                    socketid={socketid}
+                                    handleSelection={this.handleSelection.bind(this)}
+
                                 />
                             ))}
                         </GameCol>
