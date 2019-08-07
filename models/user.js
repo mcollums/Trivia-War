@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require('bcryptjs');
 
 const userSchema = new Schema({
-    name: { type: String, required: true },
+    name: { type: String},
     email: { type: String, required: true },
     password: { type: String, required: true },
     picLink: { type: String },
@@ -13,8 +14,27 @@ const userSchema = new Schema({
     totalLosses: {type: Number, default: 0},
     //totalPoints is here for later if we have time to implement
     //a points system based on difficulty instead of total wins.
-    totalPoints: {type: Number, default: 0}
+    totalPoints: {type: Number, default: 0},
+    authType: {type:String},
+    googleId: {type:String}
   });
+
+userSchema.methods.checkPassword = function(password){
+    return bcrypt.compare(password, this.password)
+}
+
+userSchema.pre('save', function(next){
+    if(this.authType !== "google"){
+        return bcrypt.genSalt(10).then(salt => {
+            return bcrypt.hash(this.password, salt)
+        }).then(hash => {
+            this.password = hash
+            return Promise.resolve()
+        })
+    } else {
+        return Promise.resolve()
+    }
+});
 
 const User = mongoose.model("User", userSchema);
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 
@@ -30,8 +30,8 @@ class UserHome extends Component {
                     <Col size="lg-7 md-12 sm-12">
                         <Jumbotron jumboHeight="80%">
                             <h4>LEADER BOARD</h4>
-                            <table class="table">
-                                <thead class="thead-dark">
+                            <table className="table">
+                                <thead className="thead-dark">
                                     <tr>
                                         <th scope="col">Ranking</th>
                                         <th scope="col">Name</th>
