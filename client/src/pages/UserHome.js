@@ -1,9 +1,28 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
+import API from "../utils/API"
 
 class UserHome extends Component {
+    state = {
+        users: []
+    };
+
+    componentDidMount() {
+        this.loadUsers();
+    }
+
+    loadUsers() {
+        API.getUsers()
+            .then(res => {
+                console.log(res.data)
+                this.setState({
+                    users: res.data,
+                })
+                // console.log(res.data)
+            })
+            .catch(err => console.log(err));
+    }
 
     render() {
         return (
@@ -35,35 +54,23 @@ class UserHome extends Component {
                                     <tr>
                                         <th scope="col">Ranking</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Points</th>
+                                        <th scope="col">Wins</th>
+                                        <th scope="col">Losses</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">4</th>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">5</th>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                    {
+                                        this.state.users.map((user, index) => {
+                                            return (
+                                                <tr>
+                                                    <td>{index + 1}</td>
+                                                    <td>{user.name}</td>
+                                                    <td>{user.totalWins}</td>
+                                                    <td>{user.totalLosses}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
                                 </tbody>
                             </table>
                         </Jumbotron>
