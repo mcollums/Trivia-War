@@ -30,6 +30,7 @@ class SinglePlayerGameContainer extends Component {
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
         this.getGame("5d47aeac6793d50a1005670f");
+        this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -61,16 +62,16 @@ class SinglePlayerGameContainer extends Component {
         });
     }
 
-    //This function decreases the time limit of the game 
-    // decrimentTime() {
-    //     if (this.state.timer !== 0) {
-    //         this.setState({
-    //             timer: this.state.timer - 1
-    //         });
-    //     } else {
-    //         // this.setUserAnswer();
-    //     }
-    // }
+    // This function decreases the time limit of the game 
+    decrimentTime() {
+        if (this.state.timer !== 0) {
+            this.setState({
+                timer: this.state.timer - 1
+            });
+        } else {
+            this.setUserAnswer();
+        }
+    }
 
     //This method updates the game state basked on what the user clicked.
     handleSelection = id => {
@@ -94,14 +95,14 @@ class SinglePlayerGameContainer extends Component {
             this.setState({
                 incorrect: newIncorrect
             });
-        //if the user selected the correct answer, add to correct
+            //if the user selected the correct answer, add to correct
         } else if (this.state.userSelect === this.state.correctAnswer) {
             console.log("Correct answer selected");
             let newCorrect = this.state.correct + 1;
             this.setState({
                 correct: newCorrect
             });
-        //if the user selected the incorrect answer, add to incorrect
+            //if the user selected the incorrect answer, add to incorrect
         } else if (this.state.userSelect !== this.state.correctAnswer) {
             console.log("Incorrect Answer selected");
             let newIncorrect = this.state.incorrect + 1;
@@ -109,7 +110,7 @@ class SinglePlayerGameContainer extends Component {
                 incorrect: newIncorrect
             });
         }
-        
+
         //This variable is checking to see what the next index value will be
         let nextIndex = (this.state.index + 1);
 
@@ -138,6 +139,7 @@ class SinglePlayerGameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
+        clearInterval(this.timerID);
     }
 
 
