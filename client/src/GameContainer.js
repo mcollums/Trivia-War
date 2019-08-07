@@ -77,45 +77,54 @@ class GameContainer extends Component {
         this.setState({
             userSelect: id
         }, () => {
-            // let thisIndex = Number.parseInt(this.state.index, 10);
-            // console.log("thisIndex is number? " + Number.isInteger(thisIndex));
-            console.log("Handle Selection state of Clicked: " + this.state.userSelect);
-            // console.log("THIS INDEX = " + thisIndex);
-            console.log("THIS QuestionCount = " + this.state.questionCount);
-            console.log("THIS state INDEX + 1 = " + (this.state.index + 1));
-            let nextIndex = (this.state.index + 1);
+            this.setUserAnswer();
 
-            if (nextIndex === this.state.questionCount) {
-                console.log("GAME OVER");
-                // this.endGame();
-            } else {
-                console.log("MORE QUESTIONS!");
-                this.setUserAnswer();
-            }
+            // //This variable is checking to see what the next index value will be
+            // let nextIndex = (this.state.index + 1);
+
+            // //if the next index value is equal to the amount of questions
+            // if (nextIndex > this.state.questionCount) {
+            //     console.log("GAME OVER");
+            //     // this.endGame();
+            // } else {
+            //     console.log("MORE QUESTIONS!");
+            //     this.setUserAnswer();
+            // }
         });
     };
 
     setUserAnswer = () => {
-            if (this.state.userSelect === "") {
-                console.log("No answer selected");
-                let newIncorrect = this.state.incorrect + 1;
-                this.setState({
-                    incorrect: newIncorrect
-                })
-            } else if (this.state.userSelect === this.state.correctAnswer) {
-                console.log("Correct answer selected")
-                let newCorrect = this.state.correct + 1;
-                this.setState({
-                    correct: newCorrect
-                })
-            } else if (this.state.userSelect !== this.state.correctAnswer) {
-                console.log("Incorrect Answer selected")
-                let newIncorrect = this.state.incorrect + 1;
-                this.setState({
-                    incorrect: newIncorrect
-                })
-            }
+        if (this.state.userSelect === "") {
+            console.log("No answer selected");
+            let newIncorrect = this.state.incorrect + 1;
+            this.setState({
+                incorrect: newIncorrect
+            })
+        } else if (this.state.userSelect === this.state.correctAnswer) {
+            console.log("Correct answer selected")
+            let newCorrect = this.state.correct + 1;
+            this.setState({
+                correct: newCorrect
+            })
+        } else if (this.state.userSelect !== this.state.correctAnswer) {
+            console.log("Incorrect Answer selected")
+            let newIncorrect = this.state.incorrect + 1;
+            this.setState({
+                incorrect: newIncorrect
+            })
+        }
+        
+        //This variable is checking to see what the next index value will be
+        let nextIndex = (this.state.index + 1);
+
+        //if the next index value is equal to the amount of questions
+        if (nextIndex === this.state.questionCount) {
+            console.log("GAME OVER");
+            this.endGame();
+        } else {
+            console.log("MORE QUESTIONS!");
             this.setNextQuestion();
+        }
     }
 
     setNextQuestion = () => {
@@ -135,7 +144,7 @@ class GameContainer extends Component {
     endGame = () => {
         console.log("GAME OVER");
     }
- 
+
     //First question and it's answers are populated to the page
     //Timer starts
     //User selects an answer that stays highlighted when clicked (give class of chosen)
