@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import API from "./utils/API";
-import Container from "./Container";
-import Row from "./Row";
-import Col from "./Col";
-import GameCard from "./GameCard";
-import GameCol from "./GameCol";
+import API from "../utils/API";
+import GameCard from "../components/GameCard";
+import GameCol from "../components//GameCol";
+import { Col, Row, Container } from "../components/Grid";
+import Jumbotron from "../components/Jumbotron";
 
 let quizQuestions = [];
 
@@ -154,23 +153,39 @@ class GameContainer extends Component {
             <div>
                 <Container fluid="-fluid">
                     <Row>
-                        <Col size="10" id="titleCol">
-                            <h5 className="text-center"> {this.state.title} </h5>
+                        <Col size="12" id="titleCol">
+                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} className="text-center"> {this.state.title} </h5>
                         </Col>
                     </Row>
                     <Row>
-                        <GameCol size="10">
-                            <h2>{this.state.question}</h2>
-                            <h2>{this.state.timer}</h2>
-                            {this.state.answers.map(answer => (
-                                <GameCard
-                                    id={answer}
-                                    key={answer}
-                                    answer={answer}
-                                    handleSelection={this.handleSelection}
-                                />
-                            ))}
+                        <GameCol size="12">
+                            <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+
+                                <h2>{this.state.question}</h2>
+                                <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
+                                {this.state.answers.map(answer => (
+                                    <GameCard
+                                        id={answer}
+                                        key={answer}
+                                        answer={answer}
+                                        handleSelection={this.handleSelection}
+                                    />
+                                ))}
+                            </Jumbotron>
+
                         </GameCol>
+
+                    </Row>
+                    <Row>
+                        <Col size="6" id="player1">
+                            <img style={{ marginTop:"50px",width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
+                            <h5 style={{color:"white"}}>Score</h5>
+                            {/* <img style={{color:"white"}} className="text-center"> Player 1 </img> */}
+                        </Col>
+                        <Col size="6" id="player2">
+                        <img style={{ marginTop:"50px",width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
+                        <h5 style={{color:"white"}}>Score</h5>
+                        </Col>
                     </Row>
                 </Container>
             </div>
