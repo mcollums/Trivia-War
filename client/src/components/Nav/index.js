@@ -9,7 +9,7 @@ function Nav() {
   <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
     <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
       <li className="nav-item active">
-        <a style={{fontSize: "25px", fontFamily: "'Warnes', cursive"}} className="nav-link" href="/home">Home <span class="sr-only"></span></a>
+        <a style={{fontSize: "25px", fontFamily: "'Warnes', cursive"}} className="nav-link" href="/home">Home <span className="sr-only"></span></a>
       </li>
       <li className="nav-item">
         <a className="nav-link" href="/play">Play Now</a>
