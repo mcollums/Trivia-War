@@ -75,12 +75,15 @@ class GameContainer extends Component {
     handleSelection = id => {
         console.log(id);
         this.setState({
-            clicked: id
-        });
+            userSelect: id
+        }, () => {
+        console.log("Handle Selection state of Clicked: " + this.state.userSelect)
         this.setUserAnswer();
+        });
     };
 
     setUserAnswer = () => {
+        console.log(this.state.userSelect);
         if (this.state.userSelect === "") {
             console.log("No answer selected");
             let newIncorrect = this.state.incorrect + 1;
