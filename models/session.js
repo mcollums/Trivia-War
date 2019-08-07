@@ -7,9 +7,10 @@ const sessionSchema = new Schema({
     //Quiz id
     //User 1 score
     //User 2 score
+    // is Waiting? true/false
     //End result
   });
 
 const Session = mongoose.model("Session", sessionSchema);
 
-module.exports = Session;
+module.exports = Session; 
