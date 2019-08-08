@@ -1,14 +1,11 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import API from "../utils/API";
-// import SOCKET from "../utils/socketAPI.js";
 import GameCard from "../components/GameCard";
 import GameCol from "../components//GameCol";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
-// added by jyoti for scoket.io
-import openSocket from 'socket.io-client';
-//const socket = openSocket("http://localhost:3001");
+
 
 let quizQuestions = [];
 let socketid;

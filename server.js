@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes");
@@ -8,17 +7,20 @@ const passport = require('./config/passport.js')
 const { google } = require("googleapis")
 const session = require('express-session')
 const path = require("path");
+
 app.use(session({secret: process.env.SESSION_SECRET || "the cat ate my keyboard", resave: true, saveUninitialized: true}))
 app.use(passport.initialize());
 app.use(passport.session());
 
 const db = require("./models")
+
 // Added by jyoti for scoket connection 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 //Added by jyoti
 
 //OAuth
+//============================================================================
 const googleConfig = {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -59,27 +61,9 @@ app.use(routes);
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters");
 
-// Start the API server
 //SOCKET AND GAME STATES START HERE
-// =====================================================================
-
-// let clients = 0;
-//Users will keep track of all socket users, their status and their name (?)
-// let allSocketUsers = [];
-// var allSocketUsers =  {
-//   totalUserCount :0,
-//   userList : []
-// };
-
-// //Sessions will hold all the needed game information for the server
-// //Player 1
-// //Player 2
-// //isOpen true/false
-// //
-// var gameCollection = {
-//   totalGameCount : 0,
-//   gameList : []
-// };
+// ===========================================================================================
+//Player Data on Server
 const players = [];
 const makePlayer = (socket) => {
   return {
@@ -94,6 +78,7 @@ const findPlayerById = (id) => {
   return players.find(p => p.id === id)
 }
 
+//Session Data on Server
 const sessions = [];
 const searchSessions = (socket, category) => {
 
@@ -105,11 +90,6 @@ const makeSession = (socket, category) => {
 
 io.on('connection', function (player) {
   var addedUser = false;
-
-  //Emit to users/new User when someone new is Connected
-  // player.emit('newclientconnect', { description: 'Hey, welcome!' });
-  // player.emit('userConnected', { socketId: player.id });
-  // io.broadcast.emit('newclientconnect', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
@@ -165,12 +145,6 @@ io.on('connection', function (player) {
   player.on('player-endGame', gameData => {
     io.emit('player-endGame', gameData)
   });
-
-  // player.on('disconnect', data => {
-  //   console.log("USER DISCONNECTED" + data);
-  //   io.emit('disconnect', data);
-
-  //   });
 });
 
 function buildGame(socket) {
@@ -198,7 +172,8 @@ io.on('connection', function (socket) {
 
 
 
-// API ROUTES GO HERE
+// ROUTES FOR GOOGLE AUTHENTICATION
+//=======================================================================
 app.get('/api/google/url', (req, res) => {
   res.json({url: getConnectionUrl()})
 })
