@@ -83,7 +83,7 @@ class UserHome extends Component {
                                             return (
                                                 <tr key={index+1}>
                                                     <td>{index + 1}</td>
-                                                    <td>{user.name}</td>
+                                                    <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>
                                                     <td>{user.totalLosses}</td>
                                                 </tr>
