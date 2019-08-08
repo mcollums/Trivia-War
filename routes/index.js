@@ -7,7 +7,7 @@ const passport = require("../config/passport")
 router.use("/api", apiRoutes);
 
 router.post("/register",(req,res)=>{
-  db.User.create({email:req.body.email,password:req.body.password}).then((newUser)=>{
+  db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password}).then((newUser)=>{
     res.json(newUser)
   })
 })
