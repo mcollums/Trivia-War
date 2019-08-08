@@ -9,13 +9,18 @@ export default {
   // Gets the book with the given id
   getOneGame: function(id) {
     return axios.get("/api/game/" + id);
+  },
+  logout: function() {
+    return axios.get("/logout");
+  },
+  checkAuth: function() {
+    return axios.get("/user/me");
+  },
+  getUsers: function() {
+    return axios.get("/api/user")
+  },
+  getOneUser: function(id) {
+    return axios.get("/api/user/" + id);
   }
-  // Deletes the book with the given id
-//   deleteBook: function(id) {
-//     return axios.delete("/api/books/" + id);
-//   },
-//   // Saves a book to the database
-//   saveBook: function(bookData) {
-//     return axios.post("/api/books", bookData);
-//   }
 };
+
