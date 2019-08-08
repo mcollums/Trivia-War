@@ -28,25 +28,39 @@ class App extends Component {
   }
 
   componentDidMount = () => {
+
+    // socketAPI.subscribeAuthorized(message => {
+    //   console.log(message)
+    //   if(message === true){
+    //     this.setState({authorized: true})
+    //   }
+    // })
+    // socketAPI.subscribeJoinedGame(info => {
+    //   console.log(info);
+    //   this.setState({inGame: true})
+    // })
+
+
+    // setTimeout(() => {
+    //   socketAPI.publishLogin("robert@email.com")
+    // }, 1000)
+
+    // setTimeout(() => {
+    //   socketAPI.publishSeekGame()
+    // }, 2000)
+  }
+
+  socketSubscribeAuthorized = () =>{
     socketAPI.subscribeAuthorized(message => {
       console.log(message)
       if(message === true){
         this.setState({authorized: true})
       }
-    })
-    socketAPI.subscribeJoinedGame(info => {
-      console.log(info);
-      this.setState({inGame: true})
-    })
+    });
+  }
 
-
-    setTimeout(() => {
-      socketAPI.publishLogin("robert@email.com")
-    }, 1000)
-
-    // setTimeout(() => {
-    //   socketAPI.publishSeekGame()
-    // }, 2000)
+  socketPublishLogin = (email) => {
+    socketAPI.publishLogin(email);
   }
 
   render() {
@@ -56,7 +70,8 @@ class App extends Component {
           <Nav />
           <Switch>
             <Route exact path="/" component={Authentication} />
-            <Route exact path="/home" component={UserHome} />
+            <Route exact path="/home" component={() => <UserHome socketPublishLogin={this.socketPublishLogin} 
+                  socketSubscribeAuthorized={this.socketSubscribeAuthorized} />} />
             <Route exact path="/play" component={PlayNow} />
             <Route exact path="/game" component={GameContainer} />
             <Route path="/multicat" component={CategoryTest} />

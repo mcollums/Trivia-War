@@ -22,9 +22,10 @@ router.get('/logout', (req, res) => {
 
 router.get('/user/me', function(req, res){
   if(req.user){
-      res.json({
-          email: req.user.email
-      })
+    res.json(req.user)
+      // res.json({
+      //     email: req.user.email
+      // })
   } else {
       res.status(401).json({})
   }

@@ -5,22 +5,37 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
 
 class UserHome extends Component {
-    state = {
-        users: [],
-        redirectTo: null
-    };
+    _isMounted = false;
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentUser: "",
+            users: [],
+            redirectTo: null
+        };
+    }
 
     componentDidMount() {
+        this._isMounted = true;
         API.checkAuth()
             .then(response => {
-                // this runs if the user is logged in
-                console.log("response: ", response)
+                if (this._isMounted) {
+                    this.setState({
+                        currentUser: response.data
+                    })
+                    this.props.socketPublishLogin(response.data.email);
+                    this.props.socketSubscribeAuthorized();
+                    // this runs if the user is logged in
+                    console.log("response: ", response)
+                }
             })
             .catch(err => {
                 // this runs if the uer is NOT logged in
                 this.setState({ redirectTo: "/" })
             })
         this.loadUsers();
+
+
     }
 
     loadUsers() {
@@ -28,7 +43,7 @@ class UserHome extends Component {
             .then(res => {
                 console.log(res.data)
                 this.setState({
-                    users: res.data,
+                    users: res.data
                 })
                 // console.log(res.data)
             })
@@ -81,7 +96,7 @@ class UserHome extends Component {
                                     {
                                         this.state.users.map((user, index) => {
                                             return (
-                                                <tr key={index+1}>
+                                                <tr key={index + 1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>

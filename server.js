@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes");
@@ -65,7 +64,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters"
 //SOCKET AND GAME STATES START HERE
 // ===========================================================================================
 //Player Data on Server
-const players = [];
+const playerArr = [];
 const makePlayer = (socket) => {
   return {
     id: socket.id,
@@ -74,9 +73,8 @@ const makePlayer = (socket) => {
   }
 }
 
-
 const findPlayerById = (id) => {
-  return players.find(p => p.id === id)
+  return playerArr.find(p => p.id === id)
 }
 
 //Session Data on Server
@@ -94,21 +92,21 @@ io.on('connection', function (player) {
 
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
-    const index = players.findIndex(p => p.id === player.id)
-    players.splice(index, 1)
+    const index = playerArr.findIndex(p => p.id === player.id)
+    playerArr.splice(index, 1)
     // Look for any games they are a part of and kill them
   })
 
   // let newUser = {};
   // newUser.id = player.id;
   // newUser.status = "Idle";
-  // players.push(newUser);
+  // playerArr.push(newUser);
 
   //Let server-side know someone's connected
   console.log('==================================================================');
   console.log('A user connected!', player.id);
-  console.log("ALL SOCKET USERS INFO :" + JSON.stringify(players));
-  console.log("CLIENTS # = " + players.length);
+  console.log("ALL SOCKET USERS INFO :" + JSON.stringify(playerArr));
+  console.log("CLIENTS # = " + playerArr.length);
 
   //Click Handler
   player.on('clicked', function (data) {
@@ -120,7 +118,7 @@ io.on('connection', function (player) {
     let newUser = {};
     newUser.id = player.id;
     newUser.status = "Idle";
-    players.push(newUser);
+    playerArr.push(newUser);
     // Check our database to see if that user exists along with other stuff
     player.emit("authorized", true)
   })
