@@ -33,7 +33,7 @@ class GameContainer extends Component {
     componentDidMount() {
         this.setSocketId();
         this.getGame("5d4b4ea92021254d5bc86b99");
-        this.timerID = setInterval(() => this.decrimentTime(), 1000);
+        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
     }
 
