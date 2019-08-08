@@ -32,7 +32,7 @@ class GameContainer extends Component {
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
         //this.setSocketId();
-        this.getGame("5d4b4ea92021254d5bc86b99");
+        this.getGame("5d4aedd61af73588729be101");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
         API.checkAuth()
