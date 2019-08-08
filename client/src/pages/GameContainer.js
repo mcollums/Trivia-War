@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import API from "../utils/API";
 import GameCard from "../components/GameCard";
 import GameCol from "../components//GameCol";
@@ -23,12 +24,22 @@ class GameContainer extends Component {
         outcome: "",
         index: 0,
         timer: 10,
-        socketArr: ""
+        socketArr: "",
+        redirectTo: null
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        this.getGame("5d47aeac6793d50a1005670f");
+        API.checkAuth()
+            .then(response => {
+                // this runs if the user is logged in
+                console.log("response: ", response)
+            })
+            .catch(err => {
+                // this runs if the uer is NOT logged in
+                this.setState({ redirectTo: "/" })
+            })
+        this.getGame("5d4aedd61af73588729be101");
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -149,6 +160,9 @@ class GameContainer extends Component {
 
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
         return (
             <div>
                 <Container fluid="-fluid">
