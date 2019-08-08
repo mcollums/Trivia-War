@@ -1,22 +1,32 @@
-// export default {
-//     // when the user disconnects.. perform this
-//     socketDisconnect: function () {
-//         socket.on('disconnect', function () {
-//             if (addedUser) {
-//                 --numUsers;
-//                 // killGame(socket);
+import openSocket from 'socket.io-client';
 
-//                 // echo globally that this client has left
-//                 socket.broadcast.emit('user left', {
-//                     username: socket.username,
-//                     numUsers: numUsers
-//                 });
-//             }
-//         });
-//     },
+const socket = openSocket(process.env.SOCKET_URL || 'http://localhost:3001')
 
-//     publishUserSelection: function() {
-//         socket.emit('userSelection', {description: "The user selected something"});
-//         console.log("The user selected something.");
-//     }
-// };
+export default {
+    subscribeTimer: (callback) => {
+        socket.on("timer", time => callback(time))
+    },
+    publishLogin: email => {
+        socket.emit("setuser", { email } )
+    },
+    subscribeAuthorized: callback => {
+        socket.on("authorized", message => callback(message))
+    },
+    publishSeekGame: () => {
+        socket.emit("seekGame")
+    },
+    subscribeSeekError: callback => {
+        socket.on("seekError", message => {
+            callback(message)
+        })
+    },
+    subscribeJoinedGame: callback => {
+        socket.on("joinedGame", info => callback(info))
+    },
+    subscribeGameStarted: callback => {
+        socket.on("gameStarted", info => callback(info))
+    },
+    disconnect(){
+        socket.disconnect()
+    }
+}

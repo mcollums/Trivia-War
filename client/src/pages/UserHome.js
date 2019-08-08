@@ -25,7 +25,7 @@ class UserHome extends Component {
     }
 
     handlePlayNowBtn = (userId) => {
-        let path = "/matchmaking";
+        let path = "/multicat";
         this.props.history.push(path);
     }
 

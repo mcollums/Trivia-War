@@ -31,12 +31,13 @@ server.listen(PORT, function () {
 
 //SOCKET AND GAME STATES START HERE
 // =====================================================================
+
 // let clients = 0;
 //Users will keep track of all socket users, their status and their name (?)
 // let allSocketUsers = [];
-var allSocketUsers =  new function() {
-  this.totalUserCount = 0,
-  this.userList = []
+var allSocketUsers =  {
+  totalUserCount = 0,
+  userList = []
 };
 
 //Sessions will hold all the needed game information for the server
@@ -44,25 +45,24 @@ var allSocketUsers =  new function() {
 //Player 2
 //isOpen true/false
 //
-var gameCollection =  new function() {
-  this.totalGameCount = 0,
-  this.gameList = []
+var gameCollection = {
+  totalGameCount = 0,
+  gameList = []
 };
 
-io.on('connection', function (socket) {
+io.on('connection', function (player) {
   var addedUser = false;
-  //
   // io.emit('broadcast', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
   //Emit to users/new User when someone new is Connected
   socket.emit('newclientconnect', { description: 'Hey, welcome!' });
   socket.emit('userConnected', { socketId: socket.id });
-  socket.broadcast.emit('newclientconnect', { description: allSocketUsers.totalUserCount + ' clients connected!' });
+  io.broadcast.emit('newclientconnect', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
   let newUser = {};
   newUser.id = socket.id;
   newUser.status = "Idle";
-  allSocketUsers.totalUserCount ++;
+  allSocketUsers.totalUserCount++;
   allSocketUsers.userList.push(newUser);
 
   //Let server-side know someone's connected
@@ -77,46 +77,41 @@ io.on('connection', function (socket) {
     io.sockets.emit('clicked', { data: socket.id });
   });
 
-  socket.on('player-move', gameData => {
-    io.emit('player-move', gameData)
-  })
+  socket.on('player-matchmaking', gameData => {
+    io.emit('player-matchmaking', gameData)
+  });
+
+  socket.on('player-select', gameData => {
+    io.emit('player-select', gameData)
+  });
+
   socket.on('player-ready', gameData => {
     io.emit('player-ready', gameData)
-  })
-  socket.on('player-won', gameData => {
-    io.emit('player-won', gameData)
-  })
+  });
+
+  socket.on('player-endGame', gameData => {
+    io.emit('player-endGame', gameData)
+  });
 
   socket.on('disconnect', data => {
     console.log("USER DISCONNECTED" + data);
-    if (addedUser) {
-      --numUsers;
-      // killGame(socket);
+    io.emit('disconnect', data);
 
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers
-      });
-    }
-  });
-
+    });
 });
 
 function buildGame(socket) {
-  var gameObject = {};
-  //generate random Object ID for reference later
-  gameObject.id = (Math.random()+1).toString(36).slice(2, 18);
-  // gameObject.playerOne = socket.name;
-  // gameObject.playerTwo = null;
-  gameCollection.totalGameCount ++;
-  gameCollection.gameList.push({gameObject});
- 
-  console.log("Game Created by "+ socket.name + " w/ " + gameObject.id);
-  io.emit('gameCreated', {
-   name: socket.name,
-   gameId: gameObject.id
- });
- 
- 
+    var gameObject = {};
+    //generate random Object ID for reference later
+    gameObject.id = (Math.random()+1).toString(36).slice(2, 18);
+    // gameObject.playerOne = socket.name;
+    // gameObject.playerTwo = null;
+    gameCollection.totalGameCount ++;
+    gameCollection.gameList.push({gameObject});
+  
+    console.log("Game Created by "+ socket.name + " w/ " + gameObject.id);
+    io.emit('gameCreated', {
+    name: socket.name,
+    gameId: gameObject.id
+  });
  }
