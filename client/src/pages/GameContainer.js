@@ -36,10 +36,6 @@ class GameContainer extends Component {
         setTimeout(() => {
             this.setState({ showLoading: false });
         }, 2500);
-        this.getGame("5d4888bb41fc5114683cd980")
-        //this.setSocketId();
-        this.getGame("5d4aedd61af73588729be101");
-        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
         API.checkAuth()
             .then(response => {
@@ -50,7 +46,9 @@ class GameContainer extends Component {
                 // this runs if the uer is NOT logged in
                 this.setState({ redirectTo: "/" })
             })
-        this.getGame("5d4aedd61af73588729be101");
+
+        this.getGame("PUT YOUR GAME'S ID HERE FROM THE DATABASE");
+        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
     // added by jyoti for getting the socket id after a user connected.
