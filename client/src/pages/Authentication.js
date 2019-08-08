@@ -61,9 +61,9 @@ class Authentication extends Component {
                 this.setState({ welcomeEmail: response.data.email })
             })
             .catch(err => {
-                axios.get("/api/google/url").then(response => {
-                    this.setState({ googleSigninUrl: response.data.url })
-                })
+                // axios.get("/api/google/url").then(response => {
+                //     this.setState({ googleSigninUrl: response.data.url })
+                // })
             })
     }
 
@@ -82,7 +82,7 @@ class Authentication extends Component {
     loadUsers() {
         API.getUsers()
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 this.setState({
                     users: res.data,
                 })
@@ -100,11 +100,11 @@ class Authentication extends Component {
                             <Row>
                                 <Col size="6">
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#loginModal">
+                                    <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
                                         Login
                                     </button>
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -144,7 +144,7 @@ class Authentication extends Component {
                                     </button>
 
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div className="modal fade" id="registerModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -196,7 +196,7 @@ class Authentication extends Component {
                                     {
                                         this.state.users.map((user, index) => {
                                             return (
-                                                <tr>
+                                                <tr key={index+1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>

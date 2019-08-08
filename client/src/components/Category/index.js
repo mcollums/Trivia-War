@@ -3,7 +3,7 @@ import React from "react";
 function Category(props) {
     return (
         <div className="card">
-            <div className="category">
+            <div className="category" data-id={props.id} >
                 <strong>Category</strong> {props.category}
             </div>
             <div className="game-status">

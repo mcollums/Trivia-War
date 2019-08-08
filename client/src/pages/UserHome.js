@@ -35,6 +35,11 @@ class UserHome extends Component {
             .catch(err => console.log(err));
     }
 
+    handlePlayNowBtn = (userId) => {
+        let path = "/multicat";
+        this.props.history.push(path);
+    }
+
     render() {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
@@ -76,7 +81,7 @@ class UserHome extends Component {
                                     {
                                         this.state.users.map((user, index) => {
                                             return (
-                                                <tr>
+                                                <tr key={index+1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>
@@ -88,6 +93,11 @@ class UserHome extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
+                    </Col>
+                </Row>
+                <Row className="justify-content-center">
+                    <Col size="lg-12 md-12 sm-12">
+                        <button className="btn btn-primary" onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
                     </Col>
                 </Row>
             </Container>
