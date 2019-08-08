@@ -4,6 +4,7 @@ import openSocket from 'socket.io-client';
 import Nav from "./components/Nav";
 import './App.css';
 import PlayNow from "./pages/PlayNow";
+import Authentication from "./pages/Authentication";
 import UserHome from "./pages/UserHome";
 import MultiPlayer from "./pages/MultiPlayer";
 import CategoryTest from "./pages/CategoryTest.js";
@@ -11,6 +12,7 @@ import GameContainer from "./pages/GameContainer";
 import Matchmaking from "./pages/Matchmaking";
 import SingleGameContainer from "./pages/SPGameContainer";
 import NoMatch from "./pages/NoMatch";
+import SingleCategory from "./pages/SingleCategory";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 

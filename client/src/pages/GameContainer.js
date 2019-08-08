@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import API from "../utils/API";
 // import SOCKET from "../utils/socketAPI.js";
 import GameCard from "../components/GameCard";
@@ -27,15 +28,29 @@ class GameContainer extends Component {
         outcome: "",
         index: 0,
         timer: 10,
-        socketArr: ""
+        socketArr: "",
+        redirectTo: null
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
+<<<<<<< HEAD
         this.setSocketId();
         this.getGame("5d4b4ea92021254d5bc86b99");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
+=======
+        API.checkAuth()
+            .then(response => {
+                // this runs if the user is logged in
+                console.log("response: ", response)
+            })
+            .catch(err => {
+                // this runs if the uer is NOT logged in
+                this.setState({ redirectTo: "/" })
+            })
+        this.getGame("5d4aedd61af73588729be101");
+>>>>>>> master
     }
 
     // added by jyoti for getting the socket id after a user connected.
@@ -195,6 +210,9 @@ class GameContainer extends Component {
 
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
         return (
             <div>
                 <Container fluid="-fluid">
