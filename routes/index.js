@@ -6,7 +6,7 @@ const passport = require("../config/passport")
 // API Routes
 router.use("/api", apiRoutes);
 
-router.post("/signup",(req,res)=>{
+router.post("/register",(req,res)=>{
   db.User.create({email:req.body.email,password:req.body.password}).then((newUser)=>{
     res.json(newUser)
   })

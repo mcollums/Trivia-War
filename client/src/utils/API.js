@@ -10,7 +10,6 @@ export default {
   getOneGame: function(id) {
     return axios.get("/api/game/" + id);
   },
-// <<<<<<< HEAD
   logout: function() {
     return axios.get("/logout");
   },

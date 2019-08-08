@@ -29,9 +29,21 @@ class Authentication extends Component {
             .then(result => {
                 console.log(result.data)
                 this.loadProfileInfo()
-                // redirect the user here
+                window.location.href = "/home";
             })
     }
+
+    handleFormRegister = event => {
+        event.preventDefault()
+        const { email, password } = this.state
+        axios.post("/register", { email, password })
+            .then(result => {
+                console.log(result.data)
+                this.loadProfileInfo()
+                window.location.href = "/home";
+            })
+    }
+
     handleFormLogout = event => {
         event.preventDefault()
         API.logout().then(result => {
@@ -72,11 +84,11 @@ class Authentication extends Component {
                             <Row>
                                 <Col size="6">
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">
+                                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#loginModal">
                                         Login
                                     </button>
                                     {/* <!-- Modal --> */}
-                                    <div style={{zIndex: "1999"}}  className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div className="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -111,12 +123,12 @@ class Authentication extends Component {
                                 </Col>
                                 <Col size="6">
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">
+                                    <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#registerModal">
                                         Register
                                     </button>
 
                                     {/* <!-- Modal --> */}
-                                    <div style={{zIndex: "2000"}}  className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div className="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -128,13 +140,13 @@ class Authentication extends Component {
                                                 <div className="modal-body">
                                                     <form>
                                                         <div className="form-group">
-                                                            <input type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                                                            <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                                                         </div>
                                                         <div className="form-group">
-                                                            <input type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
+                                                            <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
                                                         </div>
 
-                                                        <button type="submit" className="btn btn-dark">Submit</button>
+                                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormRegister}>Submit</button>
                                                     </form>
                                                 </div>
 
