@@ -7,7 +7,7 @@ import GameCard from "./GameCard";
 import GameCol from "./GameCol";
 // added by jyoti for scoket.io
 import openSocket from 'socket.io-client';
-const socket = openSocket("http://localhost:3001");
+// const socket = openSocket("http://localhost:3001");
 
 let quizQuestions = [];
 let socketid;

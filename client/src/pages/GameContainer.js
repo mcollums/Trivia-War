@@ -8,7 +8,7 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 // added by jyoti for scoket.io
 import openSocket from 'socket.io-client';
-const socket = openSocket("http://localhost:3001");
+//const socket = openSocket("http://localhost:3001");
 
 let quizQuestions = [];
 let socketid;
@@ -34,12 +34,10 @@ class GameContainer extends Component {
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-<<<<<<< HEAD
-        this.setSocketId();
+        //this.setSocketId();
         this.getGame("5d4b4ea92021254d5bc86b99");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
-=======
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
@@ -50,7 +48,6 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             })
         this.getGame("5d4aedd61af73588729be101");
->>>>>>> master
     }
 
     // added by jyoti for getting the socket id after a user connected.
@@ -106,26 +103,26 @@ class GameContainer extends Component {
 
     //Click Handler
     handleSelection(id, socketid) {
-        console.log(id);
-        console.log("Socket id", socketid);
-        if (id) {
-            this.setState({
-                userSelect: id
-            }, () => {
-                //putting this in a callback so we're sure the state has been updated
-                //before setUserAnswer is called
-                this.setUserAnswer();
-            });
-        }
-        socket.emit('clicked',
-            {
-                socketid: socketid
-                // will add user name here later on
+        // console.log(id);
+        // console.log("Socket id", socketid);
+        // if (id) {
+        //     this.setState({
+        //         userSelect: id
+        //     }, () => {
+        //         //putting this in a callback so we're sure the state has been updated
+        //         //before setUserAnswer is called
+        //         this.setUserAnswer();
+        //     });
+        // }
+        // socket.emit('clicked',
+        //     {
+        //         socketid: socketid
+        //         // will add user name here later on
 
-            });
-        socket.on('clicked', function (data) {
-            console.log("This Socket id" + data.data + " user clicked first");
-        });
+        //     });
+        // socket.on('clicked', function (data) {
+        //     console.log("This Socket id" + data.data + " user clicked first");
+        // });
     };
 
 

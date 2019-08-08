@@ -1,6 +1,7 @@
 // import React from 'react';
 import React, { Component } from "react";
 import openSocket from 'socket.io-client';
+import socketAPI from './utils/socketAPI';
 import Nav from "./components/Nav";
 import './App.css';
 import PlayNow from "./pages/PlayNow";
@@ -15,32 +16,38 @@ import NoMatch from "./pages/NoMatch";
 import SingleCategory from "./pages/SingleCategory";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-
-// import SinglePlayerGameContainer from './SingleGameContainer';
 // const socket = openSocket("http://localhost:3001", {transports: ['websocket']});
-
 
 class App extends Component {
   state = {
-    socketId: "test",
+    socketId: "1234",
     userId: "testy test",
-    email: "test.gmail.com"
+    email: "test.gmail.com",
+    authorized: false,
+    inGame: false
   }
 
   componentDidMount = () => {
-    this.connectSocket();
-  }
+    socketAPI.subscribeAuthorized(message => {
+      console.log(message)
+      if(message === true){
+        this.setState({authorized: true})
+      }
+    })
+    socketAPI.subscribeJoinedGame(info => {
+      console.log(info);
+      this.setState({inGame: true})
+    })
 
-  connectSocket = () => {
-    socket.on('connect', function () {
-      console.log('connected!');
-      socket.emit('greet', { message: 'Hello Mr.Server!' });
-    });
-  }
 
-  socket.on('disconnect', function(){
-    socket.emit('disconnect', {message: 'User disconnected'});
-  });
+    setTimeout(() => {
+      socketAPI.publishLogin("robert@email.com")
+    }, 1000)
+
+    // setTimeout(() => {
+    //   socketAPI.publishSeekGame()
+    // }, 2000)
+  }
 
   render() {
     return (
@@ -48,6 +55,7 @@ class App extends Component {
         <div>
           <Nav />
           <Switch>
+            <Route exact path="/" component={Authentication} />
             <Route exact path="/home" component={UserHome} />
             <Route exact path="/play" component={PlayNow} />
             <Route exact path="/game" component={GameContainer} />
@@ -55,7 +63,7 @@ class App extends Component {
             <Route path="/matchmaking" component={Matchmaking} />
             <Route exact path="/singlegame" component={SingleGameContainer} />
             <Route exact path="/multi/" component={MultiPlayer} />
-            
+            <Route exact path="/single" component={SingleCategory} />
             <Route component={NoMatch} />
           </Switch>
         </div>

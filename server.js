@@ -33,81 +33,116 @@ app.use(routes);
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters");
 
-<<<<<<< HEAD
 // Start the API server
-server.listen(PORT, function () {
-  console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
-}); 
-
 //SOCKET AND GAME STATES START HERE
 // =====================================================================
 
 // let clients = 0;
 //Users will keep track of all socket users, their status and their name (?)
 // let allSocketUsers = [];
-var allSocketUsers =  {
-  totalUserCount = 0,
-  userList = []
-};
+// var allSocketUsers =  {
+//   totalUserCount :0,
+//   userList : []
+// };
 
-//Sessions will hold all the needed game information for the server
-//Player 1
-//Player 2
-//isOpen true/false
-//
-var gameCollection = {
-  totalGameCount = 0,
-  gameList = []
-};
+// //Sessions will hold all the needed game information for the server
+// //Player 1
+// //Player 2
+// //isOpen true/false
+// //
+// var gameCollection = {
+//   totalGameCount : 0,
+//   gameList : []
+// };
+const players = [];
+const makePlayer = (socket) => {
+  return {
+    id: socket.id,
+    email: "",
+    socket
+  }
+}
+const findPlayerById = (id) => {
+  return players.find(p => p.id === id)
+}
+
+const sessions = [];
+const searchSessions = (socket, category) => {
+
+}
+
+const makeSession = (socket, category) => {
+
+}
 
 io.on('connection', function (player) {
   var addedUser = false;
-  // io.emit('broadcast', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
   //Emit to users/new User when someone new is Connected
-  socket.emit('newclientconnect', { description: 'Hey, welcome!' });
-  socket.emit('userConnected', { socketId: socket.id });
-  io.broadcast.emit('newclientconnect', { description: allSocketUsers.totalUserCount + ' clients connected!' });
+  // player.emit('newclientconnect', { description: 'Hey, welcome!' });
+  // player.emit('userConnected', { socketId: player.id });
+  // io.broadcast.emit('newclientconnect', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
-  let newUser = {};
-  newUser.id = socket.id;
-  newUser.status = "Idle";
-  allSocketUsers.totalUserCount++;
-  allSocketUsers.userList.push(newUser);
+  player.on('disconnect', () => {
+    console.log("Player " + player.id + "is disconnecting");
+    const index = players.findIndex(p => p.id === player.id)
+    players.splice(index, 1)
+    // Look for any games they are a part of and kill them
+  })
+
+  // let newUser = {};
+  // newUser.id = player.id;
+  // newUser.status = "Idle";
+  // players.push(newUser);
 
   //Let server-side know someone's connected
   console.log('==================================================================');
-  console.log('A user connected!', socket.id);
-  console.log("ALL SOCKET USERS INFO :" + JSON.stringify(allSocketUsers.userList));
-  console.log("CLIENTS # = " + allSocketUsers.totalUserCount);
+  console.log('A user connected!', player.id);
+  console.log("ALL SOCKET USERS INFO :" + JSON.stringify(players));
+  console.log("CLIENTS # = " + players.length);
 
   //Click Handler
-  socket.on('clicked', function (data) {
+  player.on('clicked', function (data) {
     console.log(data);
-    io.sockets.emit('clicked', { data: socket.id });
+    io.sockets.emit('clicked', { data: player.id });
   });
 
-  socket.on('player-matchmaking', gameData => {
+  player.on("setuser", ({email}) => {
+    let newUser = {};
+    newUser.id = player.id;
+    newUser.status = "Idle";
+    players.push(newUser);
+    // Check our database to see if that user exists along with other stuff
+    player.emit("authorized", true)
+  })
+
+  player.on("seekGame", () => {
+    // Try and find them a game, if we can, great!
+    // Otherwise just make a new one and put them in it
+    player.emit("joinedGame", { coolInfo: "Goes Here"})
+  })
+
+  player.on('player-matchmaking', gameData => {
     io.emit('player-matchmaking', gameData)
   });
 
-  socket.on('player-select', gameData => {
+  player.on('player-select', gameData => {
     io.emit('player-select', gameData)
   });
 
-  socket.on('player-ready', gameData => {
+  player.on('player-ready', gameData => {
     io.emit('player-ready', gameData)
   });
 
-  socket.on('player-endGame', gameData => {
+  player.on('player-endGame', gameData => {
     io.emit('player-endGame', gameData)
   });
 
-  socket.on('disconnect', data => {
-    console.log("USER DISCONNECTED" + data);
-    io.emit('disconnect', data);
+  // player.on('disconnect', data => {
+  //   console.log("USER DISCONNECTED" + data);
+  //   io.emit('disconnect', data);
 
-    });
+  //   });
 });
 
 function buildGame(socket) {
@@ -125,12 +160,14 @@ function buildGame(socket) {
     gameId: gameObject.id
   });
  }
-=======
 io.on('connection', function (socket) {
   console.log('A user connected!', socket.id);
   socket.broadcast.emit('user connected');
 });
 
+
+// START GOOGLE AUTHENTICATION
+//=========================================================================
 
 //OAuth
 const googleConfig = {
@@ -284,4 +321,3 @@ process.on('SIGINT', () => {
 })
 
 
->>>>>>> master
