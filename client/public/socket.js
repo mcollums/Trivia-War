@@ -2,7 +2,7 @@
 
 $(function () {
 
-  var socket = io();
+  // var socket = io();
 
   socket.on('userConnected', function(data){
     console.log("User connected to socket.js");

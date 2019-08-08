@@ -24,6 +24,11 @@ class UserHome extends Component {
             .catch(err => console.log(err));
     }
 
+    handlePlayNowBtn = (userId) => {
+        let path = "/matchmaking";
+        this.props.history.push(path);
+    }
+
     render() {
         return (
             <Container fluid>
@@ -49,8 +54,8 @@ class UserHome extends Component {
                     <Col size="lg-7 md-12 sm-12">
                         <Jumbotron jumboHeight="80%">
                             <h4>LEADER BOARD</h4>
-                            <table class="table">
-                                <thead class="thead-dark">
+                            <table className="table">
+                                <thead className="thead-dark">
                                     <tr>
                                         <th scope="col">Ranking</th>
                                         <th scope="col">Name</th>
@@ -62,7 +67,7 @@ class UserHome extends Component {
                                     {
                                         this.state.users.map((user, index) => {
                                             return (
-                                                <tr>
+                                                <tr key={index+1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.name}</td>
                                                     <td>{user.totalWins}</td>
@@ -74,6 +79,11 @@ class UserHome extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
+                    </Col>
+                </Row>
+                <Row className="justify-content-center">
+                    <Col size="lg-12 md-12 sm-12">
+                        <button className="btn btn-primary" onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
                     </Col>
                 </Row>
             </Container>

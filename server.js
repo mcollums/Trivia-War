@@ -77,7 +77,17 @@ io.on('connection', function (socket) {
     io.sockets.emit('clicked', { data: socket.id });
   });
 
-  socket.on('disconnect', function (data){
+  socket.on('player-move', gameData => {
+    io.emit('player-move', gameData)
+  })
+  socket.on('player-ready', gameData => {
+    io.emit('player-ready', gameData)
+  })
+  socket.on('player-won', gameData => {
+    io.emit('player-won', gameData)
+  })
+
+  socket.on('disconnect', data => {
     console.log("USER DISCONNECTED" + data);
     if (addedUser) {
       --numUsers;
