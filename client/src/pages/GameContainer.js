@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import API from "../utils/API";
+import SOCKET from "../utils/socketAPI.js";
 import GameCard from "../components/GameCard";
 import GameCol from "../components//GameCol";
 import { Col, Row, Container } from "../components/Grid";
@@ -39,15 +40,17 @@ class GameContainer extends Component {
 
     // added by jyoti for getting the socket id after a user connected.
 
-    setSocketId() {
-        socket.on('userConnected', socketData => {
-            socketid = socketData.socketId;
-            console.log(" this is the socket id " + socketid);
-            socket.on('newclientconnect', data => {
-                console.log(data.description);
-            });
-        });
-    }
+    // SOCKET.setSocketId();
+
+    // setSocketId() {
+    //     socket.on('userConnected', socketData => {
+    //         socketid = socketData.socketId;
+    //         console.log(" this is the socket id " + socketid);
+    //         socket.on('newclientconnect', data => {
+    //             console.log(data.description);
+    //         });
+    //     });
+    // }
     
     //Getting the game information from the Database based on the game's ID
     //Then updating the state

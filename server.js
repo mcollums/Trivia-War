@@ -50,6 +50,7 @@ var gameCollection =  new function() {
 };
 
 io.on('connection', function (socket) {
+  var addedUser = false;
   //
   // io.emit('broadcast', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
@@ -80,7 +81,7 @@ io.on('connection', function (socket) {
     console.log("USER DISCONNECTED" + data);
     if (addedUser) {
       --numUsers;
-      killGame(socket);
+      // killGame(socket);
 
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
