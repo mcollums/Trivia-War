@@ -4,10 +4,10 @@ const gameController = require("../../controllers/gameController");
 //EXAMPLE FROM IN CLASS ACTIVITY
 // // Matches with "/api/game"
 router.route("/")
-    .get(gameController.findAllGames);
+  .get(gameController.findAllGames);
 
 // // Matches with "/api/game/:id"
 router.route("/:gameId")
-  .get(gameController.findGameById)
+  .get(gameController.findGameById);
 
 module.exports = router;

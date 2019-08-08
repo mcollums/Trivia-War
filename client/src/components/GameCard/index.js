@@ -8,7 +8,7 @@ const styles = {
 
 const GameCard = props => (
     <div style={styles} id={props.answer} onClick={() => props.handleSelection(props.id)} className="card grow" >
-        <h3>{ props.answer }</h3>
+        <h3>{ props.id }</h3>
     </div>
 );
 
