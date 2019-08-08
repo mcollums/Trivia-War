@@ -62,6 +62,8 @@ const makePlayer = (socket) => {
     socket
   }
 }
+
+
 const findPlayerById = (id) => {
   return players.find(p => p.id === id)
 }
