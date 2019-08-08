@@ -48,6 +48,7 @@ class GameContainer extends Component {
             });
         });
     }
+    
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {

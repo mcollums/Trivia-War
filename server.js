@@ -51,11 +51,11 @@ var gameCollection =  new function() {
 
 io.on('connection', function (socket) {
   //
-  io.sockets.emit('broadcast', { description: allSocketUsers.totalUserCount + ' clients connected!' });
-  socket.emit('userConnected', { socketId: socket.id });
+  // io.emit('broadcast', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
   //Emit to users/new User when someone new is Connected
   socket.emit('newclientconnect', { description: 'Hey, welcome!' });
+  socket.emit('userConnected', { socketId: socket.id });
   socket.broadcast.emit('newclientconnect', { description: allSocketUsers.totalUserCount + ' clients connected!' });
 
   let newUser = {};
@@ -75,6 +75,21 @@ io.on('connection', function (socket) {
     console.log(data);
     io.sockets.emit('clicked', { data: socket.id });
   });
+
+  socket.on('disconnect', function (data){
+    console.log("USER DISCONNECTED" + data);
+    if (addedUser) {
+      --numUsers;
+      killGame(socket);
+
+      // echo globally that this client has left
+      socket.broadcast.emit('user left', {
+        username: socket.username,
+        numUsers: numUsers
+      });
+    }
+  });
+
 });
 
 function buildGame(socket) {
