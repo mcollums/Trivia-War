@@ -116,11 +116,11 @@ class Authentication extends Component {
                                                     </button>
                                                 </div>
                                                 <div className="modal-body">
-                                                    {
+                                                    {/* {
                                                         this.state.googleSigninUrl.length > 0 && this.state.welcomeEmail.length === 0
                                                             ? (<h3>Sign in with <a href={this.state.googleSigninUrl} >google </a></h3>)
                                                             : ""
-                                                    }
+                                                    } */}
                                                     <form>
                                                         <div className="form-group">
                                                             <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
