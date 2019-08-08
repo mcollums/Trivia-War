@@ -1,4 +1,4 @@
-require('dotenv').config()
+
 const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes");
@@ -8,18 +8,20 @@ const passport = require('./config/passport.js')
 const { google } = require("googleapis")
 const session = require('express-session')
 const path = require("path");
+
 app.use(session({secret: process.env.SESSION_SECRET || "the cat ate my keyboard", resave: true, saveUninitialized: true}))
 app.use(passport.initialize());
 app.use(passport.session());
 
 const db = require("./models")
-// Added by jyoti for scoket connection 
 
+// Added by jyoti for scoket connection 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 //Added by jyoti
 
 //OAuth
+//============================================================================
 const googleConfig = {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -60,12 +62,119 @@ app.use(routes);
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters");
 
+//SOCKET AND GAME STATES START HERE
+// ===========================================================================================
+//Player Data on Server
+const players = [];
+const makePlayer = (socket) => {
+  return {
+    id: socket.id,
+    email: "",
+    socket
+  }
+}
+
+
+const findPlayerById = (id) => {
+  return players.find(p => p.id === id)
+}
+
+//Session Data on Server
+const sessions = [];
+const searchSessions = (socket, category) => {
+
+}
+
+const makeSession = (socket, category) => {
+
+}
+
+io.on('connection', function (player) {
+  var addedUser = false;
+
+  player.on('disconnect', () => {
+    console.log("Player " + player.id + "is disconnecting");
+    const index = players.findIndex(p => p.id === player.id)
+    players.splice(index, 1)
+    // Look for any games they are a part of and kill them
+  })
+
+  // let newUser = {};
+  // newUser.id = player.id;
+  // newUser.status = "Idle";
+  // players.push(newUser);
+
+  //Let server-side know someone's connected
+  console.log('==================================================================');
+  console.log('A user connected!', player.id);
+  console.log("ALL SOCKET USERS INFO :" + JSON.stringify(players));
+  console.log("CLIENTS # = " + players.length);
+
+  //Click Handler
+  player.on('clicked', function (data) {
+    console.log(data);
+    io.sockets.emit('clicked', { data: player.id });
+  });
+
+  player.on("setuser", ({email}) => {
+    let newUser = {};
+    newUser.id = player.id;
+    newUser.status = "Idle";
+    players.push(newUser);
+    // Check our database to see if that user exists along with other stuff
+    player.emit("authorized", true)
+  })
+
+  player.on("seekGame", () => {
+    // Try and find them a game, if we can, great!
+    // Otherwise just make a new one and put them in it
+    player.emit("joinedGame", { coolInfo: "Goes Here"})
+  })
+
+  player.on('player-matchmaking', gameData => {
+    io.emit('player-matchmaking', gameData)
+  });
+
+  player.on('player-select', gameData => {
+    io.emit('player-select', gameData)
+  });
+
+  player.on('player-ready', gameData => {
+    io.emit('player-ready', gameData)
+  });
+
+  player.on('player-endGame', gameData => {
+    io.emit('player-endGame', gameData)
+  });
+});
+
+function buildGame(socket) {
+    var gameObject = {};
+    //generate random Object ID for reference later
+    gameObject.id = (Math.random()+1).toString(36).slice(2, 18);
+    // gameObject.playerOne = socket.name;
+    // gameObject.playerTwo = null;
+    gameCollection.totalGameCount ++;
+    gameCollection.gameList.push({gameObject});
+  
+    console.log("Game Created by "+ socket.name + " w/ " + gameObject.id);
+    io.emit('gameCreated', {
+    name: socket.name,
+    gameId: gameObject.id
+  });
+ }
 io.on('connection', function (socket) {
   console.log('A user connected!', socket.id);
   socket.broadcast.emit('user connected');
 });
 
-// API ROUTES GO HERE
+
+
+
+
+
+// ROUTES FOR GOOGLE AUTHENTICATION
+//=======================================================================
 app.get('/api/google/url', (req, res) => {
   res.json({url: getConnectionUrl()})
 })

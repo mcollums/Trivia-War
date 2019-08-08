@@ -28,7 +28,7 @@ class SinglePlayerGameContainer extends Component {
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        this.getGame("5d47aeac6793d50a1005670f");
+        this.getGame("5d4b4ea92021254d5bc86b99");
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 

@@ -6,8 +6,9 @@ import GameCol from "../components//GameCol";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 
-let quizQuestions = [];
 
+let quizQuestions = [];
+let socketid;
 class GameContainer extends Component {
     state = {
         // userId: this.props.params.userId,
@@ -30,6 +31,10 @@ class GameContainer extends Component {
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
+        //this.setSocketId();
+        this.getGame("5d4b4ea92021254d5bc86b99");
+        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
+
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
@@ -42,6 +47,17 @@ class GameContainer extends Component {
         this.getGame("5d4aedd61af73588729be101");
     }
 
+    // added by jyoti for getting the socket id after a user connected.
+    // setSocketId() {
+    //     socket.on('userConnected', socketData => {
+    //         socketid = socketData.socketId;
+    //         console.log(" this is the socket id " + socketid);
+    //         socket.on('newclientconnect', data => {
+    //             console.log(data.description);
+    //         });
+    //     });
+    // }
+    
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -71,28 +87,55 @@ class GameContainer extends Component {
         });
     }
 
-    //This function decreases the time limit of the game 
-    // decrimentTime() {
-    //     if (this.state.timer !== 0) {
-    //         this.setState({
-    //             timer: this.state.timer - 1
-    //         });
-    //     } else {
-    //         // this.setUserAnswer();
-    //     }
-    // }
-
-    //This method updates the game state basked on what the user clicked.
-    handleSelection = id => {
-        console.log(id);
-        this.setState({
-            userSelect: id
-        }, () => {
-            //putting this in a callback so we're sure the state has been updated
-            //before setUserAnswer is called
+    // This function decreases the time limit of the game 
+    decrimentTime() {
+        if (this.state.timer !== 0) {
+            this.setState({
+                timer: this.state.timer - 1
+            });
+        } else {
             this.setUserAnswer();
-        });
+        }
+    }
+
+    //Click Handler
+    handleSelection(id, socketid) {
+        // console.log(id);
+        // console.log("Socket id", socketid);
+        // if (id) {
+        //     this.setState({
+        //         userSelect: id
+        //     }, () => {
+        //         //putting this in a callback so we're sure the state has been updated
+        //         //before setUserAnswer is called
+        //         this.setUserAnswer();
+        //     });
+        // }
+        // socket.emit('clicked',
+        //     {
+        //         socketid: socketid
+        //         // will add user name here later on
+
+        //     });
+        // socket.on('clicked', function (data) {
+        //     console.log("This Socket id" + data.data + " user clicked first");
+        // });
     };
+
+
+
+
+    // //This method updates the game state basked on what the user clicked.
+    // handleSelection = id => {
+    //     console.log(id);
+    //     this.setState({
+    //         userSelect: id
+    //     }, () => {
+    //         //putting this in a callback so we're sure the state has been updated
+    //         //before setUserAnswer is called
+    //         this.setUserAnswer();
+    //     });
+    // };
 
     //This method checks if the user answer is correct and checks if the
     // game continues or not based on if there are any questions left
@@ -104,14 +147,14 @@ class GameContainer extends Component {
             this.setState({
                 incorrect: newIncorrect
             });
-        //if the user selected the correct answer, add to correct
+            //if the user selected the correct answer, add to correct
         } else if (this.state.userSelect === this.state.correctAnswer) {
             console.log("Correct answer selected");
             let newCorrect = this.state.correct + 1;
             this.setState({
                 correct: newCorrect
             });
-        //if the user selected the incorrect answer, add to incorrect
+            //if the user selected the incorrect answer, add to incorrect
         } else if (this.state.userSelect !== this.state.correctAnswer) {
             console.log("Incorrect Answer selected");
             let newIncorrect = this.state.incorrect + 1;
@@ -119,7 +162,7 @@ class GameContainer extends Component {
                 incorrect: newIncorrect
             });
         }
-        
+
         //This variable is checking to see what the next index value will be
         let nextIndex = (this.state.index + 1);
 
@@ -148,6 +191,7 @@ class GameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
+        clearInterval(this.timerID);
     }
 
 
@@ -181,8 +225,8 @@ class GameContainer extends Component {
                                     <GameCard
                                         id={answer}
                                         key={answer}
-                                        answer={answer}
-                                        handleSelection={this.handleSelection}
+                                        socketid={socketid}
+                                        handleSelection={this.handleSelection.bind(this)}
                                     />
                                 ))}
                             </Jumbotron>
@@ -192,13 +236,13 @@ class GameContainer extends Component {
                     </Row>
                     <Row>
                         <Col size="6" id="player1">
-                            <img style={{ marginTop:"50px",width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
-                            <h5 style={{color:"white"}}>Score</h5>
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
+                            <h5 style={{ color: "white" }}>Score</h5>
                             {/* <img style={{color:"white"}} className="text-center"> Player 1 </img> */}
                         </Col>
                         <Col size="6" id="player2">
-                        <img style={{ marginTop:"50px",width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
-                        <h5 style={{color:"white"}}>Score</h5>
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
+                            <h5 style={{ color: "white" }}>Score</h5>
                         </Col>
                     </Row>
                 </Container>

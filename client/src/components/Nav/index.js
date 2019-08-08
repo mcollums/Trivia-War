@@ -6,6 +6,7 @@ class Nav extends Component {
 
   handleLogout = () => {
     API.logout().catch(err => console.log(err));
+    //TODO Handle Logout for socket.io
   }
 
   render() {
