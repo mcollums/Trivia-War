@@ -29,8 +29,6 @@ class Nav extends Component {
         <a style={{fontSize: "30px", fontFamily: "'Yatra One', cursive", marginRight:"45%"}} className="navbar-brand" href="/home">TRIVIA WAR</a>
 
       </nav>
-
-          
     );
   }
 }

@@ -19,6 +19,31 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 //Added by jyoti
 
+//OAuth
+const googleConfig = {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    redirect: process.env.GOOGLE_REDIRECT_URI
+  }
+  
+  const defaultScope = [
+    'https://www.googleapis.com/auth/userinfo.email'
+  ]
+  
+  function createConnection(){
+    return new google.auth.OAuth2(
+        googleConfig.clientId,
+        googleConfig.clientSecret,
+        googleConfig.redirect
+    )
+  }
+  function getConnectionUrl(){
+    return createConnection().generateAuthUrl({
+        access_type: 'offline',
+        prompt: 'consent',
+        scope: defaultScope
+    })
+  }
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
@@ -40,38 +65,7 @@ io.on('connection', function (socket) {
   socket.broadcast.emit('user connected');
 });
 
-
-//OAuth
-const googleConfig = {
-  clientId: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  redirect: process.env.GOOGLE_REDIRECT_URI
-}
-
-const defaultScope = [
-  'https://www.googleapis.com/auth/userinfo.email'
-]
-
-function createConnection(){
-  return new google.auth.OAuth2(
-      googleConfig.clientId,
-      googleConfig.clientSecret,
-      googleConfig.redirect
-  )
-}
-function getConnectionUrl(){
-  return createConnection().generateAuthUrl({
-      access_type: 'offline',
-      prompt: 'consent',
-      scope: defaultScope
-  })
-}
-
-
-
 // API ROUTES GO HERE
-
-
 app.get('/api/google/url', (req, res) => {
   res.json({url: getConnectionUrl()})
 })
