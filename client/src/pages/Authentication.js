@@ -33,7 +33,7 @@ class Authentication extends Component {
         axios.post("/login", { email, password })
             .then(result => {
                 console.log(result.data)
-                this.loadProfileInfo()
+                // this.loadProfileInfo()
                 window.location.href = "/home";
             }).catch(err => {
                 this.setState({ errorMessage: "Please enter a valid email or password" })
@@ -46,7 +46,7 @@ class Authentication extends Component {
         axios.post("/register", { username, picLink, email, password })
             .then(result => {
                 console.log(result.data)
-                this.loadProfileInfo()
+                // this.loadProfileInfo()
                 this.setState({ redirectTo: "/home"});
             }).catch(err => {
                 if(!this.state.username){
@@ -66,17 +66,17 @@ class Authentication extends Component {
         })
     }
 
-    loadProfileInfo = () => {
-        axios.get('/user/me')
-            .then(response => {
-                this.setState({ welcomeEmail: response.data.email })
-            })
-            .catch(err => {
-                // axios.get("/api/google/url").then(response => {
-                //     this.setState({ googleSigninUrl: response.data.url })
-                // })
-            })
-    }
+    // loadProfileInfo = () => {
+    //     axios.get('/user/me')
+    //         .then(response => {
+    //             this.setState({ welcomeEmail: response.data.email })
+    //         })
+    //         .catch(err => {
+    //             // axios.get("/api/google/url").then(response => {
+    //             //     this.setState({ googleSigninUrl: response.data.url })
+    //             // })
+    //         })
+    // }
 
     componentDidMount() {
         // Mostly just for developing locally
@@ -86,7 +86,7 @@ class Authentication extends Component {
                 window.location.href = "/"
             })
         } else {
-            this.loadProfileInfo()
+            // this.loadProfileInfo()
         }
         this.loadUsers();
     }

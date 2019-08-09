@@ -17,12 +17,13 @@ class UserHome extends Component {
                 // this runs if the user is logged in
                 console.log("response: ", response.data)
                 this.setState({userInfo:response.data})
+                this.loadUsers();
             })
             .catch(err => {
                 // this runs if the user is NOT logged in
                 this.setState({ redirectTo: "/" })
             })
-        this.loadUsers();
+        // this.loadUserById();
     }
 
     // loadUserData(){
@@ -48,7 +49,7 @@ class UserHome extends Component {
     }
 
     handlePlayNowBtn = (userId) => {
-        let path = "/multicat";
+        let path = "/play";
         this.props.history.push(path);
     }
 
