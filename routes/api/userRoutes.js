@@ -6,6 +6,12 @@ router.route("/")
     .get(userController.findAll);
 
 // // Matches with "/api/user/:id"
-router.route("/:userId")
+router.route("/:id")
   .get(userController.findById)
+
+// // // Matches with "/api/user/:email"
+router.route("/:email")
+  .get(userController.findOne)
+
+
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import axios from 'axios';
@@ -8,12 +8,14 @@ import API from "../utils/API.js";
 class Authentication extends Component {
     state = {
         users: [],
-        username: '',
-        picLink: '',
-        email: '',
-        password: '',
+        username: "",
+        picLink: "",
+        email: "",
+        password: "",
+        errorMessage: "",
         welcomeEmail: "",
-        googleSigninUrl: ""
+        googleSigninUrl: "",
+        redirectTo: null
     }
 
     handleInput = event => {
@@ -33,6 +35,8 @@ class Authentication extends Component {
                 console.log(result.data)
                 this.loadProfileInfo()
                 window.location.href = "/home";
+            }).catch(err => {
+                this.setState({ errorMessage: "Please enter a valid email or password" })
             })
     }
 
@@ -43,7 +47,14 @@ class Authentication extends Component {
             .then(result => {
                 console.log(result.data)
                 this.loadProfileInfo()
-                window.location.href = "/home";
+                this.setState({ redirectTo: "/home"});
+            }).catch(err => {
+                if(!this.state.username){
+                    this.setState({ errorMessage: "Please enter a valid name" })
+                }
+                else if(!this.state.password && this.state.password.length<6){
+                    this.setState({ errorMessage: "Password needs to be at least 6 characters" })
+                }
             })
     }
 
@@ -92,6 +103,10 @@ class Authentication extends Component {
     }
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
+
         return (
             <Container fluid>
                 <Row>
@@ -128,7 +143,7 @@ class Authentication extends Component {
                                                         <div className="form-group">
                                                             <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
                                                         </div>
-
+                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
                                                         <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
                                                     </form>
                                                 </div>
@@ -167,7 +182,7 @@ class Authentication extends Component {
                                                         <div className="form-group">
                                                             <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
                                                         </div>
-
+                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
                                                         <button type="submit" className="btn btn-dark" onClick={this.handleFormRegister}>Submit</button>
                                                     </form>
                                                 </div>
@@ -196,7 +211,7 @@ class Authentication extends Component {
                                     {
                                         this.state.users.map((user, index) => {
                                             return (
-                                                <tr key={index+1}>
+                                                <tr key={index + 1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>
