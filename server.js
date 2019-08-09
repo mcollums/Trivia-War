@@ -192,7 +192,7 @@ io.on('connection', function (player) {
 
 
     // player.emit("authorized", true)
-  })
+  });
 
 
   player.on("seekGame", () => {

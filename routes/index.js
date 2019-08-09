@@ -2,7 +2,8 @@ const path = require("path");
 const router = require("express").Router();
 const apiRoutes = require("./api");
 const db = require("../models")
-const passport = require("../config/passport")
+const passport = require("../config/passport");
+const chalk = require('chalk');
 // API Routes
 router.use("/api", apiRoutes);
 
@@ -10,10 +11,12 @@ router.post("/register",(req,res)=>{
   db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password}).then((newUser)=>{
     res.redirect(307, "/login")
   })
-})
+});
+
 router.post('/login', passport.authenticate("local"),  (req, res) => {
   res.json(req.user);
-})
+});
+
 router.get('/logout', (req, res) => {
   console.log("logged out user")
   req.logout();
@@ -21,8 +24,9 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/user/me', function(req, res){
+  console.log(chalk.red("req.user"+req.user));
   if(req.user){
-    res.json(req.data);
+    res.json(req.user);
   } else {
       res.status(401).json({})
   }

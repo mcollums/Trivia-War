@@ -22,8 +22,10 @@ class UserHome extends Component {
             .then(response => {
                     this.setState({
                         currentUser: response.data
+                    }, () => {
+                        console.log("Current User State ", this.state.currentUser)
                     })
-                    console.log(this.state.currentUser);
+                    
             })
             .catch(err => {
                 // this runs if the user is NOT logged in
@@ -63,13 +65,13 @@ class UserHome extends Component {
                             {/* User image goes here */}
                             <img style={{width:"200px"}} alt={""} src={this.state.currentUser.picLink} />
                             <div>
-                                <strong>Name: </strong> {this.state.currentUser.name}
+                                <strong>Name: </strong> {this.state.currentUser.username}
                             </div>
                             <div>
-                                <strong>Wins:</strong> {this.state.currentUser.wins}
+                                <strong>Wins:</strong> {this.state.currentUser.totalWins}
                             </div>
                             <div>
-                                <strong>Losses:</strong> {this.state.currentUser.losses}
+                                <strong>Losses:</strong> {this.state.currentUser.totalLosses}
                             </div>
                             <div>
                                 <strong>Ranking:</strong> {this.state.currentUser.email}
