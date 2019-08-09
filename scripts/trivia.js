@@ -98,6 +98,7 @@ runSeeds = (i) => {
                 runSeeds(i);
             }
         }
+        }
     );
 }
 
