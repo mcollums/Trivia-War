@@ -5,7 +5,7 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
 
 class UserHome extends Component {
-    _isMounted = false;
+    // _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -16,18 +16,18 @@ class UserHome extends Component {
     }
 
     componentDidMount() {
-        this._isMounted = true;
+        // this._isMounted = true;
         API.checkAuth()
             .then(response => {
-                if (this._isMounted) {
                     this.setState({
                         currentUser: response.data
-                    })
-                    this.props.socketPublishLogin(response.data.email);
-                    this.props.socketSubscribeAuthorized();
+                    }, () => {
+                        this.props.socketPublishLogin(response.data);
+                    });
+                    
+                    // this.props.socketSubscribeAuthorized();
                     // this runs if the user is logged in
                     console.log("response: ", response)
-                }
             })
             .catch(err => {
                 // this runs if the uer is NOT logged in

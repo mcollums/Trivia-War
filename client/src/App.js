@@ -28,6 +28,7 @@ class App extends Component {
   }
 
   componentDidMount = () => {
+    // this.socketSubscribeAuthorized();
 
     // socketAPI.subscribeAuthorized(message => {
     //   console.log(message)

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Col, Row, Container } from "../components/Grid";
+import { Link, Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
+
+// import UserHome from "./UserHome";
 import axios from 'axios';
 import API from "../utils/API.js";
 
@@ -29,8 +32,9 @@ class Authentication extends Component {
         const { email, password } = this.state
         axios.post("/login", { email, password })
             .then(result => {
-                console.log(result.data)
-                this.loadProfileInfo()
+                console.log(result.data);
+                this.loadProfileInfo();
+                // <Redirect to="/home" />
                 window.location.href = "/home";
             })
     }
