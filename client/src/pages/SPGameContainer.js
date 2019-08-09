@@ -28,7 +28,7 @@ class SinglePlayerGameContainer extends Component {
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        this.getGame("5d4b4ea92021254d5bc86b99");
+        this.getGame(this.props.id);
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
@@ -46,7 +46,6 @@ class SinglePlayerGameContainer extends Component {
 
     // Setting the state of the game
     setQuestionState(data) {
-        // console.log(data);
         let index = this.state.index;
         this.setState({
             title: data.title,
@@ -56,8 +55,6 @@ class SinglePlayerGameContainer extends Component {
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
-            // console.log("STATE" + JSON.stringify(this.state));
-            // console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
         });
     }
 
@@ -149,48 +146,48 @@ class SinglePlayerGameContainer extends Component {
     //Set timer for 5 seconds and then...  
     //Send back to user's homepage
 
-render() {
-    return (
-        <div>
-            <Container fluid="-fluid">
-                <Row>
-                    <Col size="12" id="titleCol">
-                        <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} className="text-center"> {this.state.title} </h5>
-                    </Col>
-                </Row>
-                <Row>
-                    <GameCol size="12">
-                        <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+    render() {
+        return (
+            <div>
+                <Container fluid="-fluid">
+                    <Row>
+                        <Col size="12" id="titleCol">
+                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} className="text-center"> {this.state.title} </h5>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <GameCol size="12">
+                            <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
 
-                            <h2>{this.state.question}</h2>
-                            <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
-                            {this.state.answers.map(answer => (
-                                <GameCard
-                                    id={answer}
-                                    key={answer}
-                                    answer={answer}
-                                    handleSelection={this.handleSelection}
-                                />
-                            ))}
-                        </Jumbotron>
+                                <h2>{this.state.question}</h2>
+                                <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
+                                {this.state.answers.map(answer => (
+                                    <GameCard
+                                        id={answer}
+                                        key={answer}
+                                        answer={answer}
+                                        handleSelection={this.handleSelection}
+                                    />
+                                ))}
+                            </Jumbotron>
 
-                    </GameCol>
+                        </GameCol>
 
-                </Row>
-                <Row>
-                    <Col size="6" id="player1">
-                        <img style={{ marginTop:"50px",width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
-                        <h5 style={{color:"white"}}>Score</h5>
-                    </Col>
-                    <Col size="6" id="player2">
-                    <img style={{ marginTop:"50px",width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
-                    <h5 style={{color:"white"}}>Score</h5>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-    )
-}
+                    </Row>
+                    <Row>
+                        <Col size="6" id="player1">
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
+                            <h5 style={{ color: "white" }}>Score</h5>
+                        </Col>
+                        <Col size="6" id="player2">
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
+                            <h5 style={{ color: "white" }}>Score</h5>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        )
+    }
 }
 
 export default SinglePlayerGameContainer
