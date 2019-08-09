@@ -7,23 +7,35 @@ import API from "../utils/API"
 class UserHome extends Component {
     state = {
         users: [],
-        redirectTo: null
+        redirectTo: null,
+        userInfo:{}
     };
 
     componentDidMount() {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                console.log("response: ", response)
+                console.log("response: ", response.data)
+                this.setState({userInfo:response.data})
+                this.loadUsers();
             })
             .catch(err => {
-                // this runs if the uer is NOT logged in
+                // this runs if the user is NOT logged in
                 this.setState({ redirectTo: "/" })
             })
-        this.loadUsers();
         // this.loadUserById();
     }
 
+    // loadUserData(){
+    //     API.checkAuth()
+    //     .then(res => {
+    //         console.log("This should be user email" + res.data)
+            
+    //     })
+    //     .catch(err => {
+    //         console.log(err)
+    //     })
+    // }
     loadUsers() {
         API.getUsers()
             .then(res => {
@@ -51,18 +63,18 @@ class UserHome extends Component {
                     <Col size="lg-5 md-12 sm-12">
                         <Jumbotron addClass="userData" jumboHeight="80%">
                             {/* User image goes here */}
-                            <img alt={""} src={''/*this.state.userInfo.picLink*/} />
+                            <img style={{width:"200px"}} alt={""} src={this.state.userInfo.picLink} />
                             <div>
-                                <strong>Name:</strong> {''/*this.state.userInfo.name*/}
+                                <strong>Name: </strong> {this.state.userInfo.name}
                             </div>
                             <div>
-                                <strong>Wins:</strong> {''/*this.state.userInfo.totalWins*/}
+                                <strong>Wins:</strong> {this.state.userInfo.wins}
                             </div>
                             <div>
-                                <strong>Losses:</strong> {''/*this.state.userInfo.totalLosses*/}
+                                <strong>Losses:</strong> {this.state.userInfo.losses}
                             </div>
                             <div>
-                                <strong>Ranking:</strong> {''/*this.state.ranking*/}
+                                <strong>Ranking:</strong> {this.state.userInfo.email}
                             </div>
                         </Jumbotron>
                     </Col>
