@@ -23,26 +23,32 @@ class App extends Component {
     socketId: "1234",
   userId: "testy test",
     email: "test.gmail.com",
-    authorized: false,
-    inGame: false
-        }       
+      authorized: false,
+        inGame: false
+}
 
-  componentDidMount = () => {
-    socketAPI.subscribeAuthorized(message => {
-      console.log(message)
-      if(message === true){
-        this.setState({authorized: true})
-      }
-    })
-    socketAPI.subscribeJoinedGame(info => {
-      console.log(info);
-      this.setState({inGame: true})
-    })
-        socketAPI.subscribeSeekError(message=>{
-          console.log(message);
-        })
+componentDidMount = () => {
+  socketAPI.subscribeAuthorized(message => {
+    console.log(message)
+    if (message === true) {
+      this.setState({ authorized: true })
+    }
+  })
+  socketAPI.subscribeJoinedGame(info => {
+    info = {
+      email: this.state.email,
+      socketid: this.state.socketid
+    }
+  })() => {
+    this.setState({ inGame: true })
+  }
 
 
+  socketAPI.subscribeSeekError(message => {
+    console.log(message);
+  })
+    
+    
     setTimeout(() => {
       socketAPI.publishLogin("robert@email.com")
     }, 1000)
