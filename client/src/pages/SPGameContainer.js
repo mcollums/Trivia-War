@@ -28,7 +28,7 @@ class SinglePlayerGameContainer extends Component {
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        this.getGame("5d4b2f315a195f0c38f008d6");
+        this.getGame(this.props.id);
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
@@ -46,7 +46,6 @@ class SinglePlayerGameContainer extends Component {
 
     // Setting the state of the game
     setQuestionState(data) {
-        // console.log(data);
         let index = this.state.index;
         this.setState({
             title: data.title,
@@ -56,8 +55,6 @@ class SinglePlayerGameContainer extends Component {
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
-            // console.log("STATE" + JSON.stringify(this.state));
-            // console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
         });
     }
 
