@@ -8,4 +8,10 @@ router.route("/")
 // // Matches with "/api/user/:id"
 router.route("/:id")
   .get(userController.findById)
+
+// // // Matches with "/api/user/:email"
+router.route("/:email")
+  .get(userController.findOne)
+
+
 module.exports = router;
