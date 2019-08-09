@@ -66,8 +66,9 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters"
 // ===========================================================================================
 //Player Data on Server
 const playerArr = [];
+
 const makePlayer = (socket) => {
-  console.log("Making new player");
+  console.log(chalk.blue("Making new player for: ", socket.id));
   return {
     id: socket.id,
     email: "",
@@ -164,8 +165,8 @@ io.on('connection', function (player) {
 
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
-    const index = playerArr.findIndex(p => p.id === player.id)
-    playerArr.splice(index, 1)
+    const index = playerArr.findIndex(p => p.id === player.id);
+    playerArr.splice(index, 1);
     // Look for any games they are a part of and kill them
   })
 

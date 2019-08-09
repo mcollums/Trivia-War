@@ -31,7 +31,7 @@ class App extends Component {
     // this.socketSubscribeAuthorized();
 
     socketAPI.subscribeAuthorized(message => {
-      console.log("AUTHORIZIED", message);
+      console.log("AUTHORIZED", message);
       if(message === true){
         this.setState({authorized: true})
       }
@@ -57,6 +57,7 @@ class App extends Component {
   }
 
   render() {
+    console.log("RENDER PARTY");
     return (
       <Router>
         <div>

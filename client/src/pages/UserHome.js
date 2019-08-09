@@ -14,6 +14,7 @@ class UserHome extends Component {
     }
 
     componentDidMount() {
+        console.log("USER HOME RENDER");
         //on page load, check to see if the user is in the database
         //then set that user in the state
         API.checkAuth()
