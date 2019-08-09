@@ -6,6 +6,6 @@ router.route("/")
     .get(userController.findAll);
 
 // // Matches with "/api/user/:id"
-router.route("/:userId")
+router.route("/:id")
   .get(userController.findById)
 module.exports = router;
