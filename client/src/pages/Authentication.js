@@ -2,11 +2,23 @@ import React, { Component } from "react";
 import { Col, Row, Container } from "../components/Grid";
 import { withRouter, Link, Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
-
-// import UserHome from "./UserHome";
+import Modal from 'react-modal';
 import axios from 'axios';
 import API from "../utils/API.js";
 import socketAPI from "../utils/socketAPI";
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+    }
+};
+
+// Modal.setAppElement(document.getElementById('root'));
 
 class Authentication extends Component {
     state = {
@@ -18,7 +30,35 @@ class Authentication extends Component {
         errorMessage: "",
         welcomeEmail: "",
         googleSigninUrl: "",
-        redirectTo: null
+        redirectTo: null,
+        loginOpen: false,
+        registerOpen: false
+    }
+
+    // constructor() {
+    //     super();
+
+    //     this.state = {
+    //         modalIsOpen: false
+    //     };
+
+    //     this.openModal = this.openModal.bind(this);
+    //     this.afterOpenModal = this.afterOpenModal.bind(this);
+    //     this.closeModal = this.closeModal.bind(this);
+    // }
+
+    
+    openModal = modal => {
+        this.setState({ [modal]: true });
+    }
+
+    // afterOpenModal= () =>{
+    //     // references are now sync'd and can be accessed.
+    //     this.subtitle.style.color = '#f00';
+    // }
+
+    closeModal= modal => {
+        this.setState({ [modal]: false });
     }
 
     handleInput = event => {
@@ -54,12 +94,12 @@ class Authentication extends Component {
                 //window.location.href = "/home";
                 this.props.history.push("/home")
                 // this.loadProfileInfo()
-                this.setState({ redirectTo: "/home"});
+                this.setState({ redirectTo: "/home" });
             }).catch(err => {
-                if(!this.state.username){
+                if (!this.state.username) {
                     this.setState({ errorMessage: "Please enter a valid name" })
                 }
-                else if(!this.state.password && this.state.password.length<6){
+                else if (!this.state.password && this.state.password.length < 6) {
                     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
                 }
             })
@@ -116,14 +156,16 @@ class Authentication extends Component {
         }
 
         return (
+
             <Container fluid>
                 <Row>
                     <Col size="lg-5 md-12 sm-12">
                         <Jumbotron jumboHeight="80%">
                             <Row>
                                 <Col size="6">
+                                    
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
+                                    {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
                                         Login
                                     </button>
                                     <div>
@@ -131,8 +173,9 @@ class Authentication extends Component {
                                         Password <input name="password" type="text" value={this.state.password} onChange={this.handleInput}/>
                                         <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
                                     </div>
+                                    </button> */}
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    {/* <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -143,13 +186,13 @@ class Authentication extends Component {
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <div className="modal-body">
+                                                <div className="modal-body"> */}
                                                     {/* {
                                                         this.state.googleSigninUrl.length > 0 && this.state.welcomeEmail.length === 0
                                                             ? (<h3>Sign in with <a href={this.state.googleSigninUrl} >google </a></h3>)
                                                             : ""
                                                     } */}
-                                                    <form>
+                                                    {/* <form>
                                                         <div className="form-group">
                                                             <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                                                         </div>
@@ -163,16 +206,63 @@ class Authentication extends Component {
 
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
+                                    <button onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
+                                    
+                                    <Modal
+                                        isOpen={this.state.loginOpen}
+                                        onAfterOpen={this.afterOpenModal}
+                                        onRequestClose={() => this.closeModal("loginOpen")}
+                                        style={customStyles}
+                                        contentLabel="Example Modal"
+                                        id="loginModal"
+                                    >
+
+                                        {/* <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2> */}
+                                        <button onClick={() => this.closeModal("loginOpen")}>close</button>
+                                        {/* <div>I am a modal</div> */}
+                                        <form>
+                                        <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                                        <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
+                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
+                                          
+                                        </form>
+                                    </Modal>
+
                                 </Col>
+
                                 <Col size="6">
+                                    <button onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
+                                    
+                                    <Modal
+                                        isOpen={this.state.registerOpen}
+                                        onAfterOpen={this.afterOpenModal}
+                                        onRequestClose={() => this.closeModal("registerOpen")}
+                                        style={customStyles}
+                                        contentLabel="Example Modal"
+                                        id="registerModal"
+                                    >
+
+                                        <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
+                                        <button onClick={() => this.closeModal("registerOpen")}>close</button>
+                                        <div>I am a modal</div>
+                                        <form>
+                                            <input onChange={this.handleInput} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
+                                            <input onChange={this.handleInput} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
+                                            <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                                           
+                                            <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
+                                            <button type="submit" className="btn btn-dark" onClick={this.handleFormRegister}>Submit</button>
+                                          
+                                        </form>
+                                    </Modal>
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#registerModal">
+                                    {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#registerModal">
                                         Register
-                                    </button>
+                                    </button> */}
 
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="registerModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    {/* <div className="modal fade" id="registerModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -202,7 +292,7 @@ class Authentication extends Component {
 
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </Col>
                             </Row>
 
