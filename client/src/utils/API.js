@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export default {
-  // Gets all books
+  // Gets all games
   getGames: function () {
     console.log("API Get Games");
     return axios.get("/api/game");
   },
-  // Gets the book with the given id
+  // Gets the game with the given id
   getOneGame: function (id) {
     return axios.get("/api/game/" + id);
   },
@@ -22,9 +22,7 @@ export default {
   getOneUser: function (id) {
     return axios.get("/api/user/" + id);
   }
-  getAllCategory: function () {
-    return axios.get("/api/getCategory");
-  }
+
 
 };
 
