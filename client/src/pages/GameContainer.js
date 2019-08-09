@@ -25,15 +25,17 @@ class GameContainer extends Component {
         outcome: "",
         index: 0,
         timer: 10,
+
+        showLoading: true,
         socketArr: "",
         redirectTo: null
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        //this.setSocketId();
-        this.getGame("5d4b4ea92021254d5bc86b99");
-        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
+        setTimeout(() => {
+            this.setState({ showLoading: false });
+        }, 2500);
 
         API.checkAuth()
             .then(response => {
@@ -44,7 +46,9 @@ class GameContainer extends Component {
                 // this runs if the uer is NOT logged in
                 this.setState({ redirectTo: "/" })
             })
-        this.getGame("5d4aedd61af73588729be101");
+
+        this.getGame("PUT YOUR GAME'S ID HERE FROM THE DATABASE");
+        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
     // added by jyoti for getting the socket id after a user connected.
@@ -204,6 +208,14 @@ class GameContainer extends Component {
 
 
     render() {
+        if(this.state.showLoading) {
+            return (
+                <div className="circlecontainer">
+                <div class="lds-circle"><div></div></div>
+                </div>
+            );
+        }
+
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
