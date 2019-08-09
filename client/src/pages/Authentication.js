@@ -11,12 +11,14 @@ import socketAPI from "../utils/socketAPI";
 class Authentication extends Component {
     state = {
         users: [],
-        username: '',
-        picLink: '',
-        email: '',
-        password: '',
+        username: "",
+        picLink: "",
+        email: "",
+        password: "",
+        errorMessage: "",
         welcomeEmail: "",
-        googleSigninUrl: ""
+        googleSigninUrl: "",
+        redirectTo: null
     }
 
     handleInput = event => {
@@ -27,19 +29,18 @@ class Authentication extends Component {
     }
 
     // let's try and login   
-
     handleFormSubmit = event => {
         event.preventDefault()
         const { email, password } = this.state
         axios.post('/login', {email, password})
             .then(result => {
-                console.log(result.data);
+                // console.log(result.data);
                 // this.loadProfileInfo();
                 socketAPI.publishLogin(email)
                 this.props.history.push("/home")
-                // <Redirect to="/home" />
-                
-                //window.location.href = "/home";
+            })
+            .catch(err => {
+                this.setState({ errorMessage: "Please enter a valid email or password" })
             })
     }
 
@@ -52,6 +53,15 @@ class Authentication extends Component {
                 //this.loadProfileInfo()
                 //window.location.href = "/home";
                 this.props.history.push("/home")
+                // this.loadProfileInfo()
+                this.setState({ redirectTo: "/home"});
+            }).catch(err => {
+                if(!this.state.username){
+                    this.setState({ errorMessage: "Please enter a valid name" })
+                }
+                else if(!this.state.password && this.state.password.length<6){
+                    this.setState({ errorMessage: "Password needs to be at least 6 characters" })
+                }
             })
     }
 
@@ -83,10 +93,11 @@ class Authentication extends Component {
                 window.location.href = "/"
             })
         } else {
-            this.loadProfileInfo()
+            // this.loadProfileInfo()
         }
         this.loadUsers();
     }
+
     loadUsers() {
         API.getUsers()
             .then(res => {
@@ -94,12 +105,16 @@ class Authentication extends Component {
                 this.setState({
                     users: res.data,
                 })
-                // console.log(res.data)
+                console.log(res.data)
             })
             .catch(err => console.log(err));
     }
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
+
         return (
             <Container fluid>
                 <Row>
@@ -123,7 +138,7 @@ class Authentication extends Component {
                                                 <div className="modal-header">
                                                     <h5 className="modal-title" id="exampleModalCenterTitle">{this.state.welcomeEmail.length > 0
                                                         ? "Welcome " + this.state.welcomeEmail
-                                                        : "Login"}</h5>
+                                                        : "Login"} </h5>
                                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -141,7 +156,7 @@ class Authentication extends Component {
                                                         <div className="form-group">
                                                             <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
                                                         </div>
-
+                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
                                                         <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
                                                     </form>
                                                 </div>
@@ -180,7 +195,7 @@ class Authentication extends Component {
                                                         <div className="form-group">
                                                             <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
                                                         </div>
-
+                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
                                                         <button type="submit" className="btn btn-dark" onClick={this.handleFormRegister}>Submit</button>
                                                     </form>
                                                 </div>
@@ -209,7 +224,7 @@ class Authentication extends Component {
                                     {
                                         this.state.users.map((user, index) => {
                                             return (
-                                                <tr key={index+1}>
+                                                <tr key={index + 1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>

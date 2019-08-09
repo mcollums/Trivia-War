@@ -8,11 +8,11 @@ router.use("/api", apiRoutes);
 
 router.post("/register",(req,res)=>{
   db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password}).then((newUser)=>{
-    res.json(newUser)
+    res.redirect(307, "/login")
   })
 })
 router.post('/login', passport.authenticate("local"),  (req, res) => {
-  res.json(req.user)
+  res.json(req.user);
 })
 router.get('/logout', (req, res) => {
   console.log("logged out user")
@@ -22,10 +22,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/user/me', function(req, res){
   if(req.user){
-    res.json(req.user)
-      // res.json({
-      //     email: req.user.email
-      // })
+    res.json(req.data);
   } else {
       res.status(401).json({})
   }
