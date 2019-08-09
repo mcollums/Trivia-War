@@ -95,7 +95,7 @@ triviaSeed = [];
                     }
                     else {
                         console.log("running this again")
-                        runSeeds3(i);
+                        runSeeds(i);
                     }
             }
         );
