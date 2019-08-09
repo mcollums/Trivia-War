@@ -35,7 +35,7 @@ class GameContainer extends Component {
 
     componentDidMount() {
         this.setSocketId();
-        this.getGame("5d4879f49b36da1948280722");
+        this.getGame("5d4c895d0a6d0a4cb5cd432a");
 
     }
     // added by jyoti for getting the socket id after a user connected.
