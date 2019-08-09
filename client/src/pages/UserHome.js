@@ -51,7 +51,7 @@ class UserHome extends Component {
     }
 
     handlePlayNowBtn = (userId) => {
-        let path = "/multicat";
+        let path = "/play";
         this.props.history.push(path);
     }
 
