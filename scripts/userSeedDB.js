@@ -10,7 +10,7 @@ mongoose.connect(
 
 const userSeed = [
   {
-    name: "Robert",
+    username: "Robert",
     email: "robert@email.com",
     password: "rob",
     picLink: "https://placehold.it/200x200",
@@ -18,7 +18,7 @@ const userSeed = [
     totalLosses: 8
   },
   {
-    name: "Joel",
+    username: "Joel",
     email: "joel@email.com",
     password: "joel",
     picLink: "https://placehold.it/200x200",
@@ -26,7 +26,7 @@ const userSeed = [
     totalLosses: 2
   },
   {
-    name: "Michelle",
+    username: "Michelle",
     email: "michelle@email.com",
     password: "michelle",
     picLink: "https://placehold.it/200x200",
@@ -34,7 +34,7 @@ const userSeed = [
     totalLosses: 3
   },
   {
-    name: "Trihn",
+    username: "Trihn",
     email: "trihn@email.com",
     password: "trihn",
     picLink: "https://placehold.it/200x200",
@@ -42,7 +42,7 @@ const userSeed = [
     totalLosses: 2
   },
   {
-    name: "Jyoti",
+    username: "Jyoti",
     email: "jyoti@email.com",
     password: "jyoti",
     picLink: "https://placehold.it/200x200",
