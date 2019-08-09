@@ -2,25 +2,29 @@ import axios from "axios";
 
 export default {
   // Gets all books
-  getGames: function() {
+  getGames: function () {
     console.log("API Get Games");
     return axios.get("/api/game");
   },
   // Gets the book with the given id
-  getOneGame: function(id) {
+  getOneGame: function (id) {
     return axios.get("/api/game/" + id);
   },
-  logout: function() {
+  logout: function () {
     return axios.get("/logout");
   },
-  checkAuth: function() {
+  checkAuth: function () {
     return axios.get("/user/me");
   },
-  getUsers: function() {
+  getUsers: function () {
     return axios.get("/api/user")
   },
-  getOneUser: function(id) {
+  getOneUser: function (id) {
     return axios.get("/api/user/" + id);
   }
+  getAllCategory: function () {
+    return axios.get("/api/getCategory");
+  }
+
 };
 

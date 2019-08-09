@@ -8,37 +8,34 @@ export default {
     },
 
     publishLogin: email => {
-        socket.emit("setuser", { email } )
+        socket.emit("setuser", { email })
     },
     subscribeAuthorized: callback => {
         socket.on("authorized", message => callback(message))
     },
 
-        publishSeekGame: (callback) => {
-            socket.emit("seekGame", {})
+    publishSeekGame: () => {
+        socket.emit("seekGame", {})
+    },
 
-        },
+    // subscribedJoinedGame: callback => {
+    //     socket.on("joinedGame", info => {
+    //         // callback(info);
+    //     },
 
-            subscribedJoinedGame: (callback) => {
-                socket.on("joinedGame",
-                    info = {
-                        email: email
-                            socketid: socket.socketid
-                    }), () => callback(info)
-            },
 
-                subcribeSeekError: callback => {
-                    socket.on("seekError", message => {
-                        callback(message)
-                    })
-                },
+    // subcribeSeekError: callback => {
+    //     socket.on("seekError", message => {
+    //         callback(message)
+    //     })
+    // },
 
 
 
 
 
 
-    disconnect(){
+    disconnect() {
         socket.disconnect()
     }
 }

@@ -4,23 +4,25 @@ import './Pages.css';
 
 
 class SingleCategory extends Component {
-    
+
     loadPage() {
+        // API.
         document.getElementById("myButton").onclick = function () {
-        window.location.href = "/loading";
-            }
-        };
+            window.location.href = "/loading";
+        }
+    };
 
     render() {
         return (
             <div className="scatContain">
-                <button id="myButton" onClick={this.loadPage}>
-                <div className="scategory" id="scategory1">
-                    <div className="scatcat"></div>
 
-                </div>
+                <button id="myButton" onClick={this.loadPage}>
+                    <div className="scategory" id="scategory1">
+                        <div className="scatcat"></div>
+
+                    </div>
                 </button>
-                <div className="scategory" id="scategory2">
+                {/* <div className="scategory" id="scategory2">
                     <div className="scatcat"></div>
                     
                 </div>
@@ -40,8 +42,8 @@ class SingleCategory extends Component {
                     <div className="scatcat"></div>
                     
                 </div>
-               
-                
+                */}
+
             </div>
         )
 

@@ -21,41 +21,42 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 class App extends Component {
   state = {
     socketId: "1234",
-  userId: "testy test",
+    userId: "testy test",
     email: "test.gmail.com",
-      authorized: false,
-        inGame: false
-}
-
-componentDidMount = () => {
-  socketAPI.subscribeAuthorized(message => {
-    console.log(message)
-    if (message === true) {
-      this.setState({ authorized: true })
-    }
-  })
-  socketAPI.subscribeJoinedGame(info => {
-    info = {
-      email: this.state.email,
-      socketid: this.state.socketid
-    }
-  })() => {
-    this.setState({ inGame: true })
+    authorized: false,
+    inGame: false
   }
 
+  componentDidMount = () => {
+    socketAPI.subscribeAuthorized(message => {
+      console.log(message)
+      if (message === true) {
+        this.setState({ authorized: true })
+      }
+    })
+    // socketAPI.subscribeJoinedGame(info => {
+    //   console.log(info);
+    //   this.setState({ inGame: true })
+    // })
 
-  socketAPI.subscribeSeekError(message => {
-    console.log(message);
-  })
-    
-    
-    setTimeout(() => {
-      socketAPI.publishLogin("robert@email.com")
-    }, 1000)
+
+
+    // socketAPI.subscribeSeekError(message => {
+    //   console.log(message);
+    // })
+
+
+    // setTimeout(() => {
+    //   socketAPI.publishLogin("robert@email.com")
+    // }, 1000)
 
     // setTimeout(() => {
     //   socketAPI.publishSeekGame()
     // }, 2000)
+  }
+
+  onClickJoinGame = () => {
+    socketAPI.publishLogin("myemail@email.com")
   }
 
   render() {
