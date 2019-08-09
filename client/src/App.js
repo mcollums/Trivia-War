@@ -30,7 +30,7 @@ class App extends Component {
   componentDidMount = () => {
     // this.socketSubscribeAuthorized();
 
-    socketAPI.subscribeAuthorized(message => {
+    socketAPI.subscribeAuthorized((message, userInfo) => {
       console.log("AUTHORIZED", message);
       if(message === true){
         this.setState({authorized: true})
@@ -71,7 +71,7 @@ class App extends Component {
             <Route path="/multicat" component={CategoryTest} />
             <Route path="/matchmaking" component={Matchmaking} />
             <Route exact path="/singlegame" component={SingleGameContainer} />
-            <Route exact path="/multi/" component={MultiPlayer} />
+            <Route exact path="/multi" component={MultiPlayer} />
             <Route exact path="/single" component={SingleCategory} />
             <Route component={NoMatch} />
           </Switch>

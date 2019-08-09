@@ -11,8 +11,7 @@ let quizQuestions = [];
 let socketid;
 class GameContainer extends Component {
     state = {
-        // userId: this.props.params.userId,
-        // gameId: this.props.params.gameId,
+        userInfo: "",
         title: "",
         category: "",
         question: "",
@@ -40,12 +39,17 @@ class GameContainer extends Component {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                console.log("response: ", response)
+                // console.log("response: ", response)
+                console.log("user is authenticated");
+                console.log(response.data);
+                this.setState({
+                    userInfo: response.data
+                })
             })
             .catch(err => {
                 // this runs if the uer is NOT logged in
                 this.setState({ redirectTo: "/" })
-            })
+            });
 
         this.getGame("PUT YOUR GAME'S ID HERE FROM THE DATABASE");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
@@ -211,7 +215,7 @@ class GameContainer extends Component {
         if(this.state.showLoading) {
             return (
                 <div className="circlecontainer">
-                <div class="lds-circle"><div></div></div>
+                <div className="lds-circle"><div></div></div>
                 </div>
             );
         }
@@ -224,7 +228,8 @@ class GameContainer extends Component {
                 <Container fluid="-fluid">
                     <Row>
                         <Col size="12" id="titleCol">
-                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} className="text-center"> {this.state.title} </h5>
+                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} 
+                            className="text-center"> {this.state.title} </h5>
                         </Col>
                     </Row>
                     <Row>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Col, Row, Container } from "../components/Grid";
-import { withRouter, Link, Redirect } from 'react-router-dom'
+import { withRouter,  Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
 import Modal from 'react-modal';
 import axios from 'axios';

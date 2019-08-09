@@ -39,7 +39,7 @@ class UserHome extends Component {
     loadUsers() {
         API.getUsers()
             .then(res => {
-                console.log(res.data)
+                console.log("All users",res.data);
                 this.setState({
                     users: res.data
                 })
