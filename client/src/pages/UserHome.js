@@ -1,41 +1,34 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
 
 class UserHome extends Component {
-    // _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
             currentUser: "",
-            users: [],
-            redirectTo: null
+            users: []
         };
     }
 
     componentDidMount() {
-        // this._isMounted = true;
+        //on page load, check to see if the user is in the database
+        //then set that user in the state
         API.checkAuth()
             .then(response => {
                     this.setState({
                         currentUser: response.data
-                    }, () => {
-                        this.props.socketPublishLogin(response.data);
-                    });
-                    
-                    // this.props.socketSubscribeAuthorized();
-                    // this runs if the user is logged in
-                    console.log("response: ", response)
+                    })
             })
             .catch(err => {
                 // this runs if the uer is NOT logged in
                 this.setState({ redirectTo: "/" })
-            })
-        this.loadUsers();
+            });
 
-
+        //Find the other database users for the leaderboard
+        this.loadUsers();        
     }
 
     loadUsers() {
@@ -112,7 +105,7 @@ class UserHome extends Component {
                 </Row>
                 <Row className="justify-content-center">
                     <Col size="lg-12 md-12 sm-12">
-                        <button className="btn btn-primary" onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
+                        <button className="btn btn-primary" onClick={() => this.handlePlayNowBtn(this.state.currentUser._id)}>Play Game</button>
                     </Col>
                 </Row>
             </Container>
@@ -121,4 +114,4 @@ class UserHome extends Component {
     }
 }
 
-export default UserHome;
+export default withRouter(UserHome);

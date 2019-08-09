@@ -3,8 +3,9 @@ import openSocket from 'socket.io-client';
 const socket = openSocket(process.env.SOCKET_URL || 'http://localhost:3001')
 
 //As soon as a user connects, add them to the UsersArray
-socket.on("message", message => console.log(message))
-socket.on("joinedGame", message => console.log(message))
+socket.on("message", message => console.log(message));
+socket.on("joinedGame", message => console.log(message));
+socket.on("addedEmail", message => console.log(message));
 
 export default {
     subscribeTimer: (callback) => {

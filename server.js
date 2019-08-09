@@ -72,7 +72,8 @@ const makePlayer = (socket) => {
     id: socket.id,
     email: "",
     authorized: false,
-    socket: socket
+    socket: socket,
+    status: "Idle"
   }
 }
 
@@ -129,36 +130,37 @@ const searchSessions = (socket, category) => {
 
 
 io.on('connection', function (player) {
+  //On connection, create a new player that's now authorized.
   const newPlayer = makePlayer(player)
-  playerArr.push( newPlayer)
-  playerArr.filter(p => p.id !==  newPlayer.id).forEach(p => {
+  playerArr.push(newPlayer)
+
+  //Tell all the other sockets that there's a new player
+  playerArr.filter(p => p.id !== newPlayer.id).forEach(p => {
     p.socket.emit("message", "somebody else connected")
-  })
+  });
 
   // Auto put people in games
-  if(sessions.length === 0){
-    sessions.push(makeSession(sessionId++, newPlayer))
-  } else {
-    // Let's look for an open game
-    const s = sessions.find(s => s.playerTwo === null);
-    if(s){
-      console.log("new game joined")
-      s.playerTwo = newPlayer;
-      s.playerOne.socket.emit("joinedGame", newPlayer.id);
-      s.playerTwo.socket.emit("joinedGame", s.playerOne.id)
-    } else {
-      sessions.push(makeSession(sessionId++, newPlayer))
-    }
-  }
+  // if(sessions.length === 0){
+  //   sessions.push(makeSession(sessionId++, newPlayer))
+  // } else {
+  //   // Let's look for an open game
+  //   const s = sessions.find(s => s.playerTwo === null);
+  //   if(s){
+  //     console.log("new game joined")
+  //     s.playerTwo = newPlayer;
+  //     s.playerOne.socket.emit("joinedGame", newPlayer.id);
+  //     s.playerTwo.socket.emit("joinedGame", s.playerOne.id)
+  //   } else {
+  //     sessions.push(makeSession(sessionId++, newPlayer))
+  //   }
+  // }
 
   // console.log("This is the socket ID", player.id);
-    //Let server-side know someone's connected
-    // console.log('==================================================================');
-    // console.log('A user connected!', player.id);
-    // console.log("ALL SOCKET USERS INFO :", playerArr);
-    // console.log("CLIENTS # = " + playerArr.length);
-
-  var addedUser = false;
+  //Let server-side know someone's connected
+  // console.log('==================================================================');
+  // console.log('A user connected!', player.id);
+  // console.log("ALL SOCKET USERS INFO :", playerArr);
+  // console.log("CLIENTS # = " + playerArr.length);
 
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
@@ -168,24 +170,28 @@ io.on('connection', function (player) {
   })
 
 
-  // player.on("setuser", (data) => {
-  //   console.log('==================================================================');
-  //   console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
+  player.on("setuser", (data) => {
+    console.log('==================================================================');
+    console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
 
-  //   var newUser = {};
-  //   newUser.userId = data.email;
-  //   newUser.socketId = player.id
-  //   newUser.status = "Idle";
-  //   playerArr.push(newUser);
+    const index = playerArr.find(p => p.id === player.id);
+    if (index) {
+      console.log("User found in playersArr");
+      index.email = data;
+      index.socket.emit("addedEmail", "We added your email to your user ID");
+      index.socket.emit('authorized', true);
+    } else {
+      console.log(chalk.red("User not found"));
+    }
 
-  //   console.log('==================================================================');
-  //   console.log(chalk.blue("NEW USER: ", JSON.stringify(newUser)));
-  //   console.log(chalk.blue("Player Array in SetUser", JSON.stringify(playerArr)));
-  //   console.log(chalk.blue("CLIENTS # = " + playerArr.length));
+    // console.log('==================================================================');
+    // console.log(chalk.blue("NEW USER: ", JSON.stringify(newUser)));
+    // console.log(chalk.blue("Player Array in SetUser", JSON.stringify(playerArr)));
+    // console.log(chalk.blue("CLIENTS # = " + playerArr.length));
 
-   
-  //   player.emit("authorized", true)
-  // })
+
+    // player.emit("authorized", true)
+  })
 
 
   player.on("seekGame", () => {

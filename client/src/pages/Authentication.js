@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Col, Row, Container } from "../components/Grid";
-import { Link, Redirect } from 'react-router-dom'
+import { withRouter, Link, Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
 
 // import UserHome from "./UserHome";
 import axios from 'axios';
 import API from "../utils/API.js";
+import socketAPI from "../utils/socketAPI";
 
 class Authentication extends Component {
     state = {
@@ -30,12 +31,15 @@ class Authentication extends Component {
     handleFormSubmit = event => {
         event.preventDefault()
         const { email, password } = this.state
-        axios.post("/login", { email, password })
+        axios.post('/login', {email, password})
             .then(result => {
                 console.log(result.data);
-                this.loadProfileInfo();
+                // this.loadProfileInfo();
+                socketAPI.publishLogin(email)
+                this.props.history.push("/home")
                 // <Redirect to="/home" />
-                window.location.href = "/home";
+                
+                //window.location.href = "/home";
             })
     }
 
@@ -45,8 +49,9 @@ class Authentication extends Component {
         axios.post("/register", { username, picLink, email, password })
             .then(result => {
                 console.log(result.data)
-                this.loadProfileInfo()
-                window.location.href = "/home";
+                //this.loadProfileInfo()
+                //window.location.href = "/home";
+                this.props.history.push("/home")
             })
     }
 
@@ -106,6 +111,11 @@ class Authentication extends Component {
                                     <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
                                         Login
                                     </button>
+                                    <div>
+                                        Email: <input name="email" type="text" value={this.state.email} onChange={this.handleInput}/>
+                                        Password <input name="password" type="text" value={this.state.password} onChange={this.handleInput}/>
+                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
+                                    </div>
                                     {/* <!-- Modal --> */}
                                     <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered" role="document">
@@ -219,4 +229,4 @@ class Authentication extends Component {
     }
 }
 
-export default Authentication;
+export default withRouter(Authentication);
