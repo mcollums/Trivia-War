@@ -14,22 +14,26 @@ export default {
         socket.on("authorized", message => callback(message))
     },
 
-    publishSeekGame: () => {
-        socket.emit("seekGame")
-    },
-    subscribeJoinedGame: (callback) => {
-        socket.on("joinedGame", info => callback(info))
-    },
+    publishSeekGame: (callback) => {
+        socket.emit("seekGame") {
 
-    subscribeSeekError: callback => {
-        socket.on("seekError", message => {
+    }
+    
+        eJoinedGame: (callback) => {
+    socket.on("joinedGame", info => callback(info))
+},
+
+    cribeSeekError: callback => {
+    socket.on("seekError", message => {
             callback(message)
         })
     },
-    subscribeGameStarted: callback => {
-        socket.on("gameStarted", info => callback(info))
-    },
+
+
     
+
+
+
     disconnect(){
         socket.disconnect()
     }

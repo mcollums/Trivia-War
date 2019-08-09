@@ -21,11 +21,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 class App extends Component {
   state = {
     socketId: "1234",
-    userId: "testy test",
+  userId: "testy test",
     email: "test.gmail.com",
     authorized: false,
     inGame: false
-  }
+        }       
 
   componentDidMount = () => {
     socketAPI.subscribeAuthorized(message => {
@@ -38,6 +38,9 @@ class App extends Component {
       console.log(info);
       this.setState({inGame: true})
     })
+        socketAPI.subscribeSeekError(message=>{
+          console.log(message);
+        })
 
 
     setTimeout(() => {
