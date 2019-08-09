@@ -195,7 +195,7 @@ class Authentication extends Component {
                                             </div>
                                         </div>
                                     </div> */}
-                                    <button onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Open Modal</button>
+                                    <button onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
                                     
                                     <Modal
                                         isOpen={this.state.loginOpen}
@@ -220,7 +220,7 @@ class Authentication extends Component {
                                 </Col>
 
                                 <Col size="6">
-                                    <button onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Open Modal</button>
+                                    <button onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
                                     
                                     <Modal
                                         isOpen={this.state.registerOpen}
