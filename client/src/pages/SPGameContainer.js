@@ -25,11 +25,7 @@ class SinglePlayerGameContainer extends Component {
         index: 0,
         timer: 10,
         socketArr: "",
-<<<<<<< HEAD
-        click: "false"
-=======
         userInfo: {}
->>>>>>> master
     };
 
     //TODO: Add route that will get the game based on the user's selection
