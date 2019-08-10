@@ -18,8 +18,6 @@ const customStyles = {
     }
 };
 
-// Modal.setAppElement(document.getElementById('root'));
-
 class Authentication extends Component {
     state = {
         users: [],
@@ -34,28 +32,10 @@ class Authentication extends Component {
         loginOpen: false,
         registerOpen: false
     }
-
-    // constructor() {
-    //     super();
-
-    //     this.state = {
-    //         modalIsOpen: false
-    //     };
-
-    //     this.openModal = this.openModal.bind(this);
-    //     this.afterOpenModal = this.afterOpenModal.bind(this);
-    //     this.closeModal = this.closeModal.bind(this);
-    // }
-
     
     openModal = modal => {
         this.setState({ [modal]: true });
     }
-
-    // afterOpenModal= () =>{
-    //     // references are now sync'd and can be accessed.
-    //     this.subtitle.style.color = '#f00';
-    // }
 
     closeModal= modal => {
         this.setState({ [modal]: false });
@@ -74,7 +54,6 @@ class Authentication extends Component {
         const { email, password } = this.state
         axios.post('/login', {email, password})
             .then(result => {
-                // console.log(result.data);
                 // this.loadProfileInfo();
                 socketAPI.publishLogin(email)
                 this.props.history.push("/home")
@@ -91,9 +70,7 @@ class Authentication extends Component {
             .then(result => {
                 console.log(result.data)
                 //this.loadProfileInfo()
-                //window.location.href = "/home";
-                this.props.history.push("/home")
-                // this.loadProfileInfo()
+                // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
             }).catch(err => {
                 if (!this.state.username) {
@@ -261,38 +238,6 @@ class Authentication extends Component {
                                         Register
                                     </button> */}
 
-                                    {/* <!-- Modal --> */}
-                                    {/* <div className="modal fade" id="registerModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered" role="document">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalCenterTitle">Register</h5>
-                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
-                                                        </div>
-                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
-                                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormRegister}>Submit</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </Col>
                             </Row>
 

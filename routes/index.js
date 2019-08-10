@@ -24,7 +24,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/user/me', function(req, res){
-  console.log(chalk.red("req.user= " + req.user));
+  // console.log(chalk.red("req.user= " + req.user));
   if(req.user){
     res.json(req.user);
   } else {

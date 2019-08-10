@@ -39,7 +39,6 @@ class GameContainer extends Component {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                // console.log("response: ", response)
                 console.log("user is authenticated");
                 console.log(response.data);
                 this.setState({
@@ -51,7 +50,7 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
-        this.getGame("PUT YOUR GAME'S ID HERE FROM THE DATABASE");
+        this.getGame("5d4deba39ce2fb3da8274a2f");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 

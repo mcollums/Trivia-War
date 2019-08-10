@@ -132,7 +132,8 @@ const searchSessions = (socket, category) => {
 
 io.on('connection', function (player) {
   //On connection, create a new player that's now authorized.
-  const newPlayer = makePlayer(player)
+  const newPlayer = makePlayer(player);
+  console.log("New Player Info" + newPlayer);
   playerArr.push(newPlayer)
 
   //Tell all the other sockets that there's a new player
@@ -176,9 +177,11 @@ io.on('connection', function (player) {
     console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
 
     const index = playerArr.find(p => p.id === player.id);
+
     if (index) {
       console.log("User found in playersArr");
       index.email = data;
+      index.authorized = true;
       index.socket.emit("addedEmail", "We added your email to your user ID");
       index.socket.emit('authorized', true);
     } else {
@@ -190,8 +193,6 @@ io.on('connection', function (player) {
     // console.log(chalk.blue("Player Array in SetUser", JSON.stringify(playerArr)));
     // console.log(chalk.blue("CLIENTS # = " + playerArr.length));
 
-
-    // player.emit("authorized", true)
   });
 
 
