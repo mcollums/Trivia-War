@@ -300,7 +300,7 @@ class Authentication extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.users.map((user, index) => {
+                                        this.state.users.slice(0,5).map((user, index) => {
                                             return (
                                                 <tr key={index + 1}>
                                                     <td>{index + 1}</td>
