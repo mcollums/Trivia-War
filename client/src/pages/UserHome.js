@@ -79,7 +79,7 @@ class UserHome extends Component {
                         <Jumbotron addClass="userData" jumboHeight="80%">
                             {/* User image goes here */}
                             <img style={{width:"200px"}} alt={""} src={this.state.userInfo.picLink} />
-                            <div>
+                            <div className="name" style={{paddingTop: "25px"}}>
                                 <strong>Name: </strong> {this.state.userInfo.name}
                             </div>
                             <div>
@@ -88,7 +88,7 @@ class UserHome extends Component {
                             <div>
                                 <strong>Losses:</strong> {this.state.userInfo.losses}
                             </div>
-                            <div>
+                            <div className="ranking" style={{paddingBottom: "30px"}}>
                                 <strong>Ranking:</strong> {this.state.ranking}
                             </div>
                             <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
