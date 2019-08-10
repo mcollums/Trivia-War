@@ -61,7 +61,7 @@ class UserHome extends Component {
             <Container fluid>
                 <Row>
                     <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron addClass="userData" jumboHeight="80%">
+                        <Jumbotron addClass="userData" style={{maxWidth:"200px", maxHeight:"500px"}}>
                             {/* User image goes here */}
                             <img style={{width:"200px"}} alt={""} src={this.state.userInfo.picLink} />
                             <div>
