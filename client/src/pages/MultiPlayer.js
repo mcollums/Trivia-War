@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import Category from "../components/Category";
-import { Link, withRouter } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import socketAPI from "../utils/socketAPI";
 
 

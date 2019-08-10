@@ -57,8 +57,8 @@ class Authentication extends Component {
             .then(result => {
                 // this.loadProfileInfo();
                 socketAPI.publishLogin(email)
-                this.props.history.push("/home")
-                // this.setState({ redirectTo: "/home" });
+                // this.props.history.push("/home")
+                this.setState({ redirectTo: "/home" });
             })
             .catch(err => {
                 this.setState({ errorMessage: "Please enter a valid email or password" })
@@ -87,7 +87,7 @@ class Authentication extends Component {
     handleFormLogout = event => {
         event.preventDefault()
         API.logout().then(result => {
-            console.log(result.data)
+            // console.log(result.data)
             this.setState({ welcomeEmail: "" })
         })
     }
@@ -124,7 +124,7 @@ class Authentication extends Component {
                 this.setState({
                     users: res.data,
                 })
-                console.log(res.data)
+                // console.log(res.data)
             })
             .catch(err => console.log(err));
     }
