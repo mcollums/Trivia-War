@@ -22,7 +22,7 @@ class PlayNow extends Component {
                 this.setState({ redirectTo: "/" })
             })
     }
-  
+
     render() {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
@@ -36,14 +36,14 @@ class PlayNow extends Component {
                 {/* <container className="singleplayer"> */}
                 <a className="tag" href="/single">
                     <div className="jumbotronz">
-                        <h1 class="ml8">
-                            <span class="letters-container">
-                                <span class="letters letters-left">Single Player</span>
-                                <span class="letters bang">!</span>
+                        <h1 className="ml8">
+                            <span className="letters-container">
+                                <span className="letters letters-left">Single Player</span>
+                                <span className="letters bang">!</span>
                             </span>
-                            <span class="circle circle-white"></span>
-                            <span class="circle circle-dark"></span>
-                            <span class="circle circle-container"><span class="circle circle-dark-dashed"></span></span>
+                            <span className="circle circle-white"></span>
+                            <span className="circle circle-dark"></span>
+                            <span className="circle circle-container"><span className="circle circle-dark-dashed"></span></span>
                         </h1>
 
                     </div>
@@ -60,14 +60,14 @@ class PlayNow extends Component {
                 {/* <container className="multiplayer"> */}
                 <a className="tag" href="/multi">
                     <div className="jumbotronz">
-                    <h1 class="ml8">
-                            <span class="letters-container">
-                                <span class="letters letters-left">Multi - Player</span>
-                                <span class="letters bang">!</span>
+                        <h1 className="ml8">
+                            <span className="letters-container">
+                                <span className="letters letters-left">Multi - Player</span>
+                                <span className="letters bang">!</span>
                             </span>
-                            <span class="circle circle-white"></span>
-                            <span class="circle circle-dark"></span>
-                            <span class="circle circle-container"><span class="circle circle-dark-dashed"></span></span>
+                            <span className="circle circle-white"></span>
+                            <span className="circle circle-dark"></span>
+                            <span className="circle circle-container"><span className="circle circle-dark-dashed"></span></span>
                         </h1>
                     </div>
                 </a>
