@@ -30,23 +30,33 @@ class App extends Component {
   componentDidMount = () => {
     socketAPI.subscribeAuthorized(message => {
       console.log(message)
-      if(message === true){
-        this.setState({authorized: true})
+      if (message === true) {
+        this.setState({ authorized: true })
       }
     })
-    socketAPI.subscribeJoinedGame(info => {
-      console.log(info);
-      this.setState({inGame: true})
-    })
+    // socketAPI.subscribeJoinedGame(info => {
+    //   console.log(info);
+    //   this.setState({ inGame: true })
+    // })
 
 
-    setTimeout(() => {
-      socketAPI.publishLogin("robert@email.com")
-    }, 1000)
+
+    // socketAPI.subscribeSeekError(message => {
+    //   console.log(message);
+    // })
+
+
+    // setTimeout(() => {
+    //   socketAPI.publishLogin("robert@email.com")
+    // }, 1000)
 
     // setTimeout(() => {
     //   socketAPI.publishSeekGame()
     // }, 2000)
+  }
+
+  onClickJoinGame = () => {
+    socketAPI.publishLogin("myemail@email.com")
   }
 
   render() {

@@ -1,47 +1,68 @@
 import React, { Component } from "react";
 // import WaitingPage from "./pages/WaitingPage";
 import './Pages.css';
+import API from "../utils/API";
+import SPGameCard from "../components/SPGameCard";
+import SPGameContainer from './SPGameContainer';
 
 
+let addCategory = [];
 class SingleCategory extends Component {
-    
-    loadPage() {
-        document.getElementById("myButton").onclick = function () {
-        window.location.href = "/loading";
-            }
-        };
+    state = {
+        category: [],
+        id: ""
+    };
+
+
+    componentDidMount() {
+        API.getGames().then(res => {
+            console.log(res.data[0].category);
+            this.getAllGames(res.data);
+
+
+        });
+    }
+
+    loadPage = (id) => {
+        console.log(id);
+        this.setState({
+            id: id
+        })
+    };
+    getAllGames(data) {
+        // console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+            addCategory.push(data[i]);
+        }
+        this.setState({
+            category: addCategory
+
+        }, () => {
+            console.log("State category", this.state.category);
+        });
+    }
 
     render() {
         return (
-            <div className="scatContain">
-                <button id="myButton" onClick={this.loadPage}>
-                <div className="scategory" id="scategory1">
-                    <div className="scatcat"></div>
+            <div>
+                {this.state.id === "" ? (
+                    <div className="scatContain">
+                        {this.state.category.map(category => (
+                            <SPGameCard
+                                id={category._id}
+                                key={category._id}
+                                category={category.category}
+                                loadPage={this.loadPage}
 
-                </div>
-                </button>
-                <div className="scategory" id="scategory2">
-                    <div className="scatcat"></div>
-                    
-                </div>
-                <div className="scategory" id="scategory3">
-                    <div className="scatcat"></div>
-                    
-                </div>
-                <div className="scategory" id="scategory4">
-                    <div className="scatcat"></div>
-                    
-                </div>
-                <div className="scategory" id="scategory5">
-                    <div className="scatcat"></div>
-                    
-                </div>
-                <div className="scategory" id="scategory6">
-                    <div className="scatcat"></div>
-                    
-                </div>
-               
-                
+                            />
+                        ))}
+                    </div>
+                ) : (
+                        <SPGameContainer id={this.state.id} />
+                    )}
+
+
             </div>
         )
 
