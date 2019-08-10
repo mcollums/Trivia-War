@@ -38,6 +38,9 @@ class MultiPlayer extends Component {
     }
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
         return (
             <div className="scatContain">
                 {this.state.categories.map(cat =>

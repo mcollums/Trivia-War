@@ -39,8 +39,6 @@ class PlayNow extends Component {
 
         return (
             <div className="playnowContain">
-
-                {/* <a className="tag" onClick={() => this.handleSinglePlay()}> */}
                     <div className="jumbotronz" onClick={() => this.handleSinglePlay()}>
                         <h1 className="ml8">
                             <span className="letters-container">
@@ -56,9 +54,6 @@ class PlayNow extends Component {
 
                     </div>
 
-                {/* </a> */}
-           
-                {/* <a className="tag" onClick={() => this.handleMultiPlay()}> */}
                     <div className="jumbotronz" onClick={() => this.handleMultiPlay()}>
                     <h1 className="ml8">
                             <span className="letters-container">
@@ -72,7 +67,6 @@ class PlayNow extends Component {
                             </span>
                         </h1>
                     </div>
-                {/* </a> */}
             </div>
 
         )

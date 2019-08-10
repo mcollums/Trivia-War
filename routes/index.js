@@ -26,7 +26,15 @@ router.get('/logout', (req, res) => {
 router.get('/user/me', function(req, res){
   // console.log(chalk.red("req.user= " + req.user));
   if(req.user){
-    res.json(req.user);
+      res.json({
+          email: req.user.email,
+          picLink: req.user.picLink,
+          name:req.user.username,
+          wins: req.user.totalWins,
+          losses: req.user.totalLosses,
+          id: req.user._id
+
+      })
   } else {
       res.status(401).json({})
   }

@@ -26,8 +26,6 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    // this.socketSubscribeAuthorized();
-
     socketAPI.subscribeAuthorized((message) => {
       console.log("AUTHORIZED", message);
       if(message === true){
@@ -37,19 +35,6 @@ class App extends Component {
           () => {console.log("Application State: " + this.state)}
         )} else {console.log("State not updated")}
     })
-    // socketAPI.subscribeJoinedGame(info => {
-    //   console.log(info);
-    //   this.setState({inGame: true})
-    // })
-
-
-    // setTimeout(() => {
-    //   socketAPI.publishLogin("robert@email.com")
-    // }, 1000)
-
-    // setTimeout(() => {
-    //   socketAPI.publishSeekGame()
-    // }, 2000)
   }
 
   publishLogin = (email) => {

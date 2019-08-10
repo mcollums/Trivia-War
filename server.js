@@ -23,28 +23,28 @@ var io = require('socket.io')(server);
 //OAuth
 //============================================================================
 const googleConfig = {
-  clientId: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  redirect: process.env.GOOGLE_REDIRECT_URI
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    redirect: process.env.GOOGLE_REDIRECT_URI
 }
 
 const defaultScope = [
-  'https://www.googleapis.com/auth/userinfo.email'
+    'https://www.googleapis.com/auth/userinfo.email'
 ]
 
 function createConnection() {
-  return new google.auth.OAuth2(
-    googleConfig.clientId,
-    googleConfig.clientSecret,
-    googleConfig.redirect
-  )
+    return new google.auth.OAuth2(
+        googleConfig.clientId,
+        googleConfig.clientSecret,
+        googleConfig.redirect
+    )
 }
 function getConnectionUrl() {
-  return createConnection().generateAuthUrl({
-    access_type: 'offline',
-    prompt: 'consent',
-    scope: defaultScope
-  })
+    return createConnection().generateAuthUrl({
+        access_type: 'offline',
+        prompt: 'consent',
+        scope: defaultScope
+    })
 }
 
 // Define middleware here
@@ -53,7 +53,7 @@ app.use(express.json());
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
+    app.use(express.static("client/build"));
 }
 
 // Add routes, both API and view
@@ -81,7 +81,6 @@ const makePlayer = (socket) => {
 const getPlayerById = (id) => {
   return playerArr.find(p => p.id === id)
 }
-
 //Session Data on Server
 let sessionId = 1;
 
@@ -255,8 +254,8 @@ function buildGame(socket) {
   });
 }
 io.on('connection', function (socket) {
-  console.log('A user connected!', socket.id);
-  socket.broadcast.emit('user connected');
+    console.log('A user connected!', socket.id);
+    socket.broadcast.emit('user connected');
 });
 
 
@@ -375,7 +374,6 @@ app.get('/api/google/callback', function (req, res) {
 // Start the API server
 server.listen(PORT, function () {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
-  // <<<<<<< HEAD
 });
 
 //Make sure Mongoose connection is disconnected

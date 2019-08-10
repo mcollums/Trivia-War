@@ -9,8 +9,9 @@ class UserHome extends Component {
         super(props);
         this.state = {
             currentUser: "",
-            users: [],
-            redirectTo: null
+            userInfo: {},
+            redirectTo: null,
+            ranking: ""
         };
     }
 
@@ -20,29 +21,49 @@ class UserHome extends Component {
         //then set that user in the state
         API.checkAuth()
             .then(response => {
-                    this.setState({
-                        currentUser: response.data
-                    }, () => {
-                        console.log("Current User State ", this.state.currentUser)
-                    })
-                    
+                // this runs if the user is logged in
+                console.log("response: ", response.data)
+                this.setState({userInfo:response.data}, this.loadUsers);
             })
             .catch(err => {
                 // this runs if the user is NOT logged in
                 this.setState({ redirectTo: "/" })
-            });
-
-        //Find the other database users for the leaderboard
-        // this.loadUsers();        
+            })
     }
 
+    findRanking = () => {
+        let ranking = 0;
+        let allUsers = this.state.users;
+        for (let i = 0; i < allUsers.length; i++) {
+            if(allUsers[i]._id === this.state.userInfo.id){
+                ranking = (i + 1);
+                console.log("user Founds" + i)
+                console.log(ranking)
+                break;
+            }
+            console.log(allUsers[i]);
+        }
+        this.setState({
+            ranking: ranking
+        })
+    }
+    // loadUserData(){
+    //     API.checkAuth()
+    //     .then(res => {
+    //         console.log("This should be user email" + res.data)
+            
+    //     })
+    //     .catch(err => {
+    //         console.log(err)
+    //     })
+    // }
     loadUsers() {
         API.getUsers()
             .then(res => {
                 console.log("All users",res.data);
                 this.setState({
-                    users: res.data
-                })
+                    users: res.data,
+                }, this.findRanking)
                 // console.log(res.data)
             })
             .catch(err => console.log(err));
@@ -61,11 +82,11 @@ class UserHome extends Component {
             <Container fluid>
                 <Row>
                     <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron addClass="userData" jumboHeight="80%">
+                        <Jumbotron addClass="userData" style={{maxWidth:"400px", maxHeight:"500px"}}>
                             {/* User image goes here */}
-                            <img style={{width:"200px"}} alt={""} src={this.state.currentUser.picLink} />
-                            <div>
-                                <strong>Name: </strong> {this.state.currentUser.username}
+                            <img style={{width:"200px"}} alt={""} src={this.state.userInfo.picLink} />
+                            <div className="name" style={{paddingTop: "25px"}}>
+                                <strong>Name: </strong> {this.state.userInfo.name}
                             </div>
                             <div>
                                 <strong>Wins:</strong> {this.state.currentUser.totalWins}
@@ -73,13 +94,18 @@ class UserHome extends Component {
                             <div>
                                 <strong>Losses:</strong> {this.state.currentUser.totalLosses}
                             </div>
-                            <div>
-                                <strong>Ranking:</strong> {this.state.currentUser.email}
+                            <div className="ranking" style={{paddingBottom: "30px"}}>
+                                <strong>Ranking:</strong> {this.state.ranking}
                             </div>
+                            <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
+                                <Col size="lg-12 md-12 sm-12">
+                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
+                                </Col>
+                            </Row>
                         </Jumbotron>
                     </Col>
                     <Col size="lg-7 md-12 sm-12">
-                        <Jumbotron jumboHeight="80%">
+                        <Jumbotron style={{height:"500px"}}>
                             <h4>LEADER BOARD</h4>
                             <table className="table">
                                 <thead className="thead-dark">
@@ -92,7 +118,7 @@ class UserHome extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.users.map((user, index) => {
+                                        this.state.users.slice(0,5).map((user, index) => {
                                             return (
                                                 <tr key={index + 1}>
                                                     <td>{index + 1}</td>
@@ -106,11 +132,6 @@ class UserHome extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
-                    </Col>
-                </Row>
-                <Row className="justify-content-center">
-                    <Col size="lg-12 md-12 sm-12">
-                        <button className="btn btn-primary" onClick={() => this.handlePlayNowBtn(this.state.currentUser._id)}>Play Game</button>
                     </Col>
                 </Row>
             </Container>
