@@ -25,15 +25,32 @@ class SinglePlayerGameContainer extends Component {
         index: 0,
         timer: 10,
         socketArr: "",
+<<<<<<< HEAD
         click: "false"
+=======
+        userInfo: {}
+>>>>>>> master
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
         this.getGame(this.props.id);
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
+        this.getUserPic();
     }
 
+    getUserPic = () => {
+        API.checkAuth()
+            .then(response => {
+                // this runs if the user is logged in
+                console.log("response: ", response.data)
+                this.setState({ userInfo: response.data }, this.loadUsers);
+            })
+            .catch(err => {
+                // this runs if the user is NOT logged in
+                this.setState({ redirectTo: "/" })
+            })
+    }
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -194,7 +211,7 @@ class SinglePlayerGameContainer extends Component {
 
                     <Row>
                         <Col size="6" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
                             <h5 style={{ color: "white" }}>Winning score  {this.state.correct}</h5>
                         </Col>
                         <Col size="6" id="player2">
