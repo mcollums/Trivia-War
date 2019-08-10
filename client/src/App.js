@@ -20,9 +20,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 class App extends Component {
   state = {
-    socketId: "1234",
-    userId: "testy test",
-    email: "test.gmail.com",
+    userEmail: "",
     authorized: false,
     inGame: false
   }
@@ -30,11 +28,14 @@ class App extends Component {
   componentDidMount = () => {
     // this.socketSubscribeAuthorized();
 
-    socketAPI.subscribeAuthorized((message, userInfo) => {
+    socketAPI.subscribeAuthorized((message) => {
       console.log("AUTHORIZED", message);
       if(message === true){
-        this.setState({authorized: true})
-      }
+        this.setState({
+          authorized: true
+        },
+          () => {console.log("Application State: " + this.state)}
+        )} else {console.log("State not updated")}
     })
     // socketAPI.subscribeJoinedGame(info => {
     //   console.log(info);

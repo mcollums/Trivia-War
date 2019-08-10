@@ -90,7 +90,7 @@ const sessions = [];
 const makeSession = (id, creator, category) => {
   return {
     id,
-    category: null,
+    category: category,
     playerOne: creator,
     playerTwo: null
   }
@@ -179,7 +179,7 @@ io.on('connection', function (player) {
     const index = playerArr.find(p => p.id === player.id);
 
     if (index) {
-      console.log("User found in playersArr");
+      console.log("User found in playersArr, adding email:", data);
       index.email = data;
       index.authorized = true;
       index.socket.emit("addedEmail", "We added your email to your user ID");
@@ -196,11 +196,31 @@ io.on('connection', function (player) {
   });
 
 
-  player.on("seekGame", () => {
-    // Try and find them a game, if we can, great!
+  player.on("seekGame", (category) => {
+       // Try and find them a game, if we can, great!
     // Otherwise just make a new one and put them in it
-    player.emit("joinedGame", { coolInfo: "Goes Here" })
-  })
+    if (sessions.length === 0) {
+      sessions.push(makeSession(sessionId++, newPlayer));
+      console.log("Server says: New game joined by" + newPlayer);
+      newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
+    } else {
+      // Let's look for an open game
+      const s = sessions.find(s => s.playerTwo === null);
+      if (s) {
+        console.log("Server says: New game joined! GameId =" + s.id)
+        s.playerTwo = newPlayer;
+        
+        s.playerOne.socket.emit("joinedSession", newPlayer.email);
+        s.playerTwo.socket.emit("joinedSession", s.playerOne.email);
+
+        s.playerOne.socket.emit("startGame", s.id);
+        s.playerTwo.socket.emit("startGame", s.id);
+      } else {
+        sessions.push(makeSession(sessionId++, newPlayer));
+        newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
+      }
+    }
+  });
 
   player.on('player-matchmaking', gameData => {
     io.emit('player-matchmaking', gameData)
