@@ -8,7 +8,8 @@ class UserHome extends Component {
     state = {
         users: [],
         redirectTo: null,
-        userInfo:{}
+        userInfo:{},
+        ranking: ""
     };
 
     componentDidMount() {
@@ -16,16 +17,30 @@ class UserHome extends Component {
             .then(response => {
                 // this runs if the user is logged in
                 console.log("response: ", response.data)
-                this.setState({userInfo:response.data})
-                this.loadUsers();
+                this.setState({userInfo:response.data}, this.loadUsers);
             })
             .catch(err => {
                 // this runs if the user is NOT logged in
                 this.setState({ redirectTo: "/" })
             })
-        // this.loadUserById();
     }
 
+    findRanking = () => {
+        let ranking = 0;
+        let allUsers = this.state.users;
+        for (let i = 0; i < allUsers.length; i++) {
+            if(allUsers[i]._id === this.state.userInfo.id){
+                ranking = (i + 1);
+                console.log("user Founds" + i)
+                console.log(ranking)
+                break;
+            }
+            console.log(allUsers[i]);
+        }
+        this.setState({
+            ranking: ranking
+        })
+    }
     // loadUserData(){
     //     API.checkAuth()
     //     .then(res => {
@@ -42,7 +57,7 @@ class UserHome extends Component {
                 console.log(res.data)
                 this.setState({
                     users: res.data,
-                })
+                }, this.findRanking)
                 // console.log(res.data)
             })
             .catch(err => console.log(err));
@@ -64,7 +79,7 @@ class UserHome extends Component {
                         <Jumbotron addClass="userData" style={{maxWidth:"200px", maxHeight:"500px"}}>
                             {/* User image goes here */}
                             <img style={{width:"200px"}} alt={""} src={this.state.userInfo.picLink} />
-                            <div>
+                            <div className="name" style={{paddingTop: "25px"}}>
                                 <strong>Name: </strong> {this.state.userInfo.name}
                             </div>
                             <div>
@@ -73,9 +88,14 @@ class UserHome extends Component {
                             <div>
                                 <strong>Losses:</strong> {this.state.userInfo.losses}
                             </div>
-                            <div>
-                                <strong>Ranking:</strong> {this.state.userInfo.email}
+                            <div className="ranking" style={{paddingBottom: "30px"}}>
+                                <strong>Ranking:</strong> {this.state.ranking}
                             </div>
+                            <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
+                                <Col size="lg-12 md-12 sm-12">
+                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
+                                </Col>
+                            </Row>
                         </Jumbotron>
                     </Col>
                     <Col size="lg-7 md-12 sm-12">
@@ -92,7 +112,7 @@ class UserHome extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.users.map((user, index) => {
+                                        this.state.users.slice(0,5).map((user, index) => {
                                             return (
                                                 <tr key={index+1}>
                                                     <td>{index + 1}</td>
@@ -106,11 +126,6 @@ class UserHome extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
-                    </Col>
-                </Row>
-                <Row className="justify-content-center">
-                    <Col size="lg-12 md-12 sm-12">
-                        <button className="btn btn-primary" onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
                     </Col>
                 </Row>
             </Container>

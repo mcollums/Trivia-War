@@ -28,6 +28,7 @@ router.get('/user/me', function(req, res){
           name:req.user.username,
           wins: req.user.totalWins,
           losses: req.user.totalLosses,
+          id: req.user._id
 
       })
   } else {
