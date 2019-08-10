@@ -10,7 +10,6 @@ class MultiPlayer extends Component {
     }
 
     componentDidMount() {
-
         socketAPI.subscribeMatchmaking((message) => {
             //this message says that the player is waiting in matchmaking
             console.log(message);
