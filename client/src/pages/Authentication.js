@@ -34,19 +34,6 @@ class Authentication extends Component {
         registerOpen: false
     }
 
-    // constructor() {
-    //     super();
-
-    //     this.state = {
-    //         modalIsOpen: false
-    //     };
-
-    //     this.openModal = this.openModal.bind(this);
-    //     this.afterOpenModal = this.afterOpenModal.bind(this);
-    //     this.closeModal = this.closeModal.bind(this);
-    // }
-
-
     openModal = modal => {
         this.setState({ [modal]: true });
     }
@@ -76,7 +63,7 @@ class Authentication extends Component {
             .then(result => {
                 console.log(result.data)
                 // this.loadProfileInfo()
-                window.location.href = "/home";
+                this.setState({ redirectTo: "/home" });
             }).catch(err => {
                 this.setState({ errorMessage: "Please enter a valid email or password" })
             })
@@ -125,7 +112,7 @@ class Authentication extends Component {
         if (window.location.pathname === "/api/google/callback") {
             const searchParams = new URLSearchParams(window.location.search);
             axios.post("/api/google/code", { code: searchParams.get('code') }).then(() => {
-                window.location.href = "/"
+                this.setState({ redirectTo: "/" });
             })
         } else {
             // this.loadProfileInfo()

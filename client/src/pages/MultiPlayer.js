@@ -1,17 +1,23 @@
 import React, { Component } from "react";
 import Category from "../components/Category";
 import { Link } from "react-router-dom";
-
+import { Redirect } from "react-router-dom";
 
 class MultiPlayer extends Component {
-
+    state ={
+        redirectTo: null,
+    }
     loadPage() {
         document.getElementById("myLink").onclick = function () {
-        window.location.href = "/loading";
+        // window.location.href = "/loading";
+        this.setState({ redirectTo: "/loading" });
             }
         };
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
         return (
             <div className="scatContain">
                 <Link to="/game">
