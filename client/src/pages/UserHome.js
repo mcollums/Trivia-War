@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
@@ -36,10 +36,11 @@ class UserHome extends Component {
     findRanking = () => {
         let ranking = 0;
         let allUsers = this.state.users;
+        console.log(allUsers);
         for (let i = 0; i < allUsers.length; i++) {
             if(allUsers[i]._id === this.state.userInfo.id){
                 ranking = (i + 1);
-                console.log("user Founds" + i)
+                console.log("user Found " + i)
                 console.log(ranking)
                 break;
             }
@@ -67,7 +68,7 @@ class UserHome extends Component {
     loadUsers() {
         API.getUsers()
             .then(res => {
-                console.log(res.data)
+                // console.log("All users",res.data);
                 this.setState({
                     users: res.data,
                 }, 
@@ -78,7 +79,7 @@ class UserHome extends Component {
             .catch(err => console.log(err));
     }
 
-    handlePlayNowBtn = (userId) => {
+    handlePlayNowBtn = () => {
         let path = "/play";
         this.props.history.push(path);
     }
@@ -91,7 +92,7 @@ class UserHome extends Component {
             <Container fluid>
                 <Row>
                     <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron addClass="userData" jumboHeight="80%">
+                        <Jumbotron addClass="userData" style={{maxWidth:"400px", maxHeight:"500px"}}>
                             {/* User image goes here */}
                             <img style={{width:"200px"}} alt={""} src={this.state.userInfoFromDB.picLink} />
                             <div className="name" style={{paddingTop: "25px"}}>
@@ -108,13 +109,13 @@ class UserHome extends Component {
                             </div>
                             <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
                                 <Col size="lg-12 md-12 sm-12">
-                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
+                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn()}>Play Game</button>
                                 </Col>
                             </Row>
                         </Jumbotron>
                     </Col>
                     <Col size="lg-7 md-12 sm-12">
-                        <Jumbotron jumboHeight="80%">
+                        <Jumbotron style={{height:"500px"}}>
                             <h4>LEADER BOARD</h4>
                             <table className="table">
                                 <thead className="thead-dark">
@@ -129,7 +130,7 @@ class UserHome extends Component {
                                     {
                                         this.state.users.slice(0,5).map((user, index) => {
                                             return (
-                                                <tr key={index+1}>
+                                                <tr key={index + 1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>
@@ -149,4 +150,4 @@ class UserHome extends Component {
     }
 }
 
-export default UserHome;
+export default withRouter(UserHome);

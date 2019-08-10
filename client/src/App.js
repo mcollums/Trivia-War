@@ -20,59 +20,44 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 class App extends Component {
   state = {
-    socketId: "1234",
-    userId: "testy test",
-    email: "test.gmail.com",
+    userEmail: "",
     authorized: false,
     inGame: false
   }
 
   componentDidMount = () => {
-    socketAPI.subscribeAuthorized(message => {
-      console.log(message)
-      if (message === true) {
-        this.setState({ authorized: true })
-      }
+    socketAPI.subscribeAuthorized((message) => {
+      console.log("AUTHORIZED", message);
+      if(message === true){
+        this.setState({
+          authorized: true
+        },
+          () => {console.log("Application State: " + this.state)}
+        )} else {console.log("State not updated")}
     })
-    // socketAPI.subscribeJoinedGame(info => {
-    //   console.log(info);
-    //   this.setState({ inGame: true })
-    // })
-
-
-
-    // socketAPI.subscribeSeekError(message => {
-    //   console.log(message);
-    // })
-
-
-    // setTimeout(() => {
-    //   socketAPI.publishLogin("robert@email.com")
-    // }, 1000)
-
-    // setTimeout(() => {
-    //   socketAPI.publishSeekGame()
-    // }, 2000)
   }
 
-  onClickJoinGame = () => {
-    socketAPI.publishLogin("myemail@email.com")
+  publishLogin = (email) => {
+    console.log("login");
+    socketAPI.publishLogin(email);
   }
 
   render() {
+    console.log("RENDER PARTY");
     return (
       <Router>
         <div>
           <Nav />
           <Switch>
             <Route exact path="/" component={Authentication} />
-            <Route exact path="/home" component={UserHome} />
+            <Route exact path="/home" component={() => <UserHome publishLogin={this.publishLogin} 
+                  authorized={this.state.authorized} />} />
             <Route exact path="/play" component={PlayNow} />
             <Route exact path="/game" component={GameContainer} />
             <Route path="/multicat" component={CategoryTest} />
             <Route path="/matchmaking" component={Matchmaking} />
             <Route exact path="/singlegame" component={SingleGameContainer} />
-            <Route exact path="/multi/" component={MultiPlayer} />
+            <Route exact path="/multi" component={MultiPlayer} />
             <Route exact path="/single" component={SingleCategory} />
             <Route component={NoMatch} />
           </Switch>
