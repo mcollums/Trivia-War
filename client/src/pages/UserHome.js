@@ -1,23 +1,31 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
 
 class UserHome extends Component {
-    state = {
-        users: [],
-        redirectTo: null,
-        userInfo:{},
-        ranking: ""
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: [],
+            currentUser: "",
+            userInfo: {},
+            redirectTo: null,
+            ranking: ""
+        };
+    }
 
     componentDidMount() {
+        console.log("USER HOME RENDER");
+        //on page load, check to see if the user is in the database
+        //then set that user in the state
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                console.log("response: ", response.data)
-                this.setState({userInfo:response.data}, this.loadUsers);
+                // console.log("User Data: ", response.data)
+                console.log("User authenticated");
+                this.setState({userInfo:response.data}, this.loadUsers)
             })
             .catch(err => {
                 // this runs if the user is NOT logged in
@@ -28,10 +36,11 @@ class UserHome extends Component {
     findRanking = () => {
         let ranking = 0;
         let allUsers = this.state.users;
+        console.log(allUsers);
         for (let i = 0; i < allUsers.length; i++) {
             if(allUsers[i]._id === this.state.userInfo.id){
                 ranking = (i + 1);
-                console.log("user Founds" + i)
+                console.log("user Found " + i)
                 console.log(ranking)
                 break;
             }
@@ -41,29 +50,20 @@ class UserHome extends Component {
             ranking: ranking
         })
     }
-    // loadUserData(){
-    //     API.checkAuth()
-    //     .then(res => {
-    //         console.log("This should be user email" + res.data)
-            
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // }
+
     loadUsers() {
         API.getUsers()
             .then(res => {
-                console.log(res.data)
+                // console.log("All users",res.data);
                 this.setState({
                     users: res.data,
                 }, this.findRanking)
-                // console.log(res.data)
+                console.log(res.data)
             })
             .catch(err => console.log(err));
     }
 
-    handlePlayNowBtn = (userId) => {
+    handlePlayNowBtn = () => {
         let path = "/play";
         this.props.history.push(path);
     }
@@ -83,17 +83,17 @@ class UserHome extends Component {
                                 <strong>Name: </strong> {this.state.userInfo.name}
                             </div>
                             <div>
-                                <strong>Wins:</strong> {this.state.userInfo.wins}
+                                <strong>Wins:</strong> {this.state.currentUser.wins}
                             </div>
                             <div>
-                                <strong>Losses:</strong> {this.state.userInfo.losses}
+                                <strong>Losses:</strong> {this.state.currentUser.losses}
                             </div>
                             <div className="ranking" style={{paddingBottom: "30px"}}>
                                 <strong>Ranking:</strong> {this.state.ranking}
                             </div>
                             <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
                                 <Col size="lg-12 md-12 sm-12">
-                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn(this.state.users[0]._id)}>Play Game</button>
+                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn()}>Play Game</button>
                                 </Col>
                             </Row>
                         </Jumbotron>
@@ -114,7 +114,7 @@ class UserHome extends Component {
                                     {
                                         this.state.users.slice(0,5).map((user, index) => {
                                             return (
-                                                <tr key={index+1}>
+                                                <tr key={index + 1}>
                                                     <td>{index + 1}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.totalWins}</td>
@@ -134,4 +134,4 @@ class UserHome extends Component {
     }
 }
 
-export default UserHome;
+export default withRouter(UserHome);
