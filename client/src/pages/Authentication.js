@@ -1,23 +1,22 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
+import { withRouter,  Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
 import Modal from 'react-modal';
 import axios from 'axios';
 import API from "../utils/API.js";
+import socketAPI from "../utils/socketAPI";
 
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)'
-    }
-};
-
-// Modal.setAppElement(document.getElementById('root'));
+// const customStyles = {
+//     content: {
+//         top: '50%',
+//         left: '50%',
+//         right: 'auto',
+//         bottom: 'auto',
+//         marginRight: '-50%',
+//         transform: 'translate(-50%, -50%)'
+//     }
+// };
 
 class Authentication extends Component {
     state = {
@@ -33,15 +32,11 @@ class Authentication extends Component {
         loginOpen: false,
         registerOpen: false
     }
+    
 
     openModal = modal => {
         this.setState({ [modal]: true });
     }
-
-    // afterOpenModal= () =>{
-    //     // references are now sync'd and can be accessed.
-    //     this.subtitle.style.color = '#f00';
-    // }
 
     closeModal = modal => {
         this.setState({ [modal]: false });
@@ -55,17 +50,18 @@ class Authentication extends Component {
     }
 
     // let's try and login   
-
     handleFormSubmit = event => {
         event.preventDefault()
         const { email, password } = this.state
-        axios.post("/login", { email, password })
+        axios.post('/login', {email, password})
             .then(result => {
-                console.log(result.data)
-                // this.loadProfileInfo()
+                // this.loadProfileInfo();
+                socketAPI.publishLogin(email)
+                // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
-            }).catch(err => {
-                this.setState({ errorMessage: "*Please enter a valid email or password" })
+            })
+            .catch(err => {
+                this.setState({ errorMessage: "Please enter a valid email or password" })
             })
     }
 
@@ -75,7 +71,8 @@ class Authentication extends Component {
         axios.post("/register", { username, picLink, email, password })
             .then(result => {
                 console.log(result.data)
-                // this.loadProfileInfo()
+                //this.loadProfileInfo()
+                // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
             }).catch(err => {
                 console.log(err)
@@ -98,22 +95,22 @@ class Authentication extends Component {
     handleFormLogout = event => {
         event.preventDefault()
         API.logout().then(result => {
-            console.log(result.data)
+            // console.log(result.data)
             this.setState({ welcomeEmail: "" })
         })
     }
 
-    // loadProfileInfo = () => {
-    //     axios.get('/user/me')
-    //         .then(response => {
-    //             this.setState({ welcomeEmail: response.data.email })
-    //         })
-    //         .catch(err => {
-    //             // axios.get("/api/google/url").then(response => {
-    //             //     this.setState({ googleSigninUrl: response.data.url })
-    //             // })
-    //         })
-    // }
+    loadProfileInfo = () => {
+        axios.get('/user/me')
+            .then(response => {
+                this.setState({ welcomeEmail: response.data.email })
+            })
+            .catch(err => {
+                // axios.get("/api/google/url").then(response => {
+                //     this.setState({ googleSigninUrl: response.data.url })
+                // })
+            })
+    }
 
     componentDidMount() {
         // Mostly just for developing locally
@@ -127,6 +124,7 @@ class Authentication extends Component {
         }
         this.loadUsers();
     }
+
     loadUsers() {
         API.getUsers()
             .then(res => {
@@ -156,6 +154,12 @@ class Authentication extends Component {
                                     {/* <!-- Button trigger modal --> */}
                                     {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
                                         Login
+                                    </button>
+                                    <div>
+                                        Email: <input name="email" type="text" value={this.state.email} onChange={this.handleInput}/>
+                                        Password <input name="password" type="text" value={this.state.password} onChange={this.handleInput}/>
+                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
+                                    </div>
                                     </button> */}
                                     {/* <!-- Modal --> */}
                                     {/* <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -164,7 +168,7 @@ class Authentication extends Component {
                                                 <div className="modal-header">
                                                     <h5 className="modal-title" id="exampleModalCenterTitle">{this.state.welcomeEmail.length > 0
                                                         ? "Welcome " + this.state.welcomeEmail
-                                                        : "Login"}</h5>
+                                                        : "Login"} </h5>
                                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -298,38 +302,6 @@ class Authentication extends Component {
                                         Register
                                     </button> */}
 
-                                    {/* <!-- Modal --> */}
-                                    {/* <div className="modal fade" id="registerModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered" role="document">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalCenterTitle">Register</h5>
-                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
-                                                        </div>
-                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
-                                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormRegister}>Submit</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </Col>
                             </Row>
 
@@ -371,5 +343,4 @@ class Authentication extends Component {
     }
 }
 
-export default Authentication;
-// ReactDOM.render(<Authentication />, document.getElementById("root"));
+export default withRouter(Authentication);
