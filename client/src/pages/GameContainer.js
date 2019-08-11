@@ -25,16 +25,16 @@ class GameContainer extends Component {
         index: 0,
         timer: 10,
 
-        showLoading: true,
+        // showLoading: true,
         socketArr: "",
         redirectTo: null
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({ showLoading: false });
-        }, 2500);
+        // setTimeout(() => {
+        //     this.setState({ showLoading: false });
+        // }, 2500);
 
         API.checkAuth()
             .then(response => {
@@ -50,7 +50,7 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
-        this.getGame("5d4deba39ce2fb3da8274a2f");
+        this.getGame("5d4aedd61af73588729be101");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
     
@@ -200,13 +200,13 @@ class GameContainer extends Component {
 
 
     render() {
-        if(this.state.showLoading) {
-            return (
-                <div className="circlecontainer">
-                <div className="lds-circle"><div></div></div>
-                </div>
-            );
-        }
+        // if(this.state.showLoading) {
+        //     return (
+        //         <div className="circlecontainer">
+        //         <div className="lds-circle"><div></div></div>
+        //         </div>
+        //     );
+        // }
 
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />

@@ -11,25 +11,29 @@ class UserHome extends Component {
             users: [],
             userInfo: {},
             redirectTo: null,
+            userInfoFromDB: {},
             ranking: ""
         };
     }
 
     componentDidMount() {
-        console.log("USER HOME RENDER");
-        //on page load, check to see if the user is in the database
-        //then set that user in the state
-        API.checkAuth()
-            .then(response => {
-                // this runs if the user is logged in
-                // console.log("User Data: ", response.data)
-                console.log("User authenticated");
-                this.setState({userInfo:response.data}, this.loadUsers)
+        this.loadUserData();
+    }
+
+    loadUserById() {
+        // const id = this.props.match.params.id
+        console.log("User ID " + this.state.userInfo.id)
+        const id = this.state.userInfo.id
+        API.getOneUser(id)
+            .then(res => {
+                // console.log(res.data);
+                // UsersInfo.push(res.data);
+                this.setState({
+                    userInfoFromDB: res.data,
+                })
+                console.log(this.state.userInfoFromDB)
             })
-            .catch(err => {
-                // this runs if the user is NOT logged in
-                this.setState({ redirectTo: "/" })
-            })
+            .catch(err => console.log(err));
     }
 
     findRanking = () => {
@@ -49,6 +53,20 @@ class UserHome extends Component {
             ranking: ranking
         })
     }
+    
+    loadUserData(){
+        API.checkAuth()
+            .then(response => {
+                // this runs if the user is logged in
+                // console.log("response: ", response.data)
+                this.setState({userInfo:response.data}, this.loadUsers);
+                this.loadUserById();
+            })
+            .catch(err => {
+                // this runs if the user is NOT logged in
+                this.setState({ redirectTo: "/" })
+            })
+    }
 
     loadUsers() {
         API.getUsers()
@@ -56,7 +74,9 @@ class UserHome extends Component {
                 // console.log("All users",res.data);
                 this.setState({
                     users: res.data,
-                }, this.findRanking)
+                }, 
+                this.findRanking
+                )
                 // console.log(res.data)
             })
             .catch(err => console.log(err));
@@ -77,15 +97,15 @@ class UserHome extends Component {
                     <Col size="lg-5 md-12 sm-12">
                         <Jumbotron addClass="userData" style={{maxWidth:"400px", maxHeight:"500px"}}>
                             {/* User image goes here */}
-                            <img style={{width:"200px"}} alt={""} src={this.state.userInfo.picLink} />
+                            <img style={{width:"200px"}} alt={""} src={this.state.userInfoFromDB.picLink} />
                             <div className="name" style={{paddingTop: "25px"}}>
-                                <strong>Name: </strong> {this.state.userInfo.name}
+                                <strong>Name: </strong> {this.state.userInfoFromDB.username}
                             </div>
                             <div>
-                                <strong>Wins:</strong> {this.state.userInfo.wins}
+                                <strong>Wins:</strong> {this.state.userInfoFromDB.totalWins}
                             </div>
                             <div>
-                                <strong>Losses:</strong> {this.state.userInfo.losses}
+                                <strong>Losses:</strong> {this.state.userInfoFromDB.totalLosses}
                             </div>
                             <div className="ranking" style={{paddingBottom: "30px"}}>
                                 <strong>Ranking:</strong> {this.state.ranking}

@@ -157,6 +157,12 @@ body {
     }
   }
 
+  .match {
+    color: rgb(98, 203, 194);
+    margin-top: 20px;
+    text-align: center;
+  }
+
   h1.ml8 {
     font-weight: 900;
     font-size: 4.5em;

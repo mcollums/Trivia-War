@@ -4,14 +4,21 @@ import socketAPI from "../utils/socketAPI";
 import API from "../utils/API";
 import MPGameCard from "../components/MPGameCard";
 import GameContainer from './GameContainer';
+import Modal from 'react-modal';
 
 
 class MultiPlayer extends Component {
     state = {
         category: [],
         selected: "",
-        gameStart: false
+        gameStart: false,
+        matchmakingOpen: false,
+
     }
+    
+    // openModal = modal => {
+    //     this.setState({ [modal]: true });
+    // }
 
     componentDidMount() {
         API.getGames().then(res => {
@@ -24,15 +31,20 @@ class MultiPlayer extends Component {
             //this message says that the player is waiting in matchmaking
             console.log(message);
             //function that shows matchmaking modal
+            this.setState({ matchmakingOpen: true });
         });
 
         socketAPI.subscribeJoinedGame((userId) => {
             console.log("Found a session with user...", userId);
             this.props.history.push('/game');
+            this.setState({ matchmakingOpen: false });
+
         });
 
         socketAPI.subscribeGameStart((sessionId) => {
             console.log("Your session id is...", sessionId);
+            this.setState({ matchmakingOpen: false });
+
         });
     }
 
@@ -50,6 +62,14 @@ class MultiPlayer extends Component {
     }
 
     render() {
+        if (this.state.matchmakingOpen) {
+            return (
+                        <div className="circlecontainer">
+                        <div className="lds-circle"><div>
+                        </div><h5 className="match">Looking for a match...</h5></div>
+                        </div>
+                    );
+        }
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
