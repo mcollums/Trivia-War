@@ -110,7 +110,6 @@ const searchSessions = (id, category) => {
 io.on('connection', function (player) {
   //On connection, create a new player that's now authorized.
   const newPlayer = makePlayer(player);
-  // console.log("New Player Info" + newPlayer);
   playerArr.push(newPlayer)
 
   //Tell all the other sockets that there's a new player

@@ -6,35 +6,41 @@ import GameCol from "../components//GameCol";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 
-
 let quizQuestions = [];
 let socketid;
-class GameContainer extends Component {
-    state = {
-        userInfo: "",
-        title: "",
-        category: "",
-        question: "",
-        questionCount: 0,
-        answers: [],
-        correctAnswer: "",
-        correct: 0,
-        incorrect: 0,
-        userSelect: "",
-        outcome: "",
-        index: 0,
-        timer: 10,
 
-        // showLoading: true,
-        socketArr: "",
-        redirectTo: null
-    };
+class GameContainer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            quizId: "",
+            userInfo: "",
+            title: "",
+            category: "",
+            question: "",
+            questionCount: 0,
+            answers: [],
+            correctAnswer: "",
+            correct: 0,
+            incorrect: 0,
+            userSelect: "",
+            outcome: "",
+            index: 0,
+            timer: 10,
+    
+            // showLoading: true,
+            socketArr: "",
+            redirectTo: null
+        };
+    }
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        // setTimeout(() => {
-        //     this.setState({ showLoading: false });
-        // }, 2500);
+        this.setState({
+            quizId: this.props.id
+        }, () => {
+            console.log("Quiz ID " + this.state.quizId);
+        })
 
         API.checkAuth()
             .then(response => {
@@ -50,7 +56,7 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
-        this.getGame("5d4aedd61af73588729be101");
+        this.getGame("5d4cad9a72dc431b959681f1");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
     

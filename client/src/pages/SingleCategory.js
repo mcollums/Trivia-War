@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import WaitingPage from "./pages/WaitingPage";
 import './Pages.css';
 import API from "../utils/API";
 import SPGameCard from "../components/SPGameCard";
@@ -14,13 +13,10 @@ class SingleCategory extends Component {
         id: ""
     };
 
-
     componentDidMount() {
         API.getGames().then(res => {
-            console.log(res.data[0].category);
+            // console.log(res.data[0].category);
             this.getAllGames(res.data);
-
-
         });
     }
 
@@ -33,13 +29,11 @@ class SingleCategory extends Component {
     
     getAllGames(data) {
         // console.log(data);
-
         for (let i = 0; i < data.length; i++) {
             addCategory.push(data[i]);
         }
         this.setState({
             category: addCategory
-
         }, () => {
             console.log("State category", this.state.category);
         });

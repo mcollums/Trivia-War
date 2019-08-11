@@ -13,7 +13,6 @@ class MultiPlayer extends Component {
         selected: "",
         gameStart: false,
         matchmakingOpen: false,
-
     }
     
     // openModal = modal => {
@@ -53,12 +52,13 @@ class MultiPlayer extends Component {
         socketAPI.publishSeekGame(category);
     }
 
-    handleCatSelect = category => {
-        console.log("User chose: " + category);
+    handleCatSelect = (id) => {
+        console.log("User chose: " + id);
+
         this.setState({
-            selected: category
+            selected: id
         })
-        this.publishSeekGame(category);
+        this.publishSeekGame(id);
     }
 
     render() {
@@ -87,7 +87,7 @@ class MultiPlayer extends Component {
                     ))}
                 </div>
             ) : (
-                    <GameContainer id={this.state.id} />
+                    <GameContainer id={this.state.selected} />
                 )}
         </div>
         )

@@ -91,6 +91,7 @@ class UserHome extends Component {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
+        console.log("USER HOME RENDER");
         return (
             <Container fluid>
                 <Row>

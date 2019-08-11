@@ -8,10 +8,9 @@ import Jumbotron from "../components/Jumbotron";
 let quizQuestions = [];
 let nextIndex = 0;
 let newIndex = 0;
+
 class SinglePlayerGameContainer extends Component {
     state = {
-        // userId: this.props.params.userId,
-        // gameId: this.props.params.gameId,
         title: "",
         category: "",
         question: "",
@@ -47,6 +46,7 @@ class SinglePlayerGameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             })
     }
+
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -98,7 +98,7 @@ class SinglePlayerGameContainer extends Component {
     };
 
     //This method checks if the user answer is correct and checks if the
-    // game continues or not based on if there are any questions left
+    //game continues or not based on if there are any questions left
     setUserAnswer = () => {
         //if the user didn't select an answer add to incorrect
         console.log(this.state.index);
