@@ -91,77 +91,32 @@ const makeSession = (id, creator, category) => {
     id,
     category: category,
     playerOne: creator,
-    playerTwo: null
+    playerTwo: null,
+    allCorrectAnswers: null,
+    playerOneSelect: false,
+    playerTwoSelect: false,
+    playerOneScore: 0,
+    playerTwoScore: 0
   }
 }
 
-const searchSessions = (socket, category) => {
+// const searchSessions = (socket, category) => {
 
+const searchSessions = (id, category) => {
+  return sessions.find(s => s.id === id)
 }
-
-//ERIC
-// const makePlayer = (socket) => {
-//   console.log("Making new player");
-//   return {
-//     id: socket.id,
-//     email: "",
-//     authorized: false,
-//     socket: socket
-//   }
-// }
-
-// const getPlayerById = (id) => {
-//   return playerArr.find(p => p.id === id)
-// }
-
-//ERIC
-// const sessions = [];
-
-// const makeSession = (id, creator) => {
-//   return {
-//     id,
-//     playerOne: creator,
-//     playerTwo: null
-//   }
-// }
-
-
-
 
 
 io.on('connection', function (player) {
   //On connection, create a new player that's now authorized.
   const newPlayer = makePlayer(player);
-  console.log("New Player Info" + newPlayer);
+  // console.log("New Player Info" + newPlayer);
   playerArr.push(newPlayer)
 
   //Tell all the other sockets that there's a new player
   playerArr.filter(p => p.id !== newPlayer.id).forEach(p => {
     p.socket.emit("message", "somebody else connected")
   });
-
-  // Auto put people in games
-  // if(sessions.length === 0){
-  //   sessions.push(makeSession(sessionId++, newPlayer))
-  // } else {
-  //   // Let's look for an open game
-  //   const s = sessions.find(s => s.playerTwo === null);
-  //   if(s){
-  //     console.log("new game joined")
-  //     s.playerTwo = newPlayer;
-  //     s.playerOne.socket.emit("joinedGame", newPlayer.id);
-  //     s.playerTwo.socket.emit("joinedGame", s.playerOne.id)
-  //   } else {
-  //     sessions.push(makeSession(sessionId++, newPlayer))
-  //   }
-  // }
-
-  // console.log("This is the socket ID", player.id);
-  //Let server-side know someone's connected
-  // console.log('==================================================================');
-  // console.log('A user connected!', player.id);
-  // console.log("ALL SOCKET USERS INFO :", playerArr);
-  // console.log("CLIENTS # = " + playerArr.length);
 
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
@@ -173,7 +128,7 @@ io.on('connection', function (player) {
 
   player.on("setuser", (data) => {
     console.log('==================================================================');
-    console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
+    // console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
 
     const index = playerArr.find(p => p.id === player.id);
 
@@ -186,12 +141,6 @@ io.on('connection', function (player) {
     } else {
       console.log(chalk.red("User not found"));
     }
-
-    // console.log('==================================================================');
-    // console.log(chalk.blue("NEW USER: ", JSON.stringify(newUser)));
-    // console.log(chalk.blue("Player Array in SetUser", JSON.stringify(playerArr)));
-    // console.log(chalk.blue("CLIENTS # = " + playerArr.length));
-
   });
 
 
@@ -221,13 +170,6 @@ io.on('connection', function (player) {
     }
   });
 
-  player.on('player-matchmaking', gameData => {
-    io.emit('player-matchmaking', gameData)
-  });
-
-  player.on('player-select', gameData => {
-    io.emit('player-select', gameData)
-  });
 
   player.on('player-ready', gameData => {
     io.emit('player-ready', gameData)
@@ -238,29 +180,6 @@ io.on('connection', function (player) {
   });
 });
 
-function buildGame(socket) {
-  var gameObject = {};
-  //generate random Object ID for reference later
-  gameObject.id = (Math.random() + 1).toString(36).slice(2, 18);
-  // gameObject.playerOne = socket.name;
-  // gameObject.playerTwo = null;
-  gameCollection.totalGameCount++;
-  gameCollection.gameList.push({ gameObject });
-
-  console.log("Game Created by " + socket.name + " w/ " + gameObject.id);
-  io.emit('gameCreated', {
-    name: socket.name,
-    gameId: gameObject.id
-  });
-}
-io.on('connection', function (socket) {
-    console.log('A user connected!', socket.id);
-    socket.broadcast.emit('user connected');
-});
-
-
-
-
 
 
 // ROUTES FOR GOOGLE AUTHENTICATION
@@ -270,11 +189,11 @@ app.get('/api/google/url', (req, res) => {
 })
 
 function getGoogleAccountFromCode(code) {
-  console.log("CODE");
-  console.log(code);
+  // console.log("CODE");
+  // console.log(code);
   return createConnection().getToken(code).then(data => {
-    console.log("DATA");
-    console.log(data.tokens)
+    // console.log("DATA");
+    // console.log(data.tokens)
     return Promise.resolve(data.tokens)
   })
 }
@@ -286,8 +205,8 @@ app.post('/api/google/code', (req, res) => {
     const userConnection = createConnection()
     userConnection.setCredentials(tokens)
     userConnection.getTokenInfo(tokens.access_token).then(data => {
-      console.log("TOKEN INFO");
-      console.log(data);
+      // console.log("TOKEN INFO");
+      // console.log(data);
       const { email, sub } = data;
 
       db.User.findOne({ email }).then(dbUser => {
@@ -310,7 +229,7 @@ app.post('/api/google/code', (req, res) => {
           // Check the type and googleId
           // if it matches, great! Login the user!
           // if not, something odd is up, reject it
-          console.log(dbUser);
+          // console.log(dbUser);
           if (dbUser.authType === "google" && dbUser.googleId === sub + "") {
             req.login(dbUser, () => {
               res.json(true)
@@ -336,9 +255,9 @@ app.get('/api/google/callback', function (req, res) {
     userConnection.getTokenInfo(tokens.access_token).then(data => {
       const { email, sub } = data;
       db.User.findOne({ email }).then(dbUser => {
-        console.log(dbUser);
+        // console.log(dbUser);
         if (!dbUser) {
-          console.log("NEW USER");
+          // console.log("NEW USER");
           // create a new user!
           db.User.create({
             email,

@@ -1,15 +1,25 @@
 import React, { Component } from "react";
-// import Category from "../components/Category";
 import { Redirect, withRouter } from "react-router-dom";
 import socketAPI from "../utils/socketAPI";
+import API from "../utils/API";
+import MPGameCard from "../components/MPGameCard";
+import GameContainer from './GameContainer';
 
 
 class MultiPlayer extends Component {
     state = {
-        categories: ["animals", "geography", "science"]
+        category: [],
+        selected: "",
+        gameStart: false
     }
 
     componentDidMount() {
+        API.getGames().then(res => {
+            this.setState({
+                category: res.data
+            }, () => console.log(this.state.category))
+        });
+
         socketAPI.subscribeMatchmaking((message) => {
             //this message says that the player is waiting in matchmaking
             console.log(message);
@@ -31,9 +41,11 @@ class MultiPlayer extends Component {
         socketAPI.publishSeekGame(category);
     }
 
-    handleCatSelect = selection => {
-        console.log("User chose: " + selection);
-        let category = selection;
+    handleCatSelect = category => {
+        console.log("User chose: " + category);
+        this.setState({
+            selected: category
+        })
         this.publishSeekGame(category);
     }
 
@@ -42,17 +54,22 @@ class MultiPlayer extends Component {
             return <Redirect to={this.state.redirectTo} />
         }
         return (
-            <div className="scatContain">
-                {this.state.categories.map(cat =>
-                    // <Link to="/game">
-                        <div key={cat} className="mcategory" id={cat} onClick={() => { this.handleCatSelect(cat) }}>
-                            <div className="mcatcat">
-                                <h4>{cat}</h4>
-                            </div>
-                        </div>
-                    // </Link>
+            <div>
+            {this.state.selected === "" ? (
+                <div className="scatContain">
+                    {this.state.category.map(category => (
+                        <MPGameCard
+                            id={category._id}
+                            key={category._id}
+                            category={category.category}
+                            handleSelect={this.handleCatSelect}
+                        />
+                    ))}
+                </div>
+            ) : (
+                    <GameContainer id={this.state.id} />
                 )}
-            </div>
+        </div>
         )
     };
 }

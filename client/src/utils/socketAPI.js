@@ -30,10 +30,18 @@ export default {
         socket.on("joinedSession", userId => callback(userId));
     },
 
+    publishGameReady: () => {
+        socket.emit("gameReady");
+    },
+    subscribeGiveCat: (callback) => {
+        socket.on("giveCategory", category => callback(category));
+    },
     //When the game has two users...
     subscribeGameStart: (callback) => {
         socket.on("startGame", sessionId => callback(sessionId));
     },
+
+
     subscribeSeekError: callback => {
         socket.on("seekError", message => {
             callback(message)

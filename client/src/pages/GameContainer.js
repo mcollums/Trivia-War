@@ -53,17 +53,6 @@ class GameContainer extends Component {
         this.getGame("5d4deba39ce2fb3da8274a2f");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
-
-    // added by jyoti for getting the socket id after a user connected.
-    // setSocketId() {
-    //     socket.on('userConnected', socketData => {
-    //         socketid = socketData.socketId;
-    //         console.log(" this is the socket id " + socketid);
-    //         socket.on('newclientconnect', data => {
-    //             console.log(data.description);
-    //         });
-    //     });
-    // }
     
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
@@ -254,7 +243,6 @@ class GameContainer extends Component {
                         <Col size="6" id="player1">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
                             <h5 style={{ color: "white" }}>Score</h5>
-                            {/* <img style={{color:"white"}} className="text-center"> Player 1 </img> */}
                         </Col>
                         <Col size="6" id="player2">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />

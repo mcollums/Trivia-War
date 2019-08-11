@@ -4,6 +4,7 @@ const apiRoutes = require("./api");
 const db = require("../models")
 const passport = require("../config/passport");
 const chalk = require('chalk');
+
 // API Routes
 router.use("/api", apiRoutes);
 
@@ -33,7 +34,6 @@ router.get('/user/me', function(req, res){
           wins: req.user.totalWins,
           losses: req.user.totalLosses,
           id: req.user._id
-
       })
   } else {
       res.status(401).json({})

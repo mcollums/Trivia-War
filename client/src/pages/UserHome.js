@@ -9,7 +9,6 @@ class UserHome extends Component {
         super(props);
         this.state = {
             users: [],
-            currentUser: "",
             userInfo: {},
             redirectTo: null,
             ranking: ""
@@ -36,15 +35,15 @@ class UserHome extends Component {
     findRanking = () => {
         let ranking = 0;
         let allUsers = this.state.users;
-        console.log(allUsers);
+        // console.log(allUsers);
         for (let i = 0; i < allUsers.length; i++) {
             if(allUsers[i]._id === this.state.userInfo.id){
                 ranking = (i + 1);
-                console.log("user Found " + i)
-                console.log(ranking)
+                // console.log("user Found " + i)
+                // console.log(ranking)
                 break;
             }
-            console.log(allUsers[i]);
+            // console.log(allUsers[i]);
         }
         this.setState({
             ranking: ranking
@@ -58,7 +57,7 @@ class UserHome extends Component {
                 this.setState({
                     users: res.data,
                 }, this.findRanking)
-                console.log(res.data)
+                // console.log(res.data)
             })
             .catch(err => console.log(err));
     }
@@ -83,10 +82,10 @@ class UserHome extends Component {
                                 <strong>Name: </strong> {this.state.userInfo.name}
                             </div>
                             <div>
-                                <strong>Wins:</strong> {this.state.currentUser.wins}
+                                <strong>Wins:</strong> {this.state.userInfo.wins}
                             </div>
                             <div>
-                                <strong>Losses:</strong> {this.state.currentUser.losses}
+                                <strong>Losses:</strong> {this.state.userInfo.losses}
                             </div>
                             <div className="ranking" style={{paddingBottom: "30px"}}>
                                 <strong>Ranking:</strong> {this.state.ranking}

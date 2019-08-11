@@ -9,22 +9,9 @@ const styles = {
 const GameCard = props => (
 
     <div>
-        {/* {props.click === "false" ? ( */}
-
         <div style={styles} id={props.answer} onClick={() => props.handleSelection(props.id)} className="card grow" >
             <h3>{props.id}</h3>
         </div>
-        {/* ) : ( */}
-        {/* <div>
-                    <div style={styles} id={props.answer} onClick={() => props.handleSelection(props.id)} className="card grow" >
-                        <h3>{props.id}</h3>
-                    </div>
-                    <div>
-                        <h3>{props.correctAnswer}</h3>
-                    </div>
-                </div>
-            ) */}
-        {/* } */}
     </div>
 
 );

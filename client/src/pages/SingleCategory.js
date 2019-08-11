@@ -7,6 +7,7 @@ import SPGameContainer from './SPGameContainer';
 
 
 let addCategory = [];
+
 class SingleCategory extends Component {
     state = {
         category: [],
@@ -29,6 +30,7 @@ class SingleCategory extends Component {
             id: id
         })
     };
+    
     getAllGames(data) {
         // console.log(data);
 
