@@ -3,7 +3,7 @@ const userController = require("../../controllers/userController");
 
 // // Matches with "/api/user"
 router.route("/")
-    .get(userController.findAll);
+  .get(userController.findAll);
 
 // // Matches with "/api/user/:id"
 router.route("/:id")
@@ -13,5 +13,9 @@ router.route("/:id")
 router.route("/:email")
   .get(userController.findOne)
 
+//updates the single player wins and losses after the game
+// matches with "/api/user/:user"
+router.route("/")
+  .post(userController.updateOne)
 
 module.exports = router;

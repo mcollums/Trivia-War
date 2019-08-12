@@ -30,8 +30,6 @@ class SingleCategory extends Component {
         })
     };
     getAllGames(data) {
-        // console.log(data);
-
         for (let i = 0; i < data.length; i++) {
             addCategory.push(data[i]);
         }

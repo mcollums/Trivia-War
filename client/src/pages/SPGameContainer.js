@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import API from "../utils/API";
 import GameCard from "../components/GameCard";
-import GameCol from "../components//GameCol";
+import thumpsup from "../images/thumpsup.jpg";
+import thumpsdown from "../images/thumpsdown.png"
+import GameCol from "../components/GameCol";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
+import update from 'immutability-helper';
+import { Redirect } from "react-router-dom";
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -25,7 +29,8 @@ class SinglePlayerGameContainer extends Component {
         index: 0,
         timer: 10,
         socketArr: "",
-        userInfo: {}
+        userInfo: {},
+        redirectTo: null
     };
 
     //TODO: Add route that will get the game based on the user's selection
@@ -33,6 +38,7 @@ class SinglePlayerGameContainer extends Component {
         this.getGame(this.props.id);
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
         this.getUserPic();
+        console.log(this.state.userInfo);
     }
 
     getUserPic = () => {
@@ -89,7 +95,7 @@ class SinglePlayerGameContainer extends Component {
         console.log(id);
         this.setState({
             userSelect: id,
-            click: true
+
         }, () => {
             //putting this in a callback so we're sure the state has been updated
             //before setUserAnswer is called
@@ -99,6 +105,7 @@ class SinglePlayerGameContainer extends Component {
 
     //This method checks if the user answer is correct and checks if the
     // game continues or not based on if there are any questions left
+
     setUserAnswer = () => {
         //if the user didn't select an answer add to incorrect
         console.log(this.state.index);
@@ -108,23 +115,34 @@ class SinglePlayerGameContainer extends Component {
 
             let newIncorrect = this.state.incorrect + 1;
             this.setState({
-                incorrect: newIncorrect
-            });
-            //if the user selected the correct answer, add to correct
-        } else if (this.state.userSelect === this.state.correctAnswer) {
+                incorrect: newIncorrect,
+                userInfo: update(this.state.userInfo, {
+                    losses: { $set: newIncorrect }
+                }, () => { console.log("Updating the state", this.state.userInfo) })
+            })
+        }
+        //if the user selected the correct answer, add to correct
+        else if (this.state.userSelect === this.state.correctAnswer) {
             console.log("Correct answer selected");
             let newCorrect = this.state.correct + 1;
             this.setState({
-                correct: newCorrect
+                correct: newCorrect,
+                userInfo: update(this.state.userInfo, {
+                    wins: { $set: newCorrect }
+                }, () => { console.log("Updating the state", this.state.userInfo) })
             });
             //if the user selected the incorrect answer, add to incorrect
         } else if (this.state.userSelect !== this.state.correctAnswer) {
             console.log("Incorrect Answer selected");
             let newIncorrect = this.state.incorrect + 1;
             this.setState({
-                incorrect: newIncorrect
+                incorrect: newIncorrect,
+                userInfo: update(this.state.userInfo, {
+                    losses: { $set: newIncorrect }
+                }, () => { console.log("Updating the state", this.state.userInfo) })
             });
         }
+
 
         //This variable is checking to see what the next index value will be
         nextIndex = (this.state.index + 1);
@@ -133,12 +151,21 @@ class SinglePlayerGameContainer extends Component {
         //otherwise, keep going
         if (nextIndex === this.state.questionCount) {
             console.log(this.state.questionCount);
+            console.log(this.state);
             this.endGame();
         } else {
             this.setNextQuestion();
         }
     }
 
+    handlePlayAgainBtn = (user) => {
+        console.log("user details after click play again", user);
+        API.postGameDetails(user).then(res => {
+            console.log(res);
+            this.setState({ redirectTo: "/home" })
+        })
+
+    }
     setNextQuestion = () => {
         newIndex = this.state.index + 1;
         this.setState({
@@ -157,8 +184,30 @@ class SinglePlayerGameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
+        console.log(this.state);
         clearInterval(this.timerID);
     }
+
+    // renderGameContent = () => {
+    //     // do some logic stuff to figure out what to show
+    //     return (
+    //         <div>
+    //             <h2>{this.state.question}</h2>
+    //             <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
+
+
+    //             {this.state.answers.map(answer => (
+    //                 <GameCard
+    //                     id={answer}
+    //                     key={answer}
+    //                     answer={answer}
+    //                     correctAnswer={this.state.correctAnswer}
+    //                     handleSelection={this.handleSelection}
+    //                 />
+    //             ))}
+    //         </div>
+    //     )
+    // }
 
 
     //Query the db to compare user's scores and determine a winner
@@ -169,6 +218,10 @@ class SinglePlayerGameContainer extends Component {
     //Send back to user's homepage
 
     render() {
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
+
         return (
             <div>
                 <Container fluid="-fluid">
@@ -180,7 +233,9 @@ class SinglePlayerGameContainer extends Component {
                     <Row>
                         <GameCol size="12">
                             <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+                                {/* {this.renderGameContent()} */}
                                 {nextIndex !== this.state.questionCount ? (
+
                                     <div>
                                         <h2>{this.state.question}</h2>
                                         <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
@@ -199,6 +254,7 @@ class SinglePlayerGameContainer extends Component {
                                 ) : (
                                         <div>
                                             <h5><strong>{this.state.outcome}</strong></h5>
+                                            <button className="btn btn-primary btn-dark" onClick={() => this.handlePlayAgainBtn(this.state.userInfo)}>Play Again</button>
                                         </div>
                                     )}
                             </Jumbotron>
@@ -206,12 +262,13 @@ class SinglePlayerGameContainer extends Component {
                     </Row>
 
                     <Row>
+                        {/* {this.state.userInfo.picLink} */}
                         <Col size="6" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsup} />
                             <h5 style={{ color: "white" }}>Winning score  {this.state.correct}</h5>
                         </Col>
                         <Col size="6" id="player2">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsdown} />
                             <h5 style={{ color: "white" }}>Loosing Score {this.state.incorrect}</h5>
                         </Col>
                     </Row>
