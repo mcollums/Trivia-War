@@ -19,5 +19,32 @@ module.exports = {
           .findOne(req.params.email)
           .then(dbModel => res.json(dbModel))
           .catch(err => res.status(422).json(err));
-      }
+      },
+      // updateUserScore: function(req,res) {
+      //   db.User
+      //     .findById(req.params.id, (data) => {
+      //       if(!data) {return new Error('Could not find document')}
+      //       else {
+      //         console.log(data);
+      //       }
+      //     })
+      //     .then(dbModel => res.json(dbModel))
+      //     .catch(err => res.status(422).json(err));
+      // }
 };
+
+// Place.findById(req.params.id, function(err, p) {
+//   if (!p)
+//     return next(new Error('Could not load Document'));
+//   else {
+//     // do your updates here
+//     p.modified = new Date();
+
+//     p.save(function(err) {
+//       if (err)
+//         console.log('error')
+//       else
+//         console.log('success')
+//     });
+//   }
+// });

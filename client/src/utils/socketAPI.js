@@ -20,29 +20,54 @@ export default {
     },
 
     //When the user wants to join a game
-    publishSeekGame: userData => {
-        socket.emit("seekGame", userData)
+    publishSeekGame: categoryId => {
+        socket.emit("seekGame", categoryId);
     },
+    //User is the only one in the session
     subscribeMatchmaking: (callback) => {
         socket.on("matchmaking", message => callback(message));
     },
-    subscribeJoinedGame: (callback) => {
-        socket.on("joinedSession", userId => callback(userId));
-    },
-
     //When the game has two users...
     subscribeGameStart: (callback) => {
         socket.on("startGame", sessionId => callback(sessionId));
+    },
+    //When the Game Container Mounts...
+    publishGCMount: () => {
+        socket.emit('GCMount');
+    },
+    //Send back info about this session
+    subscribeSessionInfo: (callback) => {
+        socket.on('sessionInfo', sessionInfo => callback(sessionInfo));
+    },
+    //when the player makes a choice...
+    publishPlayerSelect: (result) => {
+        socket.emit('playerChoice', result);
+    },
+    //server lets each player know if the other has selected an answer
+    subscribeScoreUpdate: (callback) => {
+        socket.on('scoreUpdate', message => callback(message));
+    },
+    //server tells page to go to next question
+    subscribeNextQuestion: (callback) => {
+        socket.on('nextQuestion', score => callback(score));
+    },
+    publishEndGame: (result) => {
+        socket.emit('gameOver', result);
+    },
+    subscribeFinalScore: (callback) => {
+        socket.on('finalScore', result => callback(result))
     },
     subscribeSeekError: callback => {
         socket.on("seekError", message => {
             callback(message)
         })
     },
-    subscribeGameStarted: callback => {
-        socket.on("gameStarted", info => callback(info))
+    subscribeEndTimer: callback => {
+        socket.on('timesUp', message => callback(message));
     },
-    
+    subscribeTimerDec: (callback) => {
+        socket.on('timerDec', message => callback(message));
+    },
     disconnect(){
         socket.disconnect()
     }
