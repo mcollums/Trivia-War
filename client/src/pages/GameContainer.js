@@ -260,7 +260,18 @@ class GameContainer extends Component {
     //PUT result in db
     //Set timer for 5 seconds and then...  
     //Send back to user's homepage
-
+    getUserPic = () => {
+        API.checkAuth()
+            .then(response => {
+                // this runs if the user is logged in
+                console.log("response: ", response.data)
+                this.setState({ userInfo: response.data });
+            })
+            .catch(err => {
+                // this runs if the user is NOT logged in
+                this.setState({ redirectTo: "/" })
+            })
+    }
 
     render() {
         if (this.state.redirectTo) {
@@ -294,8 +305,8 @@ class GameContainer extends Component {
 
                     </Row>
                     <Row>
-                        <Col size="5" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
+                        <Col size="6" id="player1">
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
                             <h5 style={{ color: "white" }}>Score</h5>
                         </Col>
                         <Col size="2" id="message">

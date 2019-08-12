@@ -97,7 +97,7 @@ class UserHome extends Component {
                 
                         <div addClass="userData" id="userCon">
                             {/* User image goes here */}
-                            <img style={{width:"300px", height:"200px", borderRadius:"7%"}} alt={""} src={this.state.userInfoFromDB.picLink} />
+                            <img style={{maxWidth:"300px", maxHeight:"200px", borderRadius:"7%"}} alt={""} src={this.state.userInfoFromDB.picLink} />
                             <div className="name" style={{paddingTop: "25px"}}>
                                 <strong>Name: </strong> {this.state.userInfoFromDB.username}
                             </div>
