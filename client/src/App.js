@@ -7,10 +7,8 @@ import './App.css';
 import PlayNow from "./pages/PlayNow";
 import Authentication from "./pages/Authentication";
 import UserHome from "./pages/UserHome";
-import MultiPlayer from "./pages/MultiPlayer";
-import CategoryTest from "./pages/CategoryTest.js";
+import MultiPlayerCat from "./pages/MultiPlayerCategory";
 import GameContainer from "./pages/GameContainer";
-import Matchmaking from "./pages/Matchmaking";
 import SingleGameContainer from "./pages/SPGameContainer";
 import NoMatch from "./pages/NoMatch";
 import SingleCategory from "./pages/SingleCategory";
@@ -31,8 +29,8 @@ class App extends Component {
       if(message === true){
         this.setState({
           authorized: true
-        },
-          () => {console.log("Application State: " + this.state)}
+        }
+          // () => {console.log("Application State: " + this.state)}
         )} else {console.log("State not updated")}
     })
   }
@@ -54,10 +52,8 @@ class App extends Component {
                   authorized={this.state.authorized} />} />
             <Route exact path="/play" component={PlayNow} />
             <Route exact path="/game" component={GameContainer} />
-            <Route path="/multicat" component={CategoryTest} />
-            <Route path="/matchmaking" component={Matchmaking} />
             <Route exact path="/singlegame" component={SingleGameContainer} />
-            <Route exact path="/multi" component={MultiPlayer} />
+            <Route exact path="/multi" component={MultiPlayerCat} />
             <Route exact path="/single" component={SingleCategory} />
             <Route component={NoMatch} />
           </Switch>

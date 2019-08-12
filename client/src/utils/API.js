@@ -34,7 +34,8 @@ export default {
 
 
   }
-
-
+  // updateUserScore: function(id) {
+  //   return axios.put("api/user/score/" + id);
+  // }
 };
 

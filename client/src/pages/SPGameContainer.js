@@ -12,10 +12,9 @@ import { Redirect } from "react-router-dom";
 let quizQuestions = [];
 let nextIndex = 0;
 let newIndex = 0;
+
 class SinglePlayerGameContainer extends Component {
     state = {
-        // userId: this.props.params.userId,
-        // gameId: this.props.params.gameId,
         title: "",
         category: "",
         question: "",
@@ -53,6 +52,7 @@ class SinglePlayerGameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             })
     }
+
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -104,8 +104,7 @@ class SinglePlayerGameContainer extends Component {
     };
 
     //This method checks if the user answer is correct and checks if the
-    // game continues or not based on if there are any questions left
-
+    //game continues or not based on if there are any questions left
     setUserAnswer = () => {
         //if the user didn't select an answer add to incorrect
         console.log(this.state.index);
@@ -271,6 +270,7 @@ class SinglePlayerGameContainer extends Component {
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsdown} />
                             <h5 style={{ color: "white" }}>Loosing Score {this.state.incorrect}</h5>
                         </Col>
+                        <Col size="3"></Col>
                     </Row>
                 </Container>
             </div>
