@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import Category from "../components/Category";
 import { Redirect, withRouter } from "react-router-dom";
 import socketAPI from "../utils/socketAPI";
-import Modal from 'react-modal';
+// import Modal from 'react-modal';
 
 
 class MultiPlayer extends Component {
