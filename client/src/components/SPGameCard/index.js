@@ -7,13 +7,11 @@ const styles = {
 
 const SPGameCard = props => (
     <div>
-        {/* <button id={props.id} onClick={() => props.loadPage(props.id)}> */}
         <div style={styles} id={props.id} className="scategory" onClick={() => props.loadPage(props.id)}>
-            <div><img className="catImage" src={props.image} /></div>
+            <div><img className="catImage" src={props.image} alt={props.id}/></div>
 
             <div className="scatcat"><strong>{props.category}</strong></div>
         </div>
-        {/* </button > */}
     </div >
 );
 export default SPGameCard;
