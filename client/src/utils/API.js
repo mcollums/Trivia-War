@@ -25,8 +25,8 @@ export default {
   getOneUserEmail: function(email) {
     return axios.get("/api/user/" + email);
   },
-  // updateUserScore: function(id) {
-  //   return axios.put("api/user/score/" + id);
-  // }
+  updateUserScore: function(id,obj) {
+    return axios.put("api/user/score/" + id,obj);
+  }
 };
 

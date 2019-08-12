@@ -5,6 +5,8 @@ const userController = require("../../controllers/userController");
 router.route("/")
   .get(userController.findAll);
 
+router.route("/score/:id")
+  .put(userController.updateUserScore)
 //Matches with "/api/user/:id"
 router.route("/:id")
   .get(userController.findById)
@@ -14,7 +16,6 @@ router.route("/:email")
   .get(userController.findOne)
 
 //Matched with api/user/update/:id
-// router.route("update/:id")
-//   .put(userController.updateUserScore)
+
 
 module.exports = router;

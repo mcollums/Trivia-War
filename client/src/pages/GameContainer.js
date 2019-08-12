@@ -112,20 +112,24 @@ class GameContainer extends Component {
         });
 
         socketAPI.subscribeFinalScore((score) => {
-            console.log(JSON.stringify(score));
+            console.log("Final Score from Server " + JSON.stringify(score));
+            console.log("User ID in state: " + this.state.userInfo.email);
             let userResult = "";
             if (score.winner === "tie") {
-                userResult = this.state.userInfo.id
-            } else if (score.winner === this.state.userInfo.id) {
-                userResult = "win";
-            } else if (score.winner !== this.state.userInfo.id) {
-                userResult = "loss";
-            }
+                userResult = "totalWins"
+            } else if (score.winner === this.state.userInfo.email) {
+                userResult = "totalWins";
+            } else if (score.winner !== this.state.userInfo.email) {
+                userResult = "totalLosses";
+            }  
+            console.log("User result " + userResult);
+            let obj = {}
+            obj[userResult]= true;
 
-            // API.updateUserScore(this.state.userInfo.id)
-            // .then(res => {
-            //     console.log(res);
-            // })
+            API.updateUserScore(this.state.userInfo.id, obj)
+            .then(res => {
+                console.log(res);
+            })
             this.setState({ redirectTo: "/home" });
         })
     }
