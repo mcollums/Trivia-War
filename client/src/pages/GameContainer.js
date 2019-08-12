@@ -8,7 +8,6 @@ import Jumbotron from "../components/Jumbotron";
 import socketAPI from "../utils/socketAPI";
 
 let quizQuestions = [];
-let socketid;
 
 class GameContainer extends Component {
     constructor(props) {
@@ -41,54 +40,59 @@ class GameContainer extends Component {
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
         API.checkAuth()
-        .then(response => {
-            // this runs if the user is logged in
-            console.log("user is authenticated");
-            // console.log(response.data);
-            this.setState({
-                userInfo: response.data
-            })
-        })
-        .catch(err => {
-            // this runs if the uer is NOT logged in
-            this.setState({ redirectTo: "/" })
-        });
+            .then(response => {
+                // this runs if the user is logged in
+                this.setState({ userInfo: response.data },
+                    () => console.log(JSON.stringify(this.state.userInfo)));
+                //Grab the session info from the server
+                socketAPI.publishGCMount();
+                //Then set the state with the session info
+                socketAPI.subscribeSessionInfo((info) => {
+                    console.log("Subcribe Session Info" + JSON.stringify(info));
+                    let userPosition = "";
 
-        socketAPI.publishGCMount();
+                    if (this.state.userInfo.email === info.playerOne) {
+                        userPosition = "p1"
+                    } else if (this.state.userInfo.email === info.playerTwo) {
+                        userPosition = "p2"
+                    }
 
-        socketAPI.subscribeSessionInfo((info) => {
-            console.log("Subcrible Session Info" + JSON.stringify(info));
-        });
+                    this.setState({
+                        category: info.categoryId,
+                        position: userPosition
+                    }, () => {
+                        console.log("User position in state " + this.state.position);
+                        this.getGame(this.state.category);
 
-        // this.setState({
-        //     position: this.props.position,
-        //     quizId: this.props.selected
-        // }, () => {
-        //     console.log("PROPS: " + this.props.position + " " + this.props.selected);
-        //     console.log("Quiz ID " + this.state.quizId);
-        //     console.log("GameContain Player Position =" + this.state.position);
-        //     this.getGame("5d4cad9a72dc431b959681f1");
-        // })
-
-            // this.getGame("5d4cad9a72dc431b959681f1");
-
-      
+                        //Start Timer
+                        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
+                    })
+                });
+            }).catch(err => {
+                // this runs if the uer is NOT logged in
+                this.setState({ redirectTo: "/" })
+            });
 
 
-        //Setting up Socket Listeners:
+
+        //Setting up Socket Listeners for Game:
+        //Message comes back after either user selects an answer
         socketAPI.subscribeScoreUpdate((message) => {
             console.log(message);
             this.setState({
                 message: message
             })
         });
+
+        //Score comes back when both players have selected an ansnwer
+        //Also updates to the next question
         socketAPI.subscribeNextQuestion((score) => {
             console.log("New Score = " + JSON.stringify(score));
             //This variable is checking to see what the next index value will be
             let nextIndex = (this.state.index + 1);
 
-            // if the next index value is equal to the total amount of questions then stop the game
-            // otherwise, keep going
+            // if the next index value is equal to the total amount of questions 
+            // then stop the game otherwise, keep going
             if (nextIndex === this.state.questionCount) {
                 this.endGame();
             } else {
@@ -96,7 +100,9 @@ class GameContainer extends Component {
             }
         });
 
-        this.timerID = setInterval(() => this.decrimentTime(), 1000);
+        socketAPI.subscribeFinalScore((score) => {
+            console.log(JSON.stringify(score));
+        })
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -161,6 +167,7 @@ class GameContainer extends Component {
     // game continues or not based on if there are any questions left
     setUserAnswer = (callback) => {
         let userAnswerResult = "";
+
         //if the user didn't select an answer add to incorrect
         if (this.state.userSelect === "") {
             // console.log("No answer selected");
@@ -169,6 +176,7 @@ class GameContainer extends Component {
                 incorrect: newIncorrect
             });
             userAnswerResult = "incorrect";
+
             //if the user selected the correct answer, add to correct
         } else if (this.state.userSelect === this.state.correctAnswer) {
             // console.log("Correct answer selected");
@@ -177,6 +185,7 @@ class GameContainer extends Component {
                 correct: newCorrect
             });
             userAnswerResult = "correct"
+
             //if the user selected the incorrect answer, add to incorrect
         } else if (this.state.userSelect !== this.state.correctAnswer) {
             // console.log("Incorrect Answer selected");
@@ -205,17 +214,19 @@ class GameContainer extends Component {
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
             userSelect: ""
         }, function () {
-            console.log(this.state);
+            // console.log(this.state);
         });
     }
 
     endGame = () => {
         console.log("GAME OVER");
-        if(this.state.position === "p1") {
+        if (this.state.position === "p1") {
             console.log("Player One sending Game Data to server");
             socketAPI.publishEndGame();
+        } else {
+            console.log("Player 2 waiting on score");
         }
-        clearInterval(this.timerID);
+        // clearInterval(this.timerID);
     }
 
 

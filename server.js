@@ -190,87 +190,92 @@ io.on('connection', function (player) {
 
       s.playerOne.socket.emit("sessionInfo", sessionInfo);
       s.playerTwo.socket.emit("sessionInfo", sessionInfo);
-    }   
+    }
   })
 
 
-player.on('playerChoice', result => {
-  //Find this user's session...
-  const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
-  if (s) {
-    // console.log("Session Found! This player is in the session # " + s.id);
+  player.on('playerChoice', result => {
+    //Find this user's session...
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+      // console.log("Session Found! This player is in the session # " + s.id);
 
-    //If this user is P1 and the answer is correct, update score
-    //Also, update the session to mark that they've chosen an answer
-    if (newPlayer.email === s.playerOne.email) {
-      s.playerOneSelect = true;
-      if (result === "correct") {
-        s.playerOneScore++
-      }
-      // console.log("Player One Selected an Answer");
-
-      //If this user is P2 and the answer is correct, update score
+      //If this user is P1 and the answer is correct, update score
       //Also, update the session to mark that they've chosen an answer
-    } else if (newPlayer.email === s.playerTwo.email) {
-      s.playerTwoSelect = true;
-      if (result === "correct") {
-        s.playerTwoScore++
-      }
-      // console.log("Player Two Selected an Answer");
-    }
+      if (newPlayer.email === s.playerOne.email) {
+        s.playerOneSelect = true;
+        if (result === "correct") {
+          s.playerOneScore++
+        }
+        // console.log("Player One Selected an Answer");
 
-    //If either player hasn't selected an answer...
-    if (s.playerOneSelect === false || s.playerTwoSelect === false) {
-      //If P1 has chosen, let them know. Also let P2 know.
-      if (s.playerOneSelect === true) {
-        s.playerOne.socket.emit('scoreUpdate', "You've Selected an Answer");
-        s.playerTwo.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
-
-        //If P2 has chosen, let them know. Also let P1 know.
-      } else if (s.playerTwoSelect === true) {
-        s.playerTwo.socket.emit('scoreUpdate', "You've Selected an Answer");
-        s.playerOne.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
-      }
-      //If both users have answered...
-    } else if (s.playerOneSelect === true && s.playerTwoSelect === true) {
-      console.log("Both users have answered");
-      //Reset Session State for next question
-      s.playerOneSelect = false;
-      s.playerTwoSelect = false;
-
-      //Creating Object to send back with scores
-      let updatedScore = {
-        playerOne: s.playerOneScore,
-        playerTwo: s.playerTwoScore
+        //If this user is P2 and the answer is correct, update score
+        //Also, update the session to mark that they've chosen an answer
+      } else if (newPlayer.email === s.playerTwo.email) {
+        s.playerTwoSelect = true;
+        if (result === "correct") {
+          s.playerTwoScore++
+        }
+        // console.log("Player Two Selected an Answer");
       }
 
-      //Let both players know the current score
-      s.playerOne.socket.emit('nextQuestion', updatedScore);
-      s.playerTwo.socket.emit('nextQuestion', updatedScore);
-    }
-  } else {
-    console.log("No session found");
-  }
-});
+      //If either player hasn't selected an answer...
+      if (s.playerOneSelect === false || s.playerTwoSelect === false) {
+        //If P1 has chosen, let them know. Also let P2 know.
+        if (s.playerOneSelect === true) {
+          s.playerOne.socket.emit('scoreUpdate', "You've Selected an Answer");
+          s.playerTwo.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
 
-//When the game has finished...
-player.on('gameOver', result => {
-  //Find that user's session...
-  const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
-  if (s) {
-    let finalScore = {
-      p1Score: s.playerOneScore,
-      p2Score: s.playerTwoScore,
-      winner: ""
-    }
-    if (s.playerOneScore > s.playerTwoScore) {
-      finalScore.winner = "p1"
+          //If P2 has chosen, let them know. Also let P1 know.
+        } else if (s.playerTwoSelect === true) {
+          s.playerTwo.socket.emit('scoreUpdate', "You've Selected an Answer");
+          s.playerOne.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
+        }
+        //If both users have answered...
+      } else if (s.playerOneSelect === true && s.playerTwoSelect === true) {
+        console.log("Both users have answered");
+        //Reset Session State for next question
+        s.playerOneSelect = false;
+        s.playerTwoSelect = false;
+
+        //Creating Object to send back with scores
+        let updatedScore = {
+          playerOne: s.playerOneScore,
+          playerTwo: s.playerTwoScore
+        }
+
+        //Let both players know the current score
+        s.playerOne.socket.emit('nextQuestion', updatedScore);
+        s.playerTwo.socket.emit('nextQuestion', updatedScore);
+      }
     } else {
-      finalScore.winner = "p2"
+      console.log("No session found");
     }
-  }
-  console.log(chalk.red("FINAL SCORE: " + finalScore));
-});
+  });
+
+  //When the game has finished...
+  player.on('gameOver', result => {
+    //Find that user's session...
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+      let finalScore = {
+        p1Score: s.playerOneScore,
+        p2Score: s.playerTwoScore,
+        winner: ""
+      }
+      if (s.playerOneScore === s.playerTwoScore) {
+        finalScore.winner = "tie"
+      } else if (s.playerOneScore > s.playerTwoScore) {
+        finalScore.winner = "p1"
+      } else {
+        finalScore.winner = "p2"
+      }
+
+      console.log(chalk.red("FINAL SCORE: " + JSON.stringify(finalScore)));
+      s.playerOne.socket.emit('finalScore', finalScore);
+      s.playerTwo.socket.emit('finalScore', finalScore);
+    }
+  });
 });
 
 

@@ -3,8 +3,6 @@ import { Redirect, withRouter } from "react-router-dom";
 import socketAPI from "../utils/socketAPI";
 import API from "../utils/API";
 import MPCategory from "../components/MPCategory";
-import GameContainer from './GameContainer';
-import Modal from 'react-modal';
 
 
 class MultiPlayer extends Component {
@@ -35,13 +33,6 @@ class MultiPlayer extends Component {
             this.setState({ matchmakingOpen: true });
         });
 
-        // socketAPI.subscribeJoinedGame((userId) => {
-        //     console.log("Found a session with user...", userId);
-        //     this.props.history.push('/game');
-        //     this.setState({ matchmakingOpen: false });
-
-        // });
-
         socketAPI.subscribeGameStart((info) => {
             // console.log("Game information", info);
             this.setState({
@@ -61,9 +52,6 @@ class MultiPlayer extends Component {
 
     handleCatSelect = (id) => {
         console.log("User chose: " + id);
-        this.setState({
-            selected: id
-        })
         this.publishSeekGame(id);
     }
 
@@ -81,20 +69,6 @@ class MultiPlayer extends Component {
         }
         return (
             <div>
-                {/* {this.state.selected === "" ? (
-                    <div className="scatContain">
-                        {this.state.category.map(category => (
-                            <MPCategory
-                                id={category._id}
-                                key={category._id}
-                                category={category.category}
-                                handleSelect={this.handleCatSelect}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                        <GameContainer {...this.props} />
-                    )} */}
                 <div className="scatContain">
                     {this.state.category.map(category => (
                         <MPCategory
