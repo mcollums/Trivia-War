@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import API from "../utils/API";
-import GameCard from "../components/GameCard";
+import MPGameCard from "../components/MPGameCard";
 import GameCol from "../components//GameCol";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
+import socketAPI from "../utils/socketAPI";
 
 let quizQuestions = [];
 let socketid;
@@ -27,11 +28,13 @@ class GameContainer extends Component {
             outcome: "",
             index: 0,
             timer: 10,
-    
+
             // showLoading: true,
             socketArr: "",
-            redirectTo: null
+            redirectTo: null,
         };
+
+        this.publishPlayerSelect = this.publishPlayerSelect.bind(this)
     }
 
     //TODO: Add route that will get the game based on the user's selection
@@ -40,13 +43,14 @@ class GameContainer extends Component {
             quizId: this.props.id
         }, () => {
             console.log("Quiz ID " + this.state.quizId);
+            this.getGame("5d4cad9a72dc431b959681f1");
         })
 
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
                 console.log("user is authenticated");
-                console.log(response.data);
+                // console.log(response.data);
                 this.setState({
                     userInfo: response.data
                 })
@@ -56,10 +60,18 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
-        this.getGame("5d4cad9a72dc431b959681f1");
+    
+        //Setting up Socket Listeners:
+        socketAPI.subscribeScoreUpdate((message) => {
+            console.log("message from server" + message);
+        });
+        socketAPI.subscribeNextQuestion((score) => {
+            console.log("New Score = " + JSON.stringify(score));
+        });
+
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
-    
+
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -101,7 +113,18 @@ class GameContainer extends Component {
     }
 
     //Click Handler
-    handleSelection(id, socketid) {
+    publishPlayerSelect(selection) {
+        console.log("User Selected: " + selection);
+        this.setState({
+            userSelect: selection
+        }, () => {
+            //putting this in a callback so we're sure the state has been updated
+            //before setUserAnswer is called
+            this.setUserAnswer((result) => {
+                console.log("User is " + result);
+                socketAPI.publishPlayerSelect(result);
+            });
+        })
         // console.log(id);
         // console.log("Socket id", socketid);
         // if (id) {
@@ -141,29 +164,36 @@ class GameContainer extends Component {
 
     //This method checks if the user answer is correct and checks if the
     // game continues or not based on if there are any questions left
-    setUserAnswer = () => {
+    setUserAnswer = (callback) => {
+        let userAnswerResult = "";
         //if the user didn't select an answer add to incorrect
         if (this.state.userSelect === "") {
-            console.log("No answer selected");
+            // console.log("No answer selected");
             let newIncorrect = this.state.incorrect + 1;
             this.setState({
                 incorrect: newIncorrect
             });
+            userAnswerResult = "incorrect";
             //if the user selected the correct answer, add to correct
         } else if (this.state.userSelect === this.state.correctAnswer) {
-            console.log("Correct answer selected");
+            // console.log("Correct answer selected");
             let newCorrect = this.state.correct + 1;
             this.setState({
                 correct: newCorrect
             });
+            userAnswerResult = "correct"
             //if the user selected the incorrect answer, add to incorrect
         } else if (this.state.userSelect !== this.state.correctAnswer) {
-            console.log("Incorrect Answer selected");
+            // console.log("Incorrect Answer selected");
             let newIncorrect = this.state.incorrect + 1;
             this.setState({
                 incorrect: newIncorrect
             });
+            userAnswerResult = "incorrect";
         }
+
+        console.log("User answer result = " + userAnswerResult);
+        callback(userAnswerResult);
 
         //This variable is checking to see what the next index value will be
         let nextIndex = (this.state.index + 1);
@@ -171,10 +201,13 @@ class GameContainer extends Component {
         //if the next index value is equal to the total amount of questions then stop the game
         //otherwise, keep going
         if (nextIndex === this.state.questionCount) {
+            userAnswerResult = "";
             this.endGame();
         } else {
+            userAnswerResult = "";
             this.setNextQuestion();
         }
+       
     }
 
     setNextQuestion = () => {
@@ -222,8 +255,8 @@ class GameContainer extends Component {
                 <Container fluid="-fluid">
                     <Row>
                         <Col size="12" id="titleCol">
-                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} 
-                            className="text-center"> {this.state.title} </h5>
+                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }}
+                                className="text-center"> {this.state.title} </h5>
                         </Col>
                     </Row>
                     <Row>
@@ -233,11 +266,10 @@ class GameContainer extends Component {
                                 <h2>{this.state.question}</h2>
                                 <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
                                 {this.state.answers.map(answer => (
-                                    <GameCard
+                                    <MPGameCard
                                         id={answer}
                                         key={answer}
-                                        socketid={socketid}
-                                        handleSelection={this.handleSelection.bind(this)}
+                                        publishPlayerSelect={this.publishPlayerSelect}
                                     />
                                 ))}
                             </Jumbotron>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Redirect, withRouter } from "react-router-dom";
 import socketAPI from "../utils/socketAPI";
 import API from "../utils/API";
-import MPGameCard from "../components/MPGameCard";
+import MPCategory from "../components/MPCategory";
 import GameContainer from './GameContainer';
 import Modal from 'react-modal';
 
@@ -23,7 +23,8 @@ class MultiPlayer extends Component {
         API.getGames().then(res => {
             this.setState({
                 category: res.data
-            }, () => console.log(this.state.category))
+            }) 
+            // () => console.log(this.state.category))
         });
 
         socketAPI.subscribeMatchmaking((message) => {
@@ -33,17 +34,17 @@ class MultiPlayer extends Component {
             this.setState({ matchmakingOpen: true });
         });
 
-        socketAPI.subscribeJoinedGame((userId) => {
-            console.log("Found a session with user...", userId);
+        // socketAPI.subscribeJoinedGame((userId) => {
+        //     console.log("Found a session with user...", userId);
+        //     this.props.history.push('/game');
+        //     this.setState({ matchmakingOpen: false });
+
+        // });
+
+        socketAPI.subscribeGameStart((info) => {
+            console.log("Game information", info);
             this.props.history.push('/game');
             this.setState({ matchmakingOpen: false });
-
-        });
-
-        socketAPI.subscribeGameStart((sessionId) => {
-            console.log("Your session id is...", sessionId);
-            this.setState({ matchmakingOpen: false });
-
         });
     }
 
@@ -78,7 +79,7 @@ class MultiPlayer extends Component {
             {this.state.selected === "" ? (
                 <div className="scatContain">
                     {this.state.category.map(category => (
-                        <MPGameCard
+                        <MPCategory
                             id={category._id}
                             key={category._id}
                             category={category.category}

@@ -26,31 +26,29 @@ export default {
     subscribeMatchmaking: (callback) => {
         socket.on("matchmaking", message => callback(message));
     },
-    subscribeJoinedGame: (callback) => {
-        socket.on("joinedSession", userId => callback(userId));
-    },
-
-    publishGameReady: () => {
-        socket.emit("gameReady");
-    },
-    subscribeGiveCat: (callback) => {
-        socket.on("giveCategory", category => callback(category));
-    },
+    // subscribeJoinedGame: (callback) => {
+    //     socket.on("joinedSession", userId => callback(userId));
+    // },
     //When the game has two users...
     subscribeGameStart: (callback) => {
         socket.on("startGame", sessionId => callback(sessionId));
     },
 
+    publishPlayerSelect: (result) => {
+        socket.emit('playerChoice', result);
+    },
+    subscribeScoreUpdate: (callback) => {
+        socket.on('scoreUpdate', message => callback(message));
+    },
+    subscribeNextQuestion: (callback) => {
+        socket.on('nextQuestion', score => callback(score));
+    },
 
     subscribeSeekError: callback => {
         socket.on("seekError", message => {
             callback(message)
         })
     },
-    subscribeGameStarted: callback => {
-        socket.on("gameStarted", info => callback(info))
-    },
-    
     disconnect(){
         socket.disconnect()
     }
