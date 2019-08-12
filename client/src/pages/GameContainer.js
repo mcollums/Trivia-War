@@ -42,8 +42,7 @@ class GameContainer extends Component {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                this.setState({ userInfo: response.data },
-                    () => console.log("User Info "+JSON.stringify(this.state.userInfo)));
+                this.setState({ userInfo: response.data });
                 //Grab the session info from the server
                 socketAPI.publishGCMount();
                 //Then set the state with the session info
@@ -70,7 +69,7 @@ class GameContainer extends Component {
                                 this.setState({
                                     oppInfo: res.data
                                 }, () => {
-                                    console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
+                                    // console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
                                     this.getGame(this.state.category);
                                 })
                             })
