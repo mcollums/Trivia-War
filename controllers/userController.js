@@ -21,9 +21,9 @@ module.exports = {
           .catch(err => res.status(422).json(err));
       },
       updateOne: function (req, res) {
-        console.log("wins", req.body.wins);
-        console.log("looses", req.body.losses);
-        console.log("id", req.body.id);
+        // console.log("wins", req.body.wins);
+        // console.log("looses", req.body.losses);
+        // console.log("id", req.body.id);
         db.User.findOneAndUpdate({ _id: req.body.id }, {
           totalWins: req.body.wins, totalLosses: req.body.losses
         }, { new: true }).then(dbModel => res.json(dbModel))
@@ -36,7 +36,7 @@ module.exports = {
           .then((user) => {
             if(!user) {return new Error('Could not find document')}
             else {
-              console.log(req.body);
+              // console.log(req.body);
               if(req.body.totalWins){
                 user.totalWins = user.totalWins+1
               }else if(req.body.totalLosses){

@@ -29,8 +29,7 @@ class GameContainer extends Component {
             index: 0,
             timer: 10,
             gameOver: false,
-
-            // showLoading: true,
+            oppCorrect: "",
             redirectTo: null,
         };
 
@@ -99,6 +98,15 @@ class GameContainer extends Component {
         //Also updates to the next question
         socketAPI.subscribeNextQuestion((score) => {
             console.log("New Score = " + JSON.stringify(score));
+            if(this.state.position === "p1") {
+                this.setState({
+                    oppCorrect: score.playerOne
+                })
+            } else if (this.state.position === "p2") {
+                this.setState({
+                    oppCorrect: score.playerTwo
+                })
+            }
             //This variable is checking to see what the next index value will be
             let nextIndex = (this.state.index + 1);
 
@@ -212,7 +220,7 @@ class GameContainer extends Component {
             userAnswerResult = "incorrect";
         }
 
-        console.log("User answer result = " + userAnswerResult);
+        // console.log("User answer result = " + userAnswerResult);
         callback(userAnswerResult);
         this.setState({
             userSelect: ""
@@ -266,7 +274,6 @@ class GameContainer extends Component {
                     <Row>
                         <GameCol size="12">
                             <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
-
                                 <h2>{this.state.question}</h2>
                                 <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
                                 {this.state.answers.map(answer => (
@@ -277,21 +284,20 @@ class GameContainer extends Component {
                                     />
                                 ))}
                             </Jumbotron>
-
                         </GameCol>
 
                     </Row>
                     <Row>
                         <Col size="4" id="player1">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
-                            <h5 style={{ color: "white" }}>Score</h5>
+                            <h5 style={{ color: "white" }}>Score: {this.state.correct}</h5>
                         </Col>
                         <Col size="4" id="message">
-                            <h4 style={{ color: "white" }}>{this.state.message}</h4>
+                            <h4 style={{ color: "white", marginTop: "20px"}}> {this.state.message} </h4>
                         </Col>
                         <Col size="4" id="player2">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
-                            <h5 style={{ color: "white" }}>Score</h5>
+                            <h5 style={{ color: "white" }}> Score {this.state.oppCorrect} </h5>
                         </Col>
                     </Row>
                 </Container>

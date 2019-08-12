@@ -120,7 +120,7 @@ io.on('connection', function (player) {
 
       s.playerOne.socket.emit('timerDec', timer);
       s.playerTwo.socket.emit('timerDec', timer);
-      console.log("Timer: " + timer);
+      // console.log("Timer: " + timer);
 
       if (--timer < 0) {
         timer = duration;
