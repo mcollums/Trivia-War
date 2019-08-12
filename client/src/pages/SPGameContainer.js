@@ -206,14 +206,14 @@ class SinglePlayerGameContainer extends Component {
                     </Row>
 
                     <Row>
-                        <Col size="6" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
-                            <h5 style={{ color: "white" }}>Winning score  {this.state.correct}</h5>
+                        <Col size="3"></Col>
+                        <Col size="3" id="correct">
+                            <h5 style={{ color: "white", marginTop: "10px" }}>Correct: {this.state.correct}</h5>
                         </Col>
-                        <Col size="6" id="player2">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
-                            <h5 style={{ color: "white" }}>Loosing Score {this.state.incorrect}</h5>
+                        <Col size="3" id="incorrect">
+                            <h5 style={{ color: "white", marginTop: "10px" }}>Incorrect: {this.state.incorrect}</h5>
                         </Col>
+                        <Col size="3"></Col>
                     </Row>
                 </Container>
             </div>
