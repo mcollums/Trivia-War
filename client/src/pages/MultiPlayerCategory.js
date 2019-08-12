@@ -8,13 +8,18 @@ import Modal from 'react-modal';
 
 
 class MultiPlayer extends Component {
-    state = {
-        category: [],
-        selected: "",
-        gameStart: false,
-        matchmakingOpen: false,
+    constructor(props) {
+        super(props);
+        this.state = {
+            category: [],
+            selected: "",
+            position: "",
+            gameStart: false,
+            matchmakingOpen: false,
+        }
+        this.handleCatSelect = this.handleCatSelect.bind(this);
     }
-    
+
     // openModal = modal => {
     //     this.setState({ [modal]: true });
     // }
@@ -23,7 +28,7 @@ class MultiPlayer extends Component {
         API.getGames().then(res => {
             this.setState({
                 category: res.data
-            }) 
+            })
             // () => console.log(this.state.category))
         });
 
@@ -42,9 +47,14 @@ class MultiPlayer extends Component {
         // });
 
         socketAPI.subscribeGameStart((info) => {
-            console.log("Game information", info);
-            this.props.history.push('/game');
-            this.setState({ matchmakingOpen: false });
+            // console.log("Game information", info);
+            this.setState({
+                position: info.position
+            }, () => {
+                console.log("MultiplayerCat Position = " + this.state.position);
+                this.props.history.push('/game');
+                this.setState({ matchmakingOpen: false });
+            })
         });
     }
 
@@ -65,32 +75,32 @@ class MultiPlayer extends Component {
     render() {
         if (this.state.matchmakingOpen) {
             return (
-                        <div className="circlecontainer">
-                        <div className="lds-circle"><div>
-                        </div><h5 className="match">Looking for a match...</h5></div>
-                        </div>
-                    );
+                <div className="circlecontainer">
+                    <div className="lds-circle"><div>
+                    </div><h5 className="match">Looking for a match...</h5></div>
+                </div>
+            );
         }
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
         return (
             <div>
-            {this.state.selected === "" ? (
-                <div className="scatContain">
-                    {this.state.category.map(category => (
-                        <MPCategory
-                            id={category._id}
-                            key={category._id}
-                            category={category.category}
-                            handleSelect={this.handleCatSelect}
-                        />
-                    ))}
-                </div>
-            ) : (
-                    <GameContainer id={this.state.selected} />
-                )}
-        </div>
+                {this.state.selected === "" ? (
+                    <div className="scatContain">
+                        {this.state.category.map(category => (
+                            <MPCategory
+                                id={category._id}
+                                key={category._id}
+                                category={category.category}
+                                handleSelect={this.handleCatSelect}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                        <GameContainer {...this.props} />
+                    )}
+            </div>
         )
     };
 }

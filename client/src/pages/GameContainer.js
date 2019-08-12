@@ -14,6 +14,7 @@ class GameContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            position: "",
             quizId: "",
             userInfo: "",
             title: "",
@@ -26,11 +27,11 @@ class GameContainer extends Component {
             incorrect: 0,
             userSelect: "",
             outcome: "",
+            message: "",
             index: 0,
             timer: 10,
 
             // showLoading: true,
-            socketArr: "",
             redirectTo: null,
         };
 
@@ -40,9 +41,12 @@ class GameContainer extends Component {
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
         this.setState({
-            quizId: this.props.id
+            position: this.props.position,
+            quizId: this.props.selected
         }, () => {
+            console.log("PROPS: " + this.props.position + " " + this.props.selected);
             console.log("Quiz ID " + this.state.quizId);
+            console.log("GameContain Player Position =" + this.state.position);
             this.getGame("5d4cad9a72dc431b959681f1");
         })
 
@@ -60,13 +64,26 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
-    
+
         //Setting up Socket Listeners:
         socketAPI.subscribeScoreUpdate((message) => {
-            console.log("message from server" + message);
+            console.log(message);
+            this.setState({
+                message: message
+            })
         });
         socketAPI.subscribeNextQuestion((score) => {
             console.log("New Score = " + JSON.stringify(score));
+            //This variable is checking to see what the next index value will be
+            let nextIndex = (this.state.index + 1);
+
+            // if the next index value is equal to the total amount of questions then stop the game
+            // otherwise, keep going
+            if (nextIndex === this.state.questionCount) {
+                this.endGame();
+            } else {
+                this.setNextQuestion();
+            }
         });
 
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
@@ -194,20 +211,7 @@ class GameContainer extends Component {
 
         console.log("User answer result = " + userAnswerResult);
         callback(userAnswerResult);
-
-        //This variable is checking to see what the next index value will be
-        let nextIndex = (this.state.index + 1);
-
-        //if the next index value is equal to the total amount of questions then stop the game
-        //otherwise, keep going
-        if (nextIndex === this.state.questionCount) {
-            userAnswerResult = "";
-            this.endGame();
-        } else {
-            userAnswerResult = "";
-            this.setNextQuestion();
-        }
-       
+        userAnswerResult = "";
     }
 
     setNextQuestion = () => {
@@ -278,11 +282,14 @@ class GameContainer extends Component {
 
                     </Row>
                     <Row>
-                        <Col size="6" id="player1">
+                        <Col size="5" id="player1">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
                             <h5 style={{ color: "white" }}>Score</h5>
                         </Col>
-                        <Col size="6" id="player2">
+                        <Col size="2" id="message">
+                            <h3>{this.state.message}</h3>
+                        </Col>
+                        <Col size="5" id="player2">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
                             <h5 style={{ color: "white" }}>Score</h5>
                         </Col>
