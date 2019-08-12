@@ -11,8 +11,7 @@ let quizQuestions = [];
 let socketid;
 class GameContainer extends Component {
     state = {
-        // userId: this.props.params.userId,
-        // gameId: this.props.params.gameId,
+        userInfo: "",
         title: "",
         category: "",
         question: "",
@@ -26,28 +25,32 @@ class GameContainer extends Component {
         index: 0,
         timer: 10,
 
-        showLoading: true,
+        // showLoading: true,
         socketArr: "",
         redirectTo: null
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({ showLoading: false });
-        }, 2500);
+        // setTimeout(() => {
+        //     this.setState({ showLoading: false });
+        // }, 2500);
 
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                console.log("response: ", response)
+                console.log("user is authenticated");
+                console.log(response.data);
+                this.setState({
+                    userInfo: response.data
+                })
             })
             .catch(err => {
                 // this runs if the uer is NOT logged in
                 this.setState({ redirectTo: "/" })
-            })
+            });
 
-        this.getGame("PUT YOUR GAME'S ID HERE FROM THE DATABASE");
+        this.getGame("5d4aedd61af73588729be101");
         // this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
@@ -208,13 +211,13 @@ class GameContainer extends Component {
 
 
     render() {
-        if(this.state.showLoading) {
-            return (
-                <div className="circlecontainer">
-                <div class="lds-circle"><div></div></div>
-                </div>
-            );
-        }
+        // if(this.state.showLoading) {
+        //     return (
+        //         <div className="circlecontainer">
+        //         <div className="lds-circle"><div></div></div>
+        //         </div>
+        //     );
+        // }
 
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
@@ -224,7 +227,8 @@ class GameContainer extends Component {
                 <Container fluid="-fluid">
                     <Row>
                         <Col size="12" id="titleCol">
-                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} className="text-center"> {this.state.title} </h5>
+                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} 
+                            className="text-center"> {this.state.title} </h5>
                         </Col>
                     </Row>
                     <Row>

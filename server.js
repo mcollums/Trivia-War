@@ -7,6 +7,7 @@ const passport = require('./config/passport.js')
 const { google } = require("googleapis")
 const session = require('express-session')
 const path = require("path");
+const chalk = require('chalk');
 
 app.use(session({ secret: process.env.SESSION_SECRET || "the cat ate my keyboard", resave: true, saveUninitialized: true }))
 app.use(passport.initialize());
@@ -64,100 +65,193 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/trivia_masters"
 //SOCKET AND GAME STATES START HERE
 // ===========================================================================================
 //Player Data on Server
-const players = [];
+const playerArr = [];
+
 const makePlayer = (socket) => {
-    return {
-        id: socket.id,
-        email: "",
-        socket
-    }
+  console.log(chalk.blue("Making new player for: ", socket.id));
+  return {
+    id: socket.id,
+    email: "",
+    authorized: false,
+    socket: socket,
+    status: "Idle"
+  }
 }
 
-const findPlayerById = (id) => {
-    return players.find(p => p.id === id)
+const getPlayerById = (id) => {
+  return playerArr.find(p => p.id === id)
 }
 //Session Data on Server
+let sessionId = 1;
+
 const sessions = [];
-const searchSessions = (socket, category) => {
+
+const makeSession = (id, creator, category) => {
+  return {
+    id,
+    category: category,
+    playerOne: creator,
+    playerTwo: null
+  }
 }
 
-const makeSession = (socket, category) => {
+const searchSessions = (socket, category) => {
+
 }
+
+//ERIC
+// const makePlayer = (socket) => {
+//   console.log("Making new player");
+//   return {
+//     id: socket.id,
+//     email: "",
+//     authorized: false,
+//     socket: socket
+//   }
+// }
+
+// const getPlayerById = (id) => {
+//   return playerArr.find(p => p.id === id)
+// }
+
+//ERIC
+// const sessions = [];
+
+// const makeSession = (id, creator) => {
+//   return {
+//     id,
+//     playerOne: creator,
+//     playerTwo: null
+//   }
+// }
+
+
+
+
 
 io.on('connection', function (player) {
-    var addedUser = false;
+  //On connection, create a new player that's now authorized.
+  const newPlayer = makePlayer(player);
+  console.log("New Player Info" + newPlayer);
+  playerArr.push(newPlayer)
 
-    player.on('disconnect', () => {
-        console.log("Player " + player.id + "is disconnecting");
-        const index = players.findIndex(p => p.id === player.id)
-        players.splice(index, 1)
-        // Look for any games they are a part of and kill them
-    })
+  //Tell all the other sockets that there's a new player
+  playerArr.filter(p => p.id !== newPlayer.id).forEach(p => {
+    p.socket.emit("message", "somebody else connected")
+  });
 
-    // let newUser = {};
-    // newUser.id = player.id;
-    // newUser.status = "Idle";
-    // players.push(newUser);
+  // Auto put people in games
+  // if(sessions.length === 0){
+  //   sessions.push(makeSession(sessionId++, newPlayer))
+  // } else {
+  //   // Let's look for an open game
+  //   const s = sessions.find(s => s.playerTwo === null);
+  //   if(s){
+  //     console.log("new game joined")
+  //     s.playerTwo = newPlayer;
+  //     s.playerOne.socket.emit("joinedGame", newPlayer.id);
+  //     s.playerTwo.socket.emit("joinedGame", s.playerOne.id)
+  //   } else {
+  //     sessions.push(makeSession(sessionId++, newPlayer))
+  //   }
+  // }
 
-    //Let server-side know someone's connected
+  // console.log("This is the socket ID", player.id);
+  //Let server-side know someone's connected
+  // console.log('==================================================================');
+  // console.log('A user connected!', player.id);
+  // console.log("ALL SOCKET USERS INFO :", playerArr);
+  // console.log("CLIENTS # = " + playerArr.length);
+
+  player.on('disconnect', () => {
+    console.log("Player " + player.id + "is disconnecting");
+    const index = playerArr.findIndex(p => p.id === player.id);
+    playerArr.splice(index, 1);
+    // Look for any games they are a part of and kill them
+  })
+
+
+  player.on("setuser", (data) => {
     console.log('==================================================================');
-    console.log('A user connected!', player.id);
-    console.log("ALL SOCKET USERS INFO :" + JSON.stringify(players));
-    console.log("CLIENTS # = " + players.length);
+    console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
 
-    //Click Handler
-    player.on('clicked', function (data) {
-        console.log(data);
-        io.sockets.emit('clicked', { data: player.id });
-    });
+    const index = playerArr.find(p => p.id === player.id);
 
-    player.on("setuser", ({ email }) => {
-        let newUser = {};
-        newUser.id = player.id;
-        newUser.status = "Idle";
-        players.push(newUser);
-        // Check our database to see if that user exists along with other stuff
-        player.emit("authorized", true)
-    })
+    if (index) {
+      console.log("User found in playersArr, adding email:", data);
+      index.email = data;
+      index.authorized = true;
+      index.socket.emit("addedEmail", "We added your email to your user ID");
+      index.socket.emit('authorized', true);
+    } else {
+      console.log(chalk.red("User not found"));
+    }
 
-    player.on("seekGame", () => {
-        // Try and find them a game, if we can, great!
-        // Otherwise just make a new one and put them in it
+    // console.log('==================================================================');
+    // console.log(chalk.blue("NEW USER: ", JSON.stringify(newUser)));
+    // console.log(chalk.blue("Player Array in SetUser", JSON.stringify(playerArr)));
+    // console.log(chalk.blue("CLIENTS # = " + playerArr.length));
 
-        player.emit("joinedGame", { coolInfo: "Goes Here" })
-    })
+  });
 
-    player.on('player-matchmaking', gameData => {
-        io.emit('player-matchmaking', gameData)
-    });
 
-    player.on('player-select', gameData => {
-        io.emit('player-select', gameData)
-    });
+  player.on("seekGame", (category) => {
+       // Try and find them a game, if we can, great!
+    // Otherwise just make a new one and put them in it
+    if (sessions.length === 0) {
+      sessions.push(makeSession(sessionId++, newPlayer));
+      console.log("Server says: New game joined by" + newPlayer);
+      newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
+    } else {
+      // Let's look for an open game
+      const s = sessions.find(s => s.playerTwo === null);
+      if (s) {
+        console.log("Server says: New game joined! GameId =" + s.id)
+        s.playerTwo = newPlayer;
+        
+        s.playerOne.socket.emit("joinedSession", newPlayer.email);
+        s.playerTwo.socket.emit("joinedSession", s.playerOne.email);
 
-    player.on('player-ready', gameData => {
-        io.emit('player-ready', gameData)
-    });
+        s.playerOne.socket.emit("startGame", s.id);
+        s.playerTwo.socket.emit("startGame", s.id);
+      } else {
+        sessions.push(makeSession(sessionId++, newPlayer));
+        newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
+      }
+    }
+  });
 
-    player.on('player-endGame', gameData => {
-        io.emit('player-endGame', gameData)
-    });
+  player.on('player-matchmaking', gameData => {
+    io.emit('player-matchmaking', gameData)
+  });
+
+  player.on('player-select', gameData => {
+    io.emit('player-select', gameData)
+  });
+
+  player.on('player-ready', gameData => {
+    io.emit('player-ready', gameData)
+  });
+
+  player.on('player-endGame', gameData => {
+    io.emit('player-endGame', gameData)
+  });
 });
 
 function buildGame(socket) {
-    var gameObject = {};
-    //generate random Object ID for reference later
-    gameObject.id = (Math.random() + 1).toString(36).slice(2, 18);
-    // gameObject.playerOne = socket.name;
-    // gameObject.playerTwo = null;
-    gameCollection.totalGameCount++;
-    gameCollection.gameList.push({ gameObject });
+  var gameObject = {};
+  //generate random Object ID for reference later
+  gameObject.id = (Math.random() + 1).toString(36).slice(2, 18);
+  // gameObject.playerOne = socket.name;
+  // gameObject.playerTwo = null;
+  gameCollection.totalGameCount++;
+  gameCollection.gameList.push({ gameObject });
 
-    console.log("Game Created by " + socket.name + " w/ " + gameObject.id);
-    io.emit('gameCreated', {
-        name: socket.name,
-        gameId: gameObject.id
-    });
+  console.log("Game Created by " + socket.name + " w/ " + gameObject.id);
+  io.emit('gameCreated', {
+    name: socket.name,
+    gameId: gameObject.id
+  });
 }
 io.on('connection', function (socket) {
     console.log('A user connected!', socket.id);
@@ -172,123 +266,122 @@ io.on('connection', function (socket) {
 // ROUTES FOR GOOGLE AUTHENTICATION
 //=======================================================================
 app.get('/api/google/url', (req, res) => {
-    res.json({ url: getConnectionUrl() })
+  res.json({ url: getConnectionUrl() })
 })
 
 function getGoogleAccountFromCode(code) {
-    console.log("CODE");
-    console.log(code);
-    return createConnection().getToken(code).then(data => {
-        console.log("DATA");
-        console.log(data.tokens)
-        return Promise.resolve(data.tokens)
-    })
+  console.log("CODE");
+  console.log(code);
+  return createConnection().getToken(code).then(data => {
+    console.log("DATA");
+    console.log(data.tokens)
+    return Promise.resolve(data.tokens)
+  })
 }
 
 app.post('/api/google/code', (req, res) => {
-    const { code } = req.body;
-    getGoogleAccountFromCode(code).then(tokens => {
-        console.log(tokens)
-        const userConnection = createConnection()
-        userConnection.setCredentials(tokens)
-        userConnection.getTokenInfo(tokens.access_token).then(data => {
-            console.log("TOKEN INFO");
-            console.log(data);
-            const { email, sub } = data;
+  const { code } = req.body;
+  getGoogleAccountFromCode(code).then(tokens => {
+    console.log(tokens)
+    const userConnection = createConnection()
+    userConnection.setCredentials(tokens)
+    userConnection.getTokenInfo(tokens.access_token).then(data => {
+      console.log("TOKEN INFO");
+      console.log(data);
+      const { email, sub } = data;
 
-            db.User.findOne({ email }).then(dbUser => {
-                if (!dbUser) {
-                    // create a new user!
-                    db.User.create({
-                        email,
-                        authType: "google",
-                        googleId: sub
-                    }).then(finalDbUser => {
-                        req.login(finalDbUser, () => {
-                            res.json(true)
-                        })
-                    }).catch(err => {
-                        console.log(err)
-                        res.sendStatus(500)
-                    })
-
-                } else {
-                    // Check the type and googleId
-                    // if it matches, great! Login the user!
-                    // if not, something odd is up, reject it
-                    console.log(dbUser);
-                    if (dbUser.authType === "google" && dbUser.googleId === sub + "") {
-                        req.login(dbUser, () => {
-                            res.json(true)
-                        });
-
-                    } else {
-                        res.sendStatus(500)
-                    }
-                }
+      db.User.findOne({ email }).then(dbUser => {
+        if (!dbUser) {
+          // create a new user!
+          db.User.create({
+            email,
+            authType: "google",
+            googleId: sub
+          }).then(finalDbUser => {
+            req.login(finalDbUser, () => {
+              res.json(true)
             })
-
-        }).catch(() => {
+          }).catch(err => {
+            console.log(err)
             res.sendStatus(500)
-        })
+          })
+
+        } else {
+          // Check the type and googleId
+          // if it matches, great! Login the user!
+          // if not, something odd is up, reject it
+          console.log(dbUser);
+          if (dbUser.authType === "google" && dbUser.googleId === sub + "") {
+            req.login(dbUser, () => {
+              res.json(true)
+            });
+
+          } else {
+            res.sendStatus(500)
+          }
+        }
+      })
+
+    }).catch(() => {
+      res.sendStatus(500)
     })
+  })
 })
 
 app.get('/api/google/callback', function (req, res) {
-    const code = req.query.code
-    getGoogleAccountFromCode(code).then(tokens => {
-        const userConnection = createConnection()
-        userConnection.setCredentials(tokens)
-        userConnection.getTokenInfo(tokens.access_token).then(data => {
-            const { email, sub } = data;
-            db.User.findOne({ email }).then(dbUser => {
-                console.log(dbUser);
-                if (!dbUser) {
-                    console.log("NEW USER");
-                    // create a new user!
-                    db.User.create({
-                        email,
-                        authType: "google",
-                        googleId: sub
-                    }).then(finalDbUser => {
-                        req.login(finalDbUser, () => {
-                            res.redirect(process.env.NODE_ENV === "production" ? "/" : "http://localhost:3000/");
-                        })
-                    }).catch(err => {
-                        console.log(err)
-                        res.sendStatus(500)
-                    })
-
-                } else {
-                    if (dbUser.authType === "google" && dbUser.googleId === sub + "") {
-                        req.login(dbUser, () => {
-                            res.redirect(process.env.NODE_ENV === "production" ? "/" : "http://localhost:3000/");
-                        })
-                    } else {
-                        res.sendStatus(500)
-                    }
-                }
-            }).catch(err => console.log(err))
-
-        }).catch(err => {
+  const code = req.query.code
+  getGoogleAccountFromCode(code).then(tokens => {
+    const userConnection = createConnection()
+    userConnection.setCredentials(tokens)
+    userConnection.getTokenInfo(tokens.access_token).then(data => {
+      const { email, sub } = data;
+      db.User.findOne({ email }).then(dbUser => {
+        console.log(dbUser);
+        if (!dbUser) {
+          console.log("NEW USER");
+          // create a new user!
+          db.User.create({
+            email,
+            authType: "google",
+            googleId: sub
+          }).then(finalDbUser => {
+            req.login(finalDbUser, () => {
+              res.redirect(process.env.NODE_ENV === "production" ? "/" : "http://localhost:3000/");
+            })
+          }).catch(err => {
             console.log(err)
             res.sendStatus(500)
-        })
+          })
+
+        } else {
+          if (dbUser.authType === "google" && dbUser.googleId === sub + "") {
+            req.login(dbUser, () => {
+              res.redirect(process.env.NODE_ENV === "production" ? "/" : "http://localhost:3000/");
+            })
+          } else {
+            res.sendStatus(500)
+          }
+        }
+      }).catch(err => console.log(err))
+
+    }).catch(err => {
+      console.log(err)
+      res.sendStatus(500)
     })
+  })
 })
 
 // Start the API server
 server.listen(PORT, function () {
-    console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
-    // <<<<<<< HEAD
+  console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
 
 //Make sure Mongoose connection is disconnected
 process.on('SIGINT', () => {
-    mongoose.connection.close().then(() => {
-        console.log("Mongoose disconnected");
-        process.exit(0);
-    })
+  mongoose.connection.close().then(() => {
+    console.log("Mongoose disconnected");
+    process.exit(0);
+  })
 })
 
 
