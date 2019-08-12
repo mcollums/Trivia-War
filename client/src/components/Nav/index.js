@@ -30,7 +30,7 @@ class Nav extends Component {
             </li>
           </ul>
         </div>
-        <Link to="/home" style={{ fontSize: "30px", fontFamily: "'Yatra One', cursive", marginRight: "45%", color: "black", textDecoration: "none" }} className="nav-link" >TRIVIA WAR</Link>
+        <Link to="/home" style={{ fontSize: "30px", fontFamily: "'Yatra One', cursive", color: "black", textDecoration: "none" }} className="nav-link" >TRIVIA WAR</Link>
         {/* <a style={{fontSize: "30px", fontFamily: "'Yatra One', cursive", marginRight:"45%"}} className="navbar-brand" href="/home">TRIVIA WAR</a> */}
       </nav>
     );
