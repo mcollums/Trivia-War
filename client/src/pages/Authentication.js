@@ -126,14 +126,56 @@ class Authentication extends Component {
 
         return (
 
-            <Container fluid>
-                <Row>
-                    <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron style={{ maxHeight: "300px", maxWidth: "200px" }}>
-                            <Row>
-                                <Col size="6">
-                                    <button className="btn btn-dark" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
+                <div className="logCon">
+                        <div className="logInCon">
+                           
 
+                                    {/* <!-- Button trigger modal --> */}
+                                    {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
+                                        Login
+                                    </button>
+                                    <div>
+                                        Email: <input name="email" type="text" value={this.state.email} onChange={this.handleInput}/>
+                                        Password <input name="password" type="text" value={this.state.password} onChange={this.handleInput}/>
+                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
+                                    </div>
+                                    </button> */}
+                                    {/* <!-- Modal --> */}
+                                    {/* <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div className="modal-dialog modal-dialog-centered" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title" id="exampleModalCenterTitle">{this.state.welcomeEmail.length > 0
+                                                        ? "Welcome " + this.state.welcomeEmail
+                                                        : "Login"} </h5>
+                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div className="modal-body"> */}
+                                    {/* {
+                                                        this.state.googleSigninUrl.length > 0 && this.state.welcomeEmail.length === 0
+                                                            ? (<h3>Sign in with <a href={this.state.googleSigninUrl} >google </a></h3>)
+                                                            : ""
+                                                    } */}
+                                    {/* <form>
+                                                        <div className="form-group">
+                                                            <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
+                                                        </div>
+                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
+                                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div> */}
+
+                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
+                                    
                                     <Modal
                                         ariaHideApp={false}
                                         isOpen={this.state.loginOpen}
@@ -154,9 +196,6 @@ class Authentication extends Component {
                                             content: {
                                                 width: "400px",
                                                 height: "200px",
-                                                position: 'fixed',
-                                                top: '25%',
-                                                left: '25%',
                                                 border: '1px solid #ccc',
                                                 background: '#fff',
                                                 overflow: 'auto',
@@ -176,11 +215,10 @@ class Authentication extends Component {
 
                                         </form>
                                     </Modal>
+                                    
 
-                                </Col>
-
-                                <Col size="6">
-                                    <button className="btn btn-dark" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
+                             
+                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
 
                                     <Modal
                                         ariaHideApp={false}
@@ -202,9 +240,6 @@ class Authentication extends Component {
                                             content: {
                                                 width: "400px",
                                                 height: "300px",
-                                                position: 'fixed',
-                                                top: '25%',
-                                                left: '25%',
                                                 border: '1px solid #ccc',
                                                 background: '#fff',
                                                 overflow: 'auto',
@@ -228,12 +263,11 @@ class Authentication extends Component {
                                         </form>
                                     </Modal>
 
-                                </Col>
-                            </Row>
+                               
 
-                        </Jumbotron>
-                    </Col>
-                    <Col size="lg-7 md-12 sm-12">
+                        </div>
+                        
+                   
                         <Jumbotron jumboHeight="80%">
                             <h4>LEADER BOARD</h4>
                             <table className="table">
@@ -261,9 +295,9 @@ class Authentication extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
-                    </Col>
-                </Row>
-            </Container>
+                   
+                 </div>
+
 
         )
     }

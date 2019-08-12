@@ -48,10 +48,11 @@ class SingleCategory extends Component {
                                 id={category._id}
                                 key={category._id}
                                 category={category.category}
+                                image={category.image}
                                 loadPage={this.loadPage}
-
                             />
                         ))}
+                    
                     </div>
                 ) : (
                         <SPGameContainer id={this.state.id} />
