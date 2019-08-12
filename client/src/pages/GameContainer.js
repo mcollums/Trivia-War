@@ -86,7 +86,7 @@ class GameContainer extends Component {
             }
         });
 
-        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
+        this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
 
     //Getting the game information from the Database based on the game's ID
@@ -125,7 +125,9 @@ class GameContainer extends Component {
                 timer: this.state.timer - 1
             });
         } else {
-            this.setUserAnswer();
+            this.setUserAnswer((result) => {
+                socketAPI.publishPlayerSelect(result)
+            });
         }
     }
 
@@ -142,42 +144,8 @@ class GameContainer extends Component {
                 socketAPI.publishPlayerSelect(result);
             });
         })
-        // console.log(id);
-        // console.log("Socket id", socketid);
-        // if (id) {
-        //     this.setState({
-        //         userSelect: id
-        //     }, () => {
-        //         //putting this in a callback so we're sure the state has been updated
-        //         //before setUserAnswer is called
-        //         this.setUserAnswer();
-        //     });
-        // }
-        // socket.emit('clicked',
-        //     {
-        //         socketid: socketid
-        //         // will add user name here later on
-
-        //     });
-        // socket.on('clicked', function (data) {
-        //     console.log("This Socket id" + data.data + " user clicked first");
-        // });
     };
 
-
-
-
-    // //This method updates the game state basked on what the user clicked.
-    // handleSelection = id => {
-    //     console.log(id);
-    //     this.setState({
-    //         userSelect: id
-    //     }, () => {
-    //         //putting this in a callback so we're sure the state has been updated
-    //         //before setUserAnswer is called
-    //         this.setUserAnswer();
-    //     });
-    // };
 
     //This method checks if the user answer is correct and checks if the
     // game continues or not based on if there are any questions left
@@ -211,6 +179,9 @@ class GameContainer extends Component {
 
         console.log("User answer result = " + userAnswerResult);
         callback(userAnswerResult);
+        this.setState({
+            userSelect: ""
+        })
         userAnswerResult = "";
     }
 
@@ -243,14 +214,6 @@ class GameContainer extends Component {
 
 
     render() {
-        // if(this.state.showLoading) {
-        //     return (
-        //         <div className="circlecontainer">
-        //         <div className="lds-circle"><div></div></div>
-        //         </div>
-        //     );
-        // }
-
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
