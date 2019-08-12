@@ -43,6 +43,7 @@ class MultiPlayer extends Component {
                 this.setState({ matchmakingOpen: false });
             })
         });
+        // console.log(category)
     }
 
     publishSeekGame = (category) => {
@@ -75,6 +76,7 @@ class MultiPlayer extends Component {
                             id={category._id}
                             key={category._id}
                             category={category.category}
+                            image={category.image}
                             handleSelect={this.handleCatSelect}
                         />
                     ))}
