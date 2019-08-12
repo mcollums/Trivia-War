@@ -262,7 +262,7 @@ class SinglePlayerGameContainer extends Component {
                     </Row>
 
                     <Row>
-                        {/* {this.state.userInfo.picLink} */}
+
                         <Col size="6" id="player1">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsup} />
                             <h5 style={{ color: "white" }}>Winning score  {this.state.correct}</h5>
