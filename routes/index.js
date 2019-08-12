@@ -3,7 +3,6 @@ const router = require("express").Router();
 const apiRoutes = require("./api");
 const db = require("../models")
 const passport = require("../config/passport");
-const chalk = require('chalk');
 
 // API Routes
 router.use("/api", apiRoutes);

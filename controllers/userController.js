@@ -20,6 +20,16 @@ module.exports = {
           .then(dbModel => res.json(dbModel))
           .catch(err => res.status(422).json(err));
       },
+      updateOne: function (req, res) {
+        console.log("wins", req.body.wins);
+        console.log("looses", req.body.losses);
+        console.log("id", req.body.id);
+        db.User.findOneAndUpdate({ _id: req.body.id }, {
+          totalWins: req.body.wins, totalLosses: req.body.losses
+        }, { new: true }).then(dbModel => res.json(dbModel))
+          .catch(err => res.status(422).json(err));
+    
+      },
       updateUserScore: function(req,res) {
         db.User
           .findById(req.params.id)
@@ -35,8 +45,7 @@ module.exports = {
               user.save().then(dbUser => {
                 req.login(dbUser);
                 res.json(dbUser);
-              })
-              
+              });
             }
           })
           .catch(err => res.status(422).json(err));

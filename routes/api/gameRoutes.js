@@ -3,7 +3,7 @@ const gameController = require("../../controllers/gameController");
 
 //EXAMPLE FROM IN CLASS ACTIVITY
 // // Matches with "/api/game"
-console.log("/api/game");
+
 router.route("/")
   .get(gameController.findAllGames);
 
