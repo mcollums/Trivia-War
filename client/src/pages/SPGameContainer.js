@@ -22,12 +22,16 @@ class SinglePlayerGameContainer extends Component {
         userSelect: "",
         outcome: "",
         index: 0,
-        timer: 10,
-        socketArr: ""
+        timer: 12,
+        socketArr: "",
+        showLoading: true
     };
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
+        setTimeout(() => {
+            this.setState({ showLoading: false });
+        }, 2000);
         this.getGame(this.props.id);
         this.timerID = setInterval(() => this.decrimentTime(), 1000);
     }
@@ -147,6 +151,14 @@ class SinglePlayerGameContainer extends Component {
     //Send back to user's homepage
 
     render() {
+        if(this.state.showLoading) {
+            return (
+                <div className="circlecontainer">
+                <div class="lds-circle"><div></div></div>
+                </div>
+            );
+        }
+
         return (
             <div>
                 <Container fluid="-fluid">
