@@ -144,12 +144,9 @@ class Authentication extends Component {
 
         return (
 
-            <Container fluid>
-                <Row>
-                    <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron style={{ maxHeight: "300px", maxWidth: "200px" }}>
-                            <Row>
-                                <Col size="6">
+                <div className="logCon">
+                        <div className="logInCon">
+                           
 
                                     {/* <!-- Button trigger modal --> */}
                                     {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
@@ -195,8 +192,8 @@ class Authentication extends Component {
                                         </div>
                                     </div> */}
 
-                                    <button className="btn btn-dark" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
-
+                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
+                                    
                                     <Modal
                                         ariaHideApp={false}
                                         isOpen={this.state.loginOpen}
@@ -217,9 +214,6 @@ class Authentication extends Component {
                                             content: {
                                                 width: "400px",
                                                 height: "200px",
-                                                position: 'fixed',
-                                                top: '25%',
-                                                left: '25%',
                                                 border: '1px solid #ccc',
                                                 background: '#fff',
                                                 overflow: 'auto',
@@ -230,6 +224,7 @@ class Authentication extends Component {
                                             }
                                         }}
                                     >
+                                        
 
                                         {/* <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2> */}
                                         {/* <button onClick={() => this.closeModal("loginOpen")}>close</button> */}
@@ -243,11 +238,10 @@ class Authentication extends Component {
 
                                         </form>
                                     </Modal>
+                                    
 
-                                </Col>
-
-                                <Col size="6">
-                                    <button className="btn btn-dark" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
+                             
+                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
 
                                     <Modal
                                         ariaHideApp={false}
@@ -269,9 +263,6 @@ class Authentication extends Component {
                                             content: {
                                                 width: "400px",
                                                 height: "300px",
-                                                position: 'fixed',
-                                                top: '25%',
-                                                left: '25%',
                                                 border: '1px solid #ccc',
                                                 background: '#fff',
                                                 overflow: 'auto',
@@ -302,12 +293,11 @@ class Authentication extends Component {
                                         Register
                                     </button> */}
 
-                                </Col>
-                            </Row>
+                               
 
-                        </Jumbotron>
-                    </Col>
-                    <Col size="lg-7 md-12 sm-12">
+                        </div>
+                        
+                   
                         <Jumbotron jumboHeight="80%">
                             <h4>LEADER BOARD</h4>
                             <table className="table">
@@ -335,9 +325,9 @@ class Authentication extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
-                    </Col>
-                </Row>
-            </Container>
+                   
+                 </div>
+
 
         )
     }

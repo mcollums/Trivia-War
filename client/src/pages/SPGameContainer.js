@@ -223,7 +223,7 @@ class SinglePlayerGameContainer extends Component {
                         </Col>
                         <Col size="6" id="player2">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
-                            <h5 style={{ color: "white" }}>Loosing Score {this.state.incorrect}</h5>
+                            <h5 style={{ color: "white" }}>Losing Score {this.state.incorrect}</h5>
                         </Col>
                     </Row>
                 </Container>
