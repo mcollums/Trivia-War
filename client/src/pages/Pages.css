@@ -75,6 +75,27 @@
     flex-wrap: wrap;
 }
 
+#userCon {
+  width: 450px;
+  height: 350px;
+  background-color: #62cbc2;
+  border-radius: 7%;
+  text-align: center;
+  margin-top: 100px;
+  padding-top: 10px;
+}
+
+.leaderB {
+  height: 350px;
+  width: 450px;
+  background-color: #62cbc2;
+  margin-top: 100px;
+  border-radius: 7%;
+  text-align: center;
+}
+
+
+
 
 
 /* .tag :hover{
