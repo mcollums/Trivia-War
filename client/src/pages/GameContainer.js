@@ -138,6 +138,7 @@ class GameContainer extends Component {
                 //quiz Questions will be held outside the component 
                 //so we can go through the questions/answers with an index value
                 quizQuestions = res.data;
+                // console.log("quizz questions " + JSON.stringify(quizQuestions))
                 this.setQuestionState(res.data);
             });
     }
@@ -150,7 +151,7 @@ class GameContainer extends Component {
             title: data.title,
             category: data.category,
             question: data.questions[index].question,
-            answers: data.questions[index].answers,
+            answers: data.questions[index].answers.answersObject,
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
@@ -235,7 +236,7 @@ class GameContainer extends Component {
             index: newIndex,
             timer: 10,
             question: quizQuestions.questions[newIndex].question,
-            answers: quizQuestions.questions[newIndex].answers,
+            answers: quizQuestions.questions[newIndex].answers.answersObject,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
             userSelect: ""
         }, function () {

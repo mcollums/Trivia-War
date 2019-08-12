@@ -72,7 +72,7 @@ class SinglePlayerGameContainer extends Component {
             title: data.title,
             category: data.category,
             question: data.questions[index].question,
-            answers: data.questions[index].answers,
+            answers: data.questions[index].answers.answersObject,
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
@@ -171,7 +171,7 @@ class SinglePlayerGameContainer extends Component {
             index: newIndex,
             timer: 10,
             question: quizQuestions.questions[newIndex].question,
-            answers: quizQuestions.questions[newIndex].answers,
+            answers: quizQuestions.questions[newIndex].answers.answersObject,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
             userSelect: "",
             click: false
