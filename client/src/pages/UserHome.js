@@ -22,7 +22,7 @@ class UserHome extends Component {
 
     loadUserById() {
         // const id = this.props.match.params.id
-        console.log("User ID " + this.state.userInfo.id)
+        // console.log("User ID " + this.state.userInfo.id)
         const id = this.state.userInfo.id
         API.getOneUser(id)
             .then(res => {
@@ -31,7 +31,7 @@ class UserHome extends Component {
                 this.setState({
                     userInfoFromDB: res.data,
                 })
-                console.log(this.state.userInfoFromDB)
+                // console.log(this.state.userInfoFromDB)
             })
             .catch(err => console.log(err));
     }
@@ -91,7 +91,6 @@ class UserHome extends Component {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
-        console.log("USER HOME RENDER");
         return (
             <Container fluid>
                 <Row>

@@ -25,10 +25,10 @@ class GameContainer extends Component {
             correct: 0,
             incorrect: 0,
             userSelect: "",
-            outcome: "",
             message: "",
             index: 0,
             timer: 10,
+            gameOver: false,
 
             // showLoading: true,
             redirectTo: null,
@@ -92,7 +92,7 @@ class GameContainer extends Component {
             console.log(message);
             this.setState({
                 message: message
-            })
+            }, () => { console.log("State Message " + this.state.message) })
         });
 
         //Score comes back when both players have selected an ansnwer
@@ -121,15 +121,15 @@ class GameContainer extends Component {
                 userResult = "totalWins";
             } else if (score.winner !== this.state.userInfo.email) {
                 userResult = "totalLosses";
-            }  
+            }
             console.log("User result " + userResult);
             let obj = {}
-            obj[userResult]= true;
+            obj[userResult] = true;
 
             API.updateUserScore(this.state.userInfo.id, obj)
-            .then(res => {
-                console.log(res);
-            })
+                .then(res => {
+                    console.log(res);
+                })
             this.setState({ redirectTo: "/home" });
         })
     }
@@ -162,19 +162,6 @@ class GameContainer extends Component {
             // console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
         });
     }
-
-    // This function decreases the time limit of the game 
-    // decrimentTime = () => {
-    //     if (this.state.timer !== 0) {
-    //         this.setState({
-    //             timer: this.state.timer - 1
-    //         });
-    //     } else {
-    //         this.setUserAnswer((result) => {
-    //             socketAPI.publishPlayerSelect(result)
-    //         });
-    //     }
-    // }
 
     //Click Handler
     publishPlayerSelect(selection) {
@@ -241,7 +228,8 @@ class GameContainer extends Component {
             question: quizQuestions.questions[newIndex].question,
             answers: quizQuestions.questions[newIndex].answers,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
-            userSelect: ""
+            userSelect: "",
+            message: ""
         }, function () {
             // console.log(this.state);
         });
@@ -249,22 +237,18 @@ class GameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
-        if (this.state.position === "p1") {
-            console.log("Player One sending Game Data to server");
-            socketAPI.publishEndGame();
-        } else {
-            console.log("Player 2 waiting on score");
-        }
+        this.setState({
+            gameOver: true,
+        }, () => {
+            if (this.state.position === "p1") {
+                console.log("Player One sending Game Data to server");
+                socketAPI.publishEndGame();
+            } else {
+                console.log("Player 2 waiting on score");
+            }
+        })
+      
     }
-
-
-    //Query the db to compare user's scores and determine a winner
-    //If this user is the winner, display "winner"
-    //Else display "Try again next time"
-    //PUT result in db
-    //Set timer for 5 seconds and then...  
-    //Send back to user's homepage
-
 
     render() {
         if (this.state.redirectTo) {
@@ -298,14 +282,14 @@ class GameContainer extends Component {
 
                     </Row>
                     <Row>
-                        <Col size="5" id="player1">
+                        <Col size="4" id="player1">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
                             <h5 style={{ color: "white" }}>Score</h5>
                         </Col>
-                        <Col size="2" id="message">
-                            <h3>{this.state.message}</h3>
+                        <Col size="4" id="message">
+                            <h4 style={{ color: "white" }}>{this.state.message}</h4>
                         </Col>
-                        <Col size="5" id="player2">
+                        <Col size="4" id="player2">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
                             <h5 style={{ color: "white" }}>Score</h5>
                         </Col>

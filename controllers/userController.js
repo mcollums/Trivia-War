@@ -43,8 +43,9 @@ module.exports = {
                 user.totalLosses = user.totalLosses+1
               }
               user.save().then(dbUser => {
-                req.login(dbUser);
-                res.json(dbUser);
+                req.login(dbUser, () => {
+                  res.json(dbUser);
+                });
               });
             }
           })

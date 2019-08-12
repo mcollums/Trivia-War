@@ -102,8 +102,15 @@ const makeSession = (id, creator, categoryId) => {
 io.on('connection', function (player) {
 
   // This function decreases the time limit of the game 
+  const makeClearInterval = (countdown) => {
+    return () => {
+      clearInterval(countdown)
+    }
+  }
+  let clearFn = () => {};
   var startTimer = (s, duration) => {
     var timer = duration, minutes, seconds;
+
     var countdown = setInterval(function () {
       minutes = parseInt(timer / 60, 10);
       seconds = parseInt(timer % 60, 10);
@@ -115,14 +122,6 @@ io.on('connection', function (player) {
       s.playerTwo.socket.emit('timerDec', timer);
       console.log("Timer: " + timer);
 
-      player.on('playerChoice', () => {
-        clearInterval(countdown);
-      });
-
-      player.on('gameOver', () => {
-        clearInterval(countdown);
-      });
-
       if (--timer < 0) {
         timer = duration;
       } else if (timer === 0) {
@@ -131,6 +130,13 @@ io.on('connection', function (player) {
         clearInterval(countdown);
       }
     }, 1000);
+
+
+    player.off('playerChoice', clearFn)
+    player.off('gameOver', clearFn);
+    clearFn = makeClearInterval(countdown);
+    player.on('playerChoice', clearFn);
+    player.on('gameOver', clearFn);
   }
 
   //On connection, create a new player that's now authorized.
@@ -306,7 +312,7 @@ io.on('connection', function (player) {
         finalScore.winner = "tie"
       } else if (s.playerOneScore > s.playerTwoScore) {
         finalScore.winner = s.playerOne.email;
-      } else if (s.playerOneScore < s.playerTwoScore){
+      } else if (s.playerOneScore < s.playerTwoScore) {
         finalScore.winner = s.playerTwo.email
       }
 
@@ -320,14 +326,6 @@ io.on('connection', function (player) {
     }
   });
 });
-
-// player.on('disconnect', () => {
-//   console.log("Player " + player.id + "is disconnecting");
-//   const index = playerArr.findIndex(p => p.id === player.id);
-//   // Look for any games they are a part of and kill them
-//   playerArr.splice(index, 1);
-// })
-
 
 
 // ROUTES FOR GOOGLE AUTHENTICATION
