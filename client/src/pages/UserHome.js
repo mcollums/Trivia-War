@@ -92,12 +92,11 @@ class UserHome extends Component {
             return <Redirect to={this.state.redirectTo} />
         }
         return (
-            <Container fluid>
-                <Row>
-                    <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron addClass="userData" style={{maxWidth:"400px", maxHeight:"500px"}}>
+            <div className="playnowContain">
+                
+                        <div addClass="userData" id="userCon">
                             {/* User image goes here */}
-                            <img style={{width:"200px"}} alt={""} src={this.state.userInfoFromDB.picLink} />
+                            <img style={{maxWidth:"300px", maxHeight:"200px", borderRadius:"7%"}} alt={""} src={this.state.userInfoFromDB.picLink} />
                             <div className="name" style={{paddingTop: "25px"}}>
                                 <strong>Name: </strong> {this.state.userInfoFromDB.username}
                             </div>
@@ -110,15 +109,13 @@ class UserHome extends Component {
                             <div className="ranking" style={{paddingBottom: "30px"}}>
                                 <strong>Ranking:</strong> {this.state.ranking}
                             </div>
-                            <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
-                                <Col size="lg-12 md-12 sm-12">
+                          
+                                
                                     <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn()}>Play Game</button>
-                                </Col>
-                            </Row>
-                        </Jumbotron>
-                    </Col>
-                    <Col size="lg-7 md-12 sm-12">
-                        <Jumbotron style={{height:"500px"}}>
+                               
+                        </div>
+                    
+                        <div className="leaderB">
                             <h4>LEADER BOARD</h4>
                             <table className="table">
                                 <thead className="thead-dark">
@@ -144,10 +141,10 @@ class UserHome extends Component {
                                     }
                                 </tbody>
                             </table>
-                        </Jumbotron>
-                    </Col>
-                </Row>
-            </Container>
+                        </div>
+                    
+                
+            </div>
 
         )
     }

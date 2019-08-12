@@ -13,8 +13,7 @@ class GameContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: this.props.position,
-            quizId: this.props.selected,
+            position: "",
             userInfo: "",
             title: "",
             category: "",
@@ -30,6 +29,8 @@ class GameContainer extends Component {
             timer: 10,
             gameOver: false,
             oppCorrect: "",
+            oppEmail: "",
+            oppInfo: "",
             redirectTo: null,
         };
 
@@ -49,22 +50,31 @@ class GameContainer extends Component {
                 socketAPI.subscribeSessionInfo((info) => {
                     console.log("Subcribe Session Info" + JSON.stringify(info));
                     let userPosition = "";
+                    let oppInfo = "";
 
                     if (this.state.userInfo.email === info.playerOne) {
-                        userPosition = "p1"
+                        userPosition = "p1";
+                        oppInfo = info.playerTwo;
                     } else if (this.state.userInfo.email === info.playerTwo) {
-                        userPosition = "p2"
+                        userPosition = "p2";
+                        oppInfo = info.playerOne;
                     }
 
                     this.setState({
                         category: info.categoryId,
-                        position: userPosition
+                        position: userPosition,
+                        oppEmail: oppInfo 
                     }, () => {
                         console.log("User position in state " + this.state.position);
-                        this.getGame(this.state.category);
-
-                        //Start Timer
-                        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
+                        console.log("Opponent email " + this.state.oppEmail);
+                        API.getOneUserEmail(this.state.oppEmail)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getGame(this.state.category);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
                     })
                 });
             }).catch(err => {
@@ -255,8 +265,20 @@ class GameContainer extends Component {
                 console.log("Player 2 waiting on score");
             }
         })
-      
     }
+
+    // getUserPic = () => {
+    //     API.checkAuth()
+    //         .then(response => {
+    //             // this runs if the user is logged in
+    //             console.log("response: ", response.data)
+    //             this.setState({ userInfo: response.data });
+    //         })
+    //         .catch(err => {
+    //             // this runs if the user is NOT logged in
+    //             this.setState({ redirectTo: "/" })
+    //         })
+    // }
 
     render() {
         if (this.state.redirectTo) {
@@ -289,14 +311,14 @@ class GameContainer extends Component {
                     </Row>
                     <Row>
                         <Col size="4" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
                             <h5 style={{ color: "white" }}>Score: {this.state.correct}</h5>
                         </Col>
                         <Col size="4" id="message">
                             <h4 style={{ color: "white", marginTop: "20px"}}> {this.state.message} </h4>
                         </Col>
                         <Col size="4" id="player2">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
+                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo} />
                             <h5 style={{ color: "white" }}> Score {this.state.oppCorrect} </h5>
                         </Col>
                     </Row>
