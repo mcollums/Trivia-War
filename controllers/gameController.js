@@ -3,7 +3,6 @@ const db = require("../models");
 module.exports = {
   //TODO Check if these are working
   findAllGames: function (req, res) {
-    console.log("req query", req);
     db.Game
       .find()
       .then(dbModel => res.json(dbModel))

@@ -5,13 +5,16 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
 
 class UserHome extends Component {
-    state = {
-        users: [],
-        redirectTo: null,
-        userInfo:{},
-        userInfoFromDB: {},
-        ranking: ""
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: [],
+            userInfo: {},
+            redirectTo: null,
+            userInfoFromDB: {},
+            ranking: ""
+        };
+    }
 
     componentDidMount() {
         this.loadUserData();
@@ -23,7 +26,7 @@ class UserHome extends Component {
         const id = this.state.userInfo.id
         API.getOneUser(id)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 // UsersInfo.push(res.data);
                 this.setState({
                     userInfoFromDB: res.data,
@@ -36,15 +39,15 @@ class UserHome extends Component {
     findRanking = () => {
         let ranking = 0;
         let allUsers = this.state.users;
-        console.log(allUsers);
+        // console.log(allUsers);
         for (let i = 0; i < allUsers.length; i++) {
             if(allUsers[i]._id === this.state.userInfo.id){
                 ranking = (i + 1);
-                console.log("user Found " + i)
-                console.log(ranking)
+                // console.log("user Found " + i)
+                // console.log(ranking)
                 break;
             }
-            console.log(allUsers[i]);
+            // console.log(allUsers[i]);
         }
         this.setState({
             ranking: ranking
@@ -55,7 +58,7 @@ class UserHome extends Component {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                console.log("response: ", response.data)
+                // console.log("response: ", response.data)
                 this.setState({userInfo:response.data}, this.loadUsers);
                 this.loadUserById();
             })
@@ -88,6 +91,7 @@ class UserHome extends Component {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
+        console.log("USER HOME RENDER");
         return (
             <Container fluid>
                 <Row>

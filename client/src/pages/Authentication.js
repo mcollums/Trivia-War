@@ -7,17 +7,6 @@ import axios from 'axios';
 import API from "../utils/API.js";
 import socketAPI from "../utils/socketAPI";
 
-// const customStyles = {
-//     content: {
-//         top: '50%',
-//         left: '50%',
-//         right: 'auto',
-//         bottom: 'auto',
-//         marginRight: '-50%',
-//         transform: 'translate(-50%, -50%)'
-//     }
-// };
-
 class Authentication extends Component {
     state = {
         users: [],
@@ -56,7 +45,7 @@ class Authentication extends Component {
         axios.post('/login', {email, password})
             .then(result => {
                 // this.loadProfileInfo();
-                socketAPI.publishLogin(email)
+                socketAPI.publishLogin(email);
                 // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
             })
@@ -70,7 +59,7 @@ class Authentication extends Component {
         const { username, picLink, email, password } = this.state
         axios.post("/register", { username, picLink, email, password })
             .then(result => {
-                console.log(result.data)
+                // console.log(result.data)
                 //this.loadProfileInfo()
                 // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
@@ -82,12 +71,6 @@ class Authentication extends Component {
                 else if (password <= 6) {
                     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
                 }
-                // if(username === ""){
-                //     this.setState({ errorMessage: "Please enter a valid username" })
-                // }
-                // else if (!this.state.password && this.state.password.length < 6) {
-                //     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
-                // }
             })
     }
 
@@ -132,7 +115,6 @@ class Authentication extends Component {
                 this.setState({
                     users: res.data,
                 })
-                // console.log(res.data)
             })
             .catch(err => console.log(err));
     }
@@ -144,12 +126,9 @@ class Authentication extends Component {
 
         return (
 
-            <Container fluid>
-                <Row>
-                    <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron style={{ maxHeight: "300px", maxWidth: "200px" }}>
-                            <Row>
-                                <Col size="6">
+                <div className="logCon">
+                        <div className="logInCon">
+                           
 
                                     {/* <!-- Button trigger modal --> */}
                                     {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
@@ -195,8 +174,8 @@ class Authentication extends Component {
                                         </div>
                                     </div> */}
 
-                                    <button className="btn btn-dark" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
-
+                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
+                                    
                                     <Modal
                                         ariaHideApp={false}
                                         isOpen={this.state.loginOpen}
@@ -217,9 +196,6 @@ class Authentication extends Component {
                                             content: {
                                                 width: "400px",
                                                 height: "200px",
-                                                position: 'fixed',
-                                                top: '25%',
-                                                left: '25%',
                                                 border: '1px solid #ccc',
                                                 background: '#fff',
                                                 overflow: 'auto',
@@ -230,10 +206,6 @@ class Authentication extends Component {
                                             }
                                         }}
                                     >
-
-                                        {/* <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2> */}
-                                        {/* <button onClick={() => this.closeModal("loginOpen")}>close</button> */}
-                                        {/* <div>I am a modal</div> */}
                                         <form>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
@@ -243,11 +215,10 @@ class Authentication extends Component {
 
                                         </form>
                                     </Modal>
+                                    
 
-                                </Col>
-
-                                <Col size="6">
-                                    <button className="btn btn-dark" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
+                             
+                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
 
                                     <Modal
                                         ariaHideApp={false}
@@ -269,9 +240,6 @@ class Authentication extends Component {
                                             content: {
                                                 width: "400px",
                                                 height: "300px",
-                                                position: 'fixed',
-                                                top: '25%',
-                                                left: '25%',
                                                 border: '1px solid #ccc',
                                                 background: '#fff',
                                                 overflow: 'auto',
@@ -283,9 +251,6 @@ class Authentication extends Component {
                                         }}
                                     >
 
-                                        {/* <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2> */}
-                                        {/* <button onClick={() => this.closeModal("registerOpen")}>close</button> */}
-                                        {/* <div>I am a modal</div> */}
                                         <form>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
@@ -297,17 +262,12 @@ class Authentication extends Component {
 
                                         </form>
                                     </Modal>
-                                    {/* <!-- Button trigger modal --> */}
-                                    {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#registerModal">
-                                        Register
-                                    </button> */}
 
-                                </Col>
-                            </Row>
+                               
 
-                        </Jumbotron>
-                    </Col>
-                    <Col size="lg-7 md-12 sm-12">
+                        </div>
+                        
+                   
                         <Jumbotron jumboHeight="80%">
                             <h4>LEADER BOARD</h4>
                             <table className="table">
@@ -335,9 +295,9 @@ class Authentication extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
-                    </Col>
-                </Row>
-            </Container>
+                   
+                 </div>
+
 
         )
     }

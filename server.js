@@ -8,6 +8,8 @@ const { google } = require("googleapis")
 const session = require('express-session')
 const path = require("path");
 const chalk = require('chalk');
+const timer = require('./timer');
+
 
 app.use(session({ secret: process.env.SESSION_SECRET || "the cat ate my keyboard", resave: true, saveUninitialized: true }))
 app.use(passport.initialize());
@@ -23,28 +25,28 @@ var io = require('socket.io')(server);
 //OAuth
 //============================================================================
 const googleConfig = {
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirect: process.env.GOOGLE_REDIRECT_URI
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  redirect: process.env.GOOGLE_REDIRECT_URI
 }
 
 const defaultScope = [
-    'https://www.googleapis.com/auth/userinfo.email'
+  'https://www.googleapis.com/auth/userinfo.email'
 ]
 
 function createConnection() {
-    return new google.auth.OAuth2(
-        googleConfig.clientId,
-        googleConfig.clientSecret,
-        googleConfig.redirect
-    )
+  return new google.auth.OAuth2(
+    googleConfig.clientId,
+    googleConfig.clientSecret,
+    googleConfig.redirect
+  )
 }
 function getConnectionUrl() {
-    return createConnection().generateAuthUrl({
-        access_type: 'offline',
-        prompt: 'consent',
-        scope: defaultScope
-    })
+  return createConnection().generateAuthUrl({
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: defaultScope
+  })
 }
 
 // Define middleware here
@@ -53,7 +55,7 @@ app.use(express.json());
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static("client/build"));
+  app.use(express.static("client/build"));
 }
 app.use(express.static("public"));
 
@@ -74,95 +76,128 @@ const makePlayer = (socket) => {
     id: socket.id,
     email: "",
     authorized: false,
-    socket: socket,
-    status: "Idle"
+    socket: socket
   }
 }
-
-const getPlayerById = (id) => {
-  return playerArr.find(p => p.id === id)
-}
-//Session Data on Server
-let sessionId = 1;
-
-const sessions = [];
-
-const makeSession = (id, creator, category) => {
-  return {
-    id,
-    category: category,
-    playerOne: creator,
-    playerTwo: null
-  }
-}
-
-const searchSessions = (socket, category) => {
-
-}
-
-//ERIC
-// const makePlayer = (socket) => {
-//   console.log("Making new player");
-//   return {
-//     id: socket.id,
-//     email: "",
-//     authorized: false,
-//     socket: socket
-//   }
-// }
-
 // const getPlayerById = (id) => {
 //   return playerArr.find(p => p.id === id)
 // }
 
-//ERIC
-// const sessions = [];
+//Session Data on Server
+let sessionId = 1;
+const sessions = [];
 
-// const makeSession = (id, creator) => {
-//   return {
-//     id,
-//     playerOne: creator,
-//     playerTwo: null
+const makeSession = (id, creator, categoryId) => {
+  return {
+    id,
+    categoryId: categoryId,
+    playerOne: creator,
+    playerTwo: null,
+    playerOneSelect: false,
+    playerTwoSelect: false,
+    playerOneScore: 0,
+    playerTwoScore: 0
+  }
+}
+
+// // This function decreases the time limit of the game 
+// startTimer = (s, duration) => {
+//   var timer = duration, minutes, seconds;
+//   var countdown = setInterval(function () {
+//     minutes = parseInt(timer / 60, 10);
+//     seconds = parseInt(timer % 60, 10);
+
+//     minutes = minutes < 10 ? "0" + minutes : minutes;
+//     seconds = seconds < 10 ? "0" + seconds : seconds;
+
+//     s.playerOne.socket.emit('timerDec', timer);
+//     s.playerTwo.socket.emit('timerDec', timer);
+//     console.log("Timer: " + timer);
+
+//     player.on('playerChoice', () => {
+//       clearInterval(countdown);
+//     });
+
+//     if (--timer < 0) {
+//       timer = duration;
+//     } else if (timer === 0) {
+//       s.playerOne.socket.emit('timesUp');
+//       s.playerTwo.socket.emit('timesUp');
+//       clearInterval(countdown); 
+//     }
+//   }, 1000);
+// }
+// startTimer = (s, duration) => {
+//   var timer = duration, seconds;
+//   var countdown = setInterval(function () {
+//     console.log(timer);
+//     seconds = parseInt(timer % 60, 10);
+//     s.playerOne.socket.emit('timerDec', timer);
+//     s.playerTwo.socket.emit('timerDec', timer);
+
+//     if (--timer < 0) {
+//       timer = duration;  
+//   } else if (timer === 0) {
+//     s.playerOne.socket.emit('timesUp');
+//     s.playerTwo.socket.emit('timesUp');
+//     console.log("Time's Up!");
+//     clearInterval(countdown); 
+//   } }, 1000);
+// }
+
+
+// decrimentTime = (s) => {
+//   if (s.timer !== 0) {
+//     console.log("Timer" + s.timer);
+//     s.timer = s.timer--
+//   } else {
+//     socket.emit("timesUp", "Time's Up!");
 //   }
 // }
 
 
-
-
-
 io.on('connection', function (player) {
+
+  // This function decreases the time limit of the game 
+  var startTimer = (s, duration) => {
+    var timer = duration, minutes, seconds;
+    var countdown = setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      s.playerOne.socket.emit('timerDec', timer);
+      s.playerTwo.socket.emit('timerDec', timer);
+      console.log("Timer: " + timer);
+
+      player.on('playerChoice', () => {
+        clearInterval(countdown);
+      });
+
+      player.on('gameOver', () => {
+        clearInterval(countdown);
+      });
+
+      if (--timer < 0) {
+        timer = duration;
+      } else if (timer === 0) {
+        s.playerOne.socket.emit('timesUp');
+        s.playerTwo.socket.emit('timesUp');
+        clearInterval(countdown);
+      }
+    }, 1000);
+  }
+
   //On connection, create a new player that's now authorized.
   const newPlayer = makePlayer(player);
-  console.log("New Player Info" + newPlayer);
   playerArr.push(newPlayer)
 
   //Tell all the other sockets that there's a new player
   playerArr.filter(p => p.id !== newPlayer.id).forEach(p => {
     p.socket.emit("message", "somebody else connected")
   });
-
-  // Auto put people in games
-  // if(sessions.length === 0){
-  //   sessions.push(makeSession(sessionId++, newPlayer))
-  // } else {
-  //   // Let's look for an open game
-  //   const s = sessions.find(s => s.playerTwo === null);
-  //   if(s){
-  //     console.log("new game joined")
-  //     s.playerTwo = newPlayer;
-  //     s.playerOne.socket.emit("joinedGame", newPlayer.id);
-  //     s.playerTwo.socket.emit("joinedGame", s.playerOne.id)
-  //   } else {
-  //     sessions.push(makeSession(sessionId++, newPlayer))
-  //   }
-  // }
-
-  // console.log("This is the socket ID", player.id);
-  //Let server-side know someone's connected
-  // console.log('==================================================================');
-  // console.log('A user connected!', player.id);
-  // console.log("ALL SOCKET USERS INFO :", playerArr);
-  // console.log("CLIENTS # = " + playerArr.length);
 
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
@@ -174,7 +209,7 @@ io.on('connection', function (player) {
 
   player.on("setuser", (data) => {
     console.log('==================================================================');
-    console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
+    // console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
 
     const index = playerArr.find(p => p.id === player.id);
 
@@ -187,80 +222,155 @@ io.on('connection', function (player) {
     } else {
       console.log(chalk.red("User not found"));
     }
-
-    // console.log('==================================================================');
-    // console.log(chalk.blue("NEW USER: ", JSON.stringify(newUser)));
-    // console.log(chalk.blue("Player Array in SetUser", JSON.stringify(playerArr)));
-    // console.log(chalk.blue("CLIENTS # = " + playerArr.length));
-
   });
 
 
-  player.on("seekGame", (category) => {
-       // Try and find them a game, if we can, great!
+  player.on("seekGame", (categoryId) => {
+
+    let p1Info = {};
+    let p2Info = {};
+
+
+    // Try and find them a game, if we can, great!
     // Otherwise just make a new one and put them in it
     if (sessions.length === 0) {
-      sessions.push(makeSession(sessionId++, newPlayer));
-      console.log("Server says: New game joined by" + newPlayer);
+      //If there are no Sessions, make your own
+      sessions.push(makeSession(sessionId++, newPlayer, categoryId));
+      //Let P1 know we're matching them soon
       newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
     } else {
-      // Let's look for an open game
+      // Look for a game without a playerTwo...
       const s = sessions.find(s => s.playerTwo === null);
       if (s) {
-        console.log("Server says: New game joined! GameId =" + s.id)
+        //Add this player as the session's player 2
         s.playerTwo = newPlayer;
-        
-        s.playerOne.socket.emit("joinedSession", newPlayer.email);
-        s.playerTwo.socket.emit("joinedSession", s.playerOne.email);
 
-        s.playerOne.socket.emit("startGame", s.id);
-        s.playerTwo.socket.emit("startGame", s.id);
+        //Finish filling out the objects to be sent back to the page
+        p1Info.position = "p1";
+        p1Info.opponent = s.playerTwo.email;
+        p1Info.sessionId = s.id;
+        p2Info.position = "p2";
+        p2Info.opponent = s.playerOne.email;
+        p2Info.sessionId = s.id;
+
+        //Send each player info about the game
+        s.playerOne.socket.emit("startGame", p1Info);
+        s.playerTwo.socket.emit("startGame", p2Info);
+
       } else {
-        sessions.push(makeSession(sessionId++, newPlayer));
+        //If there are no games to join, make your own
+        sessions.push(makeSession(sessionId++, newPlayer, categoryId));
+        //Tell P1 that we're matching them soon
         newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
       }
     }
   });
 
-  player.on('player-matchmaking', gameData => {
-    io.emit('player-matchmaking', gameData)
+  player.on('GCMount', () => {
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+
+      let sessionInfo = {
+        categoryId: s.categoryId,
+        playerOne: s.playerOne.email,
+        playerTwo: s.playerTwo.email
+      };
+
+      s.playerOne.socket.emit("sessionInfo", sessionInfo);
+      s.playerTwo.socket.emit("sessionInfo", sessionInfo);
+
+      startTimer(s, 10);
+    }
+  })
+
+
+  player.on('playerChoice', result => {
+    //Find this user's session...
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+      console.log("Session Found! This player is in the session # " + s.id);
+
+      //If this user is P1 and the answer is correct, update score
+      //Also, update the session to mark that they've chosen an answer
+      if (newPlayer.email === s.playerOne.email) {
+        s.playerOneSelect = true;
+        if (result === "correct") {
+          s.playerOneScore++
+        }
+        console.log("Player One Selected an Answer");
+
+        //If this user is P2 and the answer is correct, update score
+        //Also, update the session to mark that they've chosen an answer
+      } else if (newPlayer.email === s.playerTwo.email) {
+        s.playerTwoSelect = true;
+        if (result === "correct") {
+          s.playerTwoScore++
+        }
+        console.log("Player Two Selected an Answer");
+      }
+
+      //If either player hasn't selected an answer...
+      if (s.playerOneSelect === false || s.playerTwoSelect === false) {
+        //If P1 has chosen, let them know. Also let P2 know.
+        if (s.playerOneSelect === true) {
+          s.playerOne.socket.emit('scoreUpdate', "You've Selected an Answer");
+          s.playerTwo.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
+
+          //If P2 has chosen, let them know. Also let P1 know.
+        } else if (s.playerTwoSelect === true) {
+          s.playerTwo.socket.emit('scoreUpdate', "You've Selected an Answer");
+          s.playerOne.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
+        }
+        //If both users have answered...
+      } else if (s.playerOneSelect === true && s.playerTwoSelect === true) {
+        console.log("Both users have answered");
+        //Reset Session State for next question
+        s.playerOneSelect = false;
+        s.playerTwoSelect = false;
+
+        //Creating Object to send back with scores
+        let updatedScore = {
+          playerOne: s.playerOneScore,
+          playerTwo: s.playerTwoScore
+        }
+
+        //Let both players know the current score
+        s.playerOne.socket.emit('nextQuestion', updatedScore);
+        s.playerTwo.socket.emit('nextQuestion', updatedScore);
+        startTimer(s, 10);
+      }
+    } else {
+      console.log("No session found");
+    }
   });
 
-  player.on('player-select', gameData => {
-    io.emit('player-select', gameData)
-  });
+  //When the game has finished...
+  player.on('gameOver', result => {
+    //Find that user's session...
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+      let finalScore = {
+        p1Score: s.playerOneScore,
+        p2Score: s.playerTwoScore,
+        winner: ""
+      }
+      if (s.playerOneScore === s.playerTwoScore) {
+        finalScore.winner = "tie"
+      } else if (s.playerOneScore > s.playerTwoScore) {
+        finalScore.winner = s.playerOne.id;
+      } else {
+        finalScore.winner = s.playerTwo.id
+      }
 
-  player.on('player-ready', gameData => {
-    io.emit('player-ready', gameData)
-  });
+      console.log(chalk.red("FINAL SCORE: " + JSON.stringify(finalScore)));
+      s.playerOne.socket.emit('finalScore', finalScore);
+      s.playerTwo.socket.emit('finalScore', finalScore);
 
-  player.on('player-endGame', gameData => {
-    io.emit('player-endGame', gameData)
+      //remove session once finished
+      sessions.splice(s, 1);
+    }
   });
 });
-
-function buildGame(socket) {
-  var gameObject = {};
-  //generate random Object ID for reference later
-  gameObject.id = (Math.random() + 1).toString(36).slice(2, 18);
-  // gameObject.playerOne = socket.name;
-  // gameObject.playerTwo = null;
-  gameCollection.totalGameCount++;
-  gameCollection.gameList.push({ gameObject });
-
-  console.log("Game Created by " + socket.name + " w/ " + gameObject.id);
-  io.emit('gameCreated', {
-    name: socket.name,
-    gameId: gameObject.id
-  });
-}
-io.on('connection', function (socket) {
-    console.log('A user connected!', socket.id);
-    socket.broadcast.emit('user connected');
-});
-
-
-
 
 
 
@@ -271,11 +381,11 @@ app.get('/api/google/url', (req, res) => {
 })
 
 function getGoogleAccountFromCode(code) {
-  console.log("CODE");
-  console.log(code);
+  // console.log("CODE");
+  // console.log(code);
   return createConnection().getToken(code).then(data => {
-    console.log("DATA");
-    console.log(data.tokens)
+    // console.log("DATA");
+    // console.log(data.tokens)
     return Promise.resolve(data.tokens)
   })
 }
@@ -287,8 +397,8 @@ app.post('/api/google/code', (req, res) => {
     const userConnection = createConnection()
     userConnection.setCredentials(tokens)
     userConnection.getTokenInfo(tokens.access_token).then(data => {
-      console.log("TOKEN INFO");
-      console.log(data);
+      // console.log("TOKEN INFO");
+      // console.log(data);
       const { email, sub } = data;
 
       db.User.findOne({ email }).then(dbUser => {
@@ -311,7 +421,7 @@ app.post('/api/google/code', (req, res) => {
           // Check the type and googleId
           // if it matches, great! Login the user!
           // if not, something odd is up, reject it
-          console.log(dbUser);
+          // console.log(dbUser);
           if (dbUser.authType === "google" && dbUser.googleId === sub + "") {
             req.login(dbUser, () => {
               res.json(true)
@@ -337,9 +447,9 @@ app.get('/api/google/callback', function (req, res) {
     userConnection.getTokenInfo(tokens.access_token).then(data => {
       const { email, sub } = data;
       db.User.findOne({ email }).then(dbUser => {
-        console.log(dbUser);
+        // console.log(dbUser);
         if (!dbUser) {
-          console.log("NEW USER");
+          // console.log("NEW USER");
           // create a new user!
           db.User.create({
             email,

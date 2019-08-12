@@ -32,7 +32,7 @@ runSeeds = (i) => {
             console.log("we got stuff")
             // console.log("Response from Trivia API: " + JSON.stringify(response.data.results));
             let results = response.data.results;
-            console.log(results[0].category);
+            // console.log(results[0].category);
 
             triviaSeed.push(
                 {
