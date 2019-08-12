@@ -7,17 +7,6 @@ import axios from 'axios';
 import API from "../utils/API.js";
 import socketAPI from "../utils/socketAPI";
 
-// const customStyles = {
-//     content: {
-//         top: '50%',
-//         left: '50%',
-//         right: 'auto',
-//         bottom: 'auto',
-//         marginRight: '-50%',
-//         transform: 'translate(-50%, -50%)'
-//     }
-// };
-
 class Authentication extends Component {
     state = {
         users: [],
@@ -56,7 +45,7 @@ class Authentication extends Component {
         axios.post('/login', {email, password})
             .then(result => {
                 // this.loadProfileInfo();
-                socketAPI.publishLogin(email)
+                socketAPI.publishLogin(email);
                 // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
             })
@@ -70,7 +59,7 @@ class Authentication extends Component {
         const { username, picLink, email, password } = this.state
         axios.post("/register", { username, picLink, email, password })
             .then(result => {
-                console.log(result.data)
+                // console.log(result.data)
                 //this.loadProfileInfo()
                 // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
@@ -82,12 +71,6 @@ class Authentication extends Component {
                 else if (password <= 6) {
                     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
                 }
-                // if(username === ""){
-                //     this.setState({ errorMessage: "Please enter a valid username" })
-                // }
-                // else if (!this.state.password && this.state.password.length < 6) {
-                //     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
-                // }
             })
     }
 
@@ -132,7 +115,6 @@ class Authentication extends Component {
                 this.setState({
                     users: res.data,
                 })
-                // console.log(res.data)
             })
             .catch(err => console.log(err));
     }
@@ -224,11 +206,6 @@ class Authentication extends Component {
                                             }
                                         }}
                                     >
-                                        
-
-                                        {/* <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2> */}
-                                        {/* <button onClick={() => this.closeModal("loginOpen")}>close</button> */}
-                                        {/* <div>I am a modal</div> */}
                                         <form>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
@@ -274,9 +251,6 @@ class Authentication extends Component {
                                         }}
                                     >
 
-                                        {/* <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2> */}
-                                        {/* <button onClick={() => this.closeModal("registerOpen")}>close</button> */}
-                                        {/* <div>I am a modal</div> */}
                                         <form>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
                                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
@@ -288,10 +262,6 @@ class Authentication extends Component {
 
                                         </form>
                                     </Modal>
-                                    {/* <!-- Button trigger modal --> */}
-                                    {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#registerModal">
-                                        Register
-                                    </button> */}
 
                                
 

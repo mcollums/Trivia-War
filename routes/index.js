@@ -3,7 +3,7 @@ const router = require("express").Router();
 const apiRoutes = require("./api");
 const db = require("../models")
 const passport = require("../config/passport");
-const chalk = require('chalk');
+
 // API Routes
 router.use("/api", apiRoutes);
 
@@ -24,7 +24,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/user/me', function(req, res){
-  // console.log(chalk.red("req.user= " + req.user));
+  // console.log(chalk.red("req.user= " + JSON.stringify(req.user)));
   if(req.user){
       res.json({
           email: req.user.email,
