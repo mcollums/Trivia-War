@@ -1,12 +1,25 @@
 const axios = require('axios');
 const mongoose = require("mongoose");
 const db = require("../models");
+const htmlToText = require("html-to-text");
+
+// const text = htmlToText.fromString(originText);
+
 
 mongoose.connect(
     process.env.MONGODB_URI ||
     "mongodb://localhost/trivia_masters"
 );
 
+makeArr = (data, callback) => {
+    let string = htmlToText.fromString(data);
+    let answersObject = string.split(',');
+
+    console.log("DATA FROM MAKEARR "+ answersObject);
+    console.log("IS ARRAY? " + Array.isArray(answersObject));
+    return {answersObject};
+    // callback(newArr);
+}
 imageArr = [
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC4I2IRZiwVEIEIq33R-FfM5nadDU12omyEXsM_Qz2ggzSUBIO",
     "data:image/jpeg;base64,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",
@@ -40,54 +53,55 @@ runSeeds = (i) => {
                     category: results[0].category,
                     questions: [
                         {
-                            "question": results[0].question,
-                            "answers": results[0].incorrect_answers,
-                            "correctAnswer": results[0].correct_answer
+                            "question": htmlToText.fromString(results[0].question),
+                            // "answers": htmlToText.fromString(results[0].incorrect_answers),
+                            "answers": makeArr(results[0].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[0].correct_answer)
                         },
                         {
-                            "question": results[1].question,
-                            "answers": results[1].incorrect_answers,
-                            "correctAnswer": results[1].correct_answer
+                            "question": htmlToText.fromString(results[1].question),
+                            "answers": makeArr(results[1].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[1].correct_answer)
                         },
                         {
-                            "question": results[2].question,
-                            "answers": results[2].incorrect_answers,
-                            "correctAnswer": results[2].correct_answer
+                            "question": htmlToText.fromString(results[2].question),
+                            "answers": makeArr(results[2].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[2].correct_answer)
                         },
                         {
-                            "question": results[3].question,
-                            "answers": results[3].incorrect_answers,
-                            "correctAnswer": results[3].correct_answer
+                            "question": htmlToText.fromString(results[3].question),
+                            "answers": makeArr(results[3].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[3].correct_answer)
                         },
                         {
-                            "question": results[4].question,
-                            "answers": results[4].incorrect_answers,
-                            "correctAnswer": results[4].correct_answer
+                            "question": htmlToText.fromString(results[4].question),
+                            "answers": makeArr(results[4].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[4].correct_answer)
                         },
                         {
-                            "question": results[5].question,
-                            "answers": results[5].incorrect_answers,
-                            "correctAnswer": results[5].correct_answer
+                            "question": htmlToText.fromString(results[5].question),
+                            "answers": makeArr(results[5].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[5].correct_answer)
                         },
                         {
-                            "question": results[6].question,
-                            "answers": results[6].incorrect_answers,
-                            "correctAnswer": results[6].correct_answer
+                            "question": htmlToText.fromString(results[6].question),
+                            "answers": makeArr(results[6].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[6].correct_answer)
                         },
                         {
-                            "question": results[7].question,
-                            "answers": results[7].incorrect_answers,
-                            "correctAnswer": results[7].correct_answer
+                            "question": htmlToText.fromString(results[7].question),
+                            "answers": makeArr(results[7].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[7].correct_answer)
                         },
                         {
-                            "question": results[8].question,
-                            "answers": results[8].incorrect_answers,
-                            "correctAnswer": results[8].correct_answer
+                            "question": htmlToText.fromString(results[8].question),
+                            "answers": makeArr(results[8].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[8].correct_answer)
                         },
                         {
-                            "question": results[9].question,
-                            "answers": results[9].incorrect_answers,
-                            "correctAnswer": results[9].correct_answer
+                            "question": htmlToText.fromString(results[9].question),
+                            "answers": makeArr(results[9].incorrect_answers),
+                            "correctAnswer": htmlToText.fromString(results[9].correct_answer)
                         }
                     ]
                 }
