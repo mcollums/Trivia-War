@@ -22,9 +22,18 @@ export default {
   getOneUser: function (id) {
     return axios.get("/api/user/" + id);
   },
-  getOneUserEmail: function(email) {
+  getOneUserEmail: function (email) {
     return axios.get("/api/user/" + email);
   },
+  postGameDetails: function (user) {
+    return axios.post("/api/user", {
+      id: user.id,
+      wins: user.wins,
+      losses: user.losses
+    });
+
+
+  }
   // updateUserScore: function(id) {
   //   return axios.put("api/user/score/" + id);
   // }
