@@ -15,6 +15,7 @@ class MultiPlayer extends Component {
             gameStart: false,
             matchmakingOpen: false,
         }
+
         this.handleCatSelect = this.handleCatSelect.bind(this);
     }
 
@@ -23,36 +24,37 @@ class MultiPlayer extends Component {
             this.setState({
                 category: res.data
             })
-            // () => console.log(this.state.category))
         });
 
+        //Listens for matchmaking message from the server
         socketAPI.subscribeMatchmaking((message) => {
             //this message says that the player is waiting in matchmaking
-            console.log(message);
+            // console.log(message);
+
             //function that shows matchmaking modal
             this.setState({ matchmakingOpen: true });
         });
 
+        //Listens for the gameStart information from the server
+        //this will happen when two users have joined the session
         socketAPI.subscribeGameStart((info) => {
-            // console.log("Game information", info);
             this.setState({
                 position: info.position
             }, () => {
-                console.log("MultiplayerCat Position = " + this.state.position);
+                // console.log("MultiplayerCat Position = " + this.state.position);
                 this.props.history.push('/game');
                 this.setState({ matchmakingOpen: false });
             })
         });
-        // console.log(category)
     }
 
+    //called by handleCatSelect and sernds info to server
     publishSeekGame = (category) => {
-        console.log("Looking for a Session to create or join with ID of: " + category);
         socketAPI.publishSeekGame(category);
     }
 
+    //Click handler for the game id
     handleCatSelect = (id) => {
-        console.log("User chose: " + id);
         this.publishSeekGame(id);
     }
 

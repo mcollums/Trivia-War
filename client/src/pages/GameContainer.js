@@ -28,7 +28,7 @@ class GameContainer extends Component {
             index: 0,
             timer: 10,
             gameOver: false,
-            oppCorrect: "",
+            oppCorrect: 0,
             oppEmail: "",
             oppInfo: "",
             redirectTo: null,
@@ -43,7 +43,7 @@ class GameContainer extends Component {
             .then(response => {
                 // this runs if the user is logged in
                 this.setState({ userInfo: response.data },
-                    () => console.log(JSON.stringify(this.state.userInfo)));
+                    () => console.log("User Info "+JSON.stringify(this.state.userInfo)));
                 //Grab the session info from the server
                 socketAPI.publishGCMount();
                 //Then set the state with the session info
@@ -65,16 +65,18 @@ class GameContainer extends Component {
                         position: userPosition,
                         oppEmail: oppInfo
                     }, () => {
-                        console.log("User position in state " + this.state.position);
-                        console.log("Opponent email " + this.state.oppEmail);
-                        // API.getOneUserEmail(this.state.oppEmail)
-                        //     .then(res => {
-                        //         console.log(res.data);
-                        //         this.getGame(this.state.category);
-                        //     })
-                        //     .catch(err => {
-                        //         console.log(err);
-                        //     })
+                        API.getUserByEmail(this.state.oppEmail)
+                            .then(res => {
+                                this.setState({
+                                    oppInfo: res.data
+                                }, () => {
+                                    console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
+                                    this.getGame(this.state.category);
+                                })
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
                         this.getGame(this.state.category);
 
                     })
@@ -97,6 +99,7 @@ class GameContainer extends Component {
                 socketAPI.publishPlayerSelect(result);
             });
         });
+
         //Setting up Socket Listeners for Game:
         //Message comes back after either user selects an answer
         socketAPI.subscribeScoreUpdate((message) => {
@@ -270,18 +273,6 @@ class GameContainer extends Component {
         })
     }
 
-    // getUserPic = () => {
-    //     API.checkAuth()
-    //         .then(response => {
-    //             // this runs if the user is logged in
-    //             console.log("response: ", response.data)
-    //             this.setState({ userInfo: response.data });
-    //         })
-    //         .catch(err => {
-    //             // this runs if the user is NOT logged in
-    //             this.setState({ redirectTo: "/" })
-    //         })
-    // }
 
     render() {
         if (this.state.redirectTo) {
@@ -314,15 +305,17 @@ class GameContainer extends Component {
                     </Row>
                     <Row>
                         <Col size="4" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
-                            <h5 style={{ color: "white" }}>Score: {this.state.correct}</h5>
+                            <h5 style={{marginTop: "15px", color: "white"}}>{this.state.userInfo.name}</h5>
+                            <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
+                            <h5 style={{ color: "white", marginTop:"8px" }}>Score: {this.state.correct}</h5>
                         </Col>
                         <Col size="4" id="message">
-                            <h4 style={{ color: "white", marginTop: "20px" }}> {this.state.message} </h4>
+                            <h5 style={{ color: "white", marginTop: "30px" }}> {this.state.message} </h5>
                         </Col>
                         <Col size="4" id="player2">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo} />
-                            <h5 style={{ color: "white" }}> Score {this.state.oppCorrect} </h5>
+                            <h5 style={{marginTop: "15px", color:"white"}}>{this.state.oppInfo.username}</h5>
+                            <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo.picLink} />
+                            <h5 style={{ color: "white", marginTop: "8px" }}> Score {this.state.oppCorrect} </h5>
                         </Col>
                     </Row>
                 </Container>

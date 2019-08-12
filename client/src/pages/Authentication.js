@@ -127,52 +127,6 @@ class Authentication extends Component {
 
                 <div className="logCon">
                         <div className="logInCon">
-                           
-
-                                    {/* <!-- Button trigger modal --> */}
-                                    {/* <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#loginModal">
-                                        Login
-                                    </button>
-                                    <div>
-                                        Email: <input name="email" type="text" value={this.state.email} onChange={this.handleInput}/>
-                                        Password <input name="password" type="text" value={this.state.password} onChange={this.handleInput}/>
-                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
-                                    </div>
-                                    </button> */}
-                                    {/* <!-- Modal --> */}
-                                    {/* <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered" role="document">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalCenterTitle">{this.state.welcomeEmail.length > 0
-                                                        ? "Welcome " + this.state.welcomeEmail
-                                                        : "Login"} </h5>
-                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div className="modal-body"> */}
-                                    {/* {
-                                                        this.state.googleSigninUrl.length > 0 && this.state.welcomeEmail.length === 0
-                                                            ? (<h3>Sign in with <a href={this.state.googleSigninUrl} >google </a></h3>)
-                                                            : ""
-                                                    } */}
-                                    {/* <form>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <input onChange={this.handleInput} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
-                                                        </div>
-                                                        {this.state.errorMessage ? <div className="fail">{this.state.errorMessage}</div> : null}
-                                                        <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div> */}
-
                                     <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
                                     
                                     <Modal
@@ -294,10 +248,8 @@ class Authentication extends Component {
                                 </tbody>
                             </table>
                         </Jumbotron>
-                   
+        
                  </div>
-
-
         )
     }
 }

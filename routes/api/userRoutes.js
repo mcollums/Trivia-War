@@ -5,15 +5,20 @@ const userController = require("../../controllers/userController");
 router.route("/")
   .get(userController.findAll);
 
+// Matches with "/api/user/:email"
+router.route("/email/:email")
+  .get(userController.findOneByEmail)
+
 router.route("/score/:id")
   .put(userController.updateUserScore)
 //Matches with "/api/user/:id"
+
 router.route("/:id")
   .get(userController.findById)
 
 // Matches with "/api/user/:email"
-router.route("/:email")
-  .get(userController.findOne)
+// router.route("/:email")
+//   .get(userController.findOne)
 
 //updates the single player wins and losses after the game
 // matches with "/api/user/:user"

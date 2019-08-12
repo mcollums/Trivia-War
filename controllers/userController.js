@@ -14,10 +14,15 @@ module.exports = {
           .then(dbModel => res.json(dbModel))
           .catch(err => res.status(422).json(err));
       },
-      findOne: function(req, res) {
+      findOneByEmail: function(req, res) {
         db.User
-          .findOne(req.params.email)
-          .then(dbModel => res.json(dbModel))
+          .findOne({email: req.params.email})
+          .then((dbModel, err) => {
+            if(err) {
+              console.log("Error" + err);
+            }
+            res.json(dbModel)
+          })
           .catch(err => res.status(422).json(err));
       },
       updateOne: function (req, res) {
