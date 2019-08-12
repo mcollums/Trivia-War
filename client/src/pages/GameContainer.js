@@ -14,8 +14,8 @@ class GameContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: "",
-            quizId: "",
+            position: this.props.position,
+            quizId: this.props.selected,
             userInfo: "",
             title: "",
             category: "",
@@ -40,29 +40,39 @@ class GameContainer extends Component {
 
     //TODO: Add route that will get the game based on the user's selection
     componentDidMount() {
-        this.setState({
-            position: this.props.position,
-            quizId: this.props.selected
-        }, () => {
-            console.log("PROPS: " + this.props.position + " " + this.props.selected);
-            console.log("Quiz ID " + this.state.quizId);
-            console.log("GameContain Player Position =" + this.state.position);
-            this.getGame("5d4cad9a72dc431b959681f1");
-        })
-
         API.checkAuth()
-            .then(response => {
-                // this runs if the user is logged in
-                console.log("user is authenticated");
-                // console.log(response.data);
-                this.setState({
-                    userInfo: response.data
-                })
+        .then(response => {
+            // this runs if the user is logged in
+            console.log("user is authenticated");
+            // console.log(response.data);
+            this.setState({
+                userInfo: response.data
             })
-            .catch(err => {
-                // this runs if the uer is NOT logged in
-                this.setState({ redirectTo: "/" })
-            });
+        })
+        .catch(err => {
+            // this runs if the uer is NOT logged in
+            this.setState({ redirectTo: "/" })
+        });
+
+        socketAPI.publishGCMount();
+
+        socketAPI.subscribeSessionInfo((info) => {
+            console.log("Subcrible Session Info" + JSON.stringify(info));
+        });
+
+        // this.setState({
+        //     position: this.props.position,
+        //     quizId: this.props.selected
+        // }, () => {
+        //     console.log("PROPS: " + this.props.position + " " + this.props.selected);
+        //     console.log("Quiz ID " + this.state.quizId);
+        //     console.log("GameContain Player Position =" + this.state.position);
+        //     this.getGame("5d4cad9a72dc431b959681f1");
+        // })
+
+            // this.getGame("5d4cad9a72dc431b959681f1");
+
+      
 
 
         //Setting up Socket Listeners:
@@ -201,6 +211,10 @@ class GameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
+        if(this.state.position === "p1") {
+            console.log("Player One sending Game Data to server");
+            socketAPI.publishEndGame();
+        }
         clearInterval(this.timerID);
     }
 

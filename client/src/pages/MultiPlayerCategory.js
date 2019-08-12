@@ -20,10 +20,6 @@ class MultiPlayer extends Component {
         this.handleCatSelect = this.handleCatSelect.bind(this);
     }
 
-    // openModal = modal => {
-    //     this.setState({ [modal]: true });
-    // }
-
     componentDidMount() {
         API.getGames().then(res => {
             this.setState({
@@ -59,13 +55,12 @@ class MultiPlayer extends Component {
     }
 
     publishSeekGame = (category) => {
-        console.log("Looking for a Session to create or join.");
+        console.log("Looking for a Session to create or join with ID of: " + category);
         socketAPI.publishSeekGame(category);
     }
 
     handleCatSelect = (id) => {
         console.log("User chose: " + id);
-
         this.setState({
             selected: id
         })
@@ -86,7 +81,7 @@ class MultiPlayer extends Component {
         }
         return (
             <div>
-                {this.state.selected === "" ? (
+                {/* {this.state.selected === "" ? (
                     <div className="scatContain">
                         {this.state.category.map(category => (
                             <MPCategory
@@ -99,7 +94,17 @@ class MultiPlayer extends Component {
                     </div>
                 ) : (
                         <GameContainer {...this.props} />
-                    )}
+                    )} */}
+                <div className="scatContain">
+                    {this.state.category.map(category => (
+                        <MPCategory
+                            id={category._id}
+                            key={category._id}
+                            category={category.category}
+                            handleSelect={this.handleCatSelect}
+                        />
+                    ))}
+                </div>
             </div>
         )
     };

@@ -76,19 +76,18 @@ const makePlayer = (socket) => {
     socket: socket
   }
 }
+// const getPlayerById = (id) => {
+//   return playerArr.find(p => p.id === id)
+// }
 
-const getPlayerById = (id) => {
-  return playerArr.find(p => p.id === id)
-}
 //Session Data on Server
 let sessionId = 1;
-
 const sessions = [];
 
-const makeSession = (id, creator, category) => {
+const makeSession = (id, creator, categoryId) => {
   return {
     id,
-    category: category,
+    categoryId: categoryId,
     playerOne: creator,
     playerTwo: null,
     playerOneSelect: false,
@@ -98,11 +97,9 @@ const makeSession = (id, creator, category) => {
   }
 }
 
-// const searchSessions = (socket, category) => {
-
-const searchSessions = (id, category) => {
-  return sessions.find(s => s.id === id)
-}
+// const searchSessions = (id, categoryId) => {
+//   return sessions.find(s => s.id === id)
+// }
 
 
 io.on('connection', function (player) {
@@ -141,34 +138,24 @@ io.on('connection', function (player) {
   });
 
 
-  player.on("seekGame", (category) => {
+  player.on("seekGame", (categoryId) => {
 
-    let p1Info = {
-      position: "",
-      opponent: "",
-      sessionId: ""
-    }
-
-    let p2Info = {
-      position: "",
-      opponent: "",
-      sessionId: ""
-    }
+    let p1Info = {};
+    let p2Info = {};
 
     // Try and find them a game, if we can, great!
     // Otherwise just make a new one and put them in it
     if (sessions.length === 0) {
-      sessions.push(makeSession(sessionId++, newPlayer));
-      newPlayer.position = "p1";
-      console.log("Server says: New game joined by" + newPlayer);
+      //If there are no Sessions, make your own
+      sessions.push(makeSession(sessionId++, newPlayer, categoryId));
+      //Let P1 know we're matching them soon
       newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
     } else {
-      // Look for a game without a playerTwo
+      // Look for a game without a playerTwo...
       const s = sessions.find(s => s.playerTwo === null);
       if (s) {
         //Add this player as the session's player 2
         s.playerTwo = newPlayer;
-        newPlayer.position = "p2";
 
         //Finish filling out the objects to be sent back to the page
         p1Info.position = "p1";
@@ -178,80 +165,112 @@ io.on('connection', function (player) {
         p2Info.opponent = s.playerOne.email;
         p2Info.sessionId = s.id;
 
-        //Tell each user that the other person joined
-        // s.playerOne.socket.emit("joinedSession", newPlayer.email);
-        // s.playerTwo.socket.emit("joinedSession", s.playerOne.email);
-
+        //Send each player info about the game
         s.playerOne.socket.emit("startGame", p1Info);
         s.playerTwo.socket.emit("startGame", p2Info);
 
-        //Console logging to make sure they're connected:
-        console.log("Server says: New game joined! GameId =" + s.id)
-        console.log("Server says: PlayerOne Email =" + s.playerOne.email);
-        console.log("Server says: PlayerOne SI =" + s.playerOne.id);
-        console.log("Server says: PlayerTwo Email =" + s.playerTwo.email);
-        console.log("Server says: PlayerTwo SI =" + s.playerTwo.id);
       } else {
         //If there are no games to join, make your own
-        sessions.push(makeSession(sessionId++, newPlayer));
-
-        newPlayer.position = "p1";
-
+        sessions.push(makeSession(sessionId++, newPlayer, categoryId));
+        //Tell P1 that we're matching them soon
         newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
       }
     }
   });
 
-
-  player.on('playerChoice', result => {
+  player.on('GCMount', () => {
     const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
     if (s) {
-      // console.log("Session Found! This player is in the session # " + s.id);
-      // console.log("This player is " + newPlayer.position);
 
-      if (newPlayer.email === s.playerOne.email) {
-        s.playerOneSelect = true;
-        if (result === "correct") {
-          s.playerOneScore++
-        }
-        // console.log("Player One Selected an Answer");
-      } else if (newPlayer.email === s.playerTwo.email) {
-        s.playerTwoSelect = true;
-        if (result === "correct") {
-          s.playerTwoScore++
-        }
-        // console.log("Player Two Selected an Answer");
+      let sessionInfo = {
+        categoryId: s.categoryId,
+        playerOne: s.playerOne.email,
+        playerTwo: s.playerTwo.email
+      };
+
+      s.playerOne.socket.emit("sessionInfo", sessionInfo);
+      s.playerTwo.socket.emit("sessionInfo", sessionInfo);
+    }   
+  })
+
+
+player.on('playerChoice', result => {
+  //Find this user's session...
+  const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+  if (s) {
+    // console.log("Session Found! This player is in the session # " + s.id);
+
+    //If this user is P1 and the answer is correct, update score
+    //Also, update the session to mark that they've chosen an answer
+    if (newPlayer.email === s.playerOne.email) {
+      s.playerOneSelect = true;
+      if (result === "correct") {
+        s.playerOneScore++
       }
+      // console.log("Player One Selected an Answer");
 
-      if (s.playerOneSelect === false || s.playerTwoSelect === false) {
-        if (s.playerOneSelect === true) {
-          s.playerOne.socket.emit('scoreUpdate', "You've Selected an Answer");
-          s.playerTwo.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
-        } else if (s.playerTwoSelect === true) {
-          s.playerTwo.socket.emit('scoreUpdate', "You've Selected an Answer");
-          s.playerOne.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
-        }
-      } else if (s.playerOneSelect === true && s.playerTwoSelect === true) {
-        console.log("Both users have answered");
-        s.playerOneSelect = false;
-        s.playerTwoSelect = false;
-
-        let updatedScore = {
-          playerOne: s.playerOneScore,
-          playerTwo: s.playerTwoScore
-        }
-
-        s.playerOne.socket.emit('nextQuestion', updatedScore);
-        s.playerTwo.socket.emit('nextQuestion', updatedScore);
+      //If this user is P2 and the answer is correct, update score
+      //Also, update the session to mark that they've chosen an answer
+    } else if (newPlayer.email === s.playerTwo.email) {
+      s.playerTwoSelect = true;
+      if (result === "correct") {
+        s.playerTwoScore++
       }
-    } else {
-      console.log("No session found");
+      // console.log("Player Two Selected an Answer");
     }
-  });
 
-  player.on('player-endGame', gameData => {
-    io.emit('player-endGame', gameData)
-  });
+    //If either player hasn't selected an answer...
+    if (s.playerOneSelect === false || s.playerTwoSelect === false) {
+      //If P1 has chosen, let them know. Also let P2 know.
+      if (s.playerOneSelect === true) {
+        s.playerOne.socket.emit('scoreUpdate', "You've Selected an Answer");
+        s.playerTwo.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
+
+        //If P2 has chosen, let them know. Also let P1 know.
+      } else if (s.playerTwoSelect === true) {
+        s.playerTwo.socket.emit('scoreUpdate', "You've Selected an Answer");
+        s.playerOne.socket.emit('scoreUpdate', "Your Opponent has Selected their Answer");
+      }
+      //If both users have answered...
+    } else if (s.playerOneSelect === true && s.playerTwoSelect === true) {
+      console.log("Both users have answered");
+      //Reset Session State for next question
+      s.playerOneSelect = false;
+      s.playerTwoSelect = false;
+
+      //Creating Object to send back with scores
+      let updatedScore = {
+        playerOne: s.playerOneScore,
+        playerTwo: s.playerTwoScore
+      }
+
+      //Let both players know the current score
+      s.playerOne.socket.emit('nextQuestion', updatedScore);
+      s.playerTwo.socket.emit('nextQuestion', updatedScore);
+    }
+  } else {
+    console.log("No session found");
+  }
+});
+
+//When the game has finished...
+player.on('gameOver', result => {
+  //Find that user's session...
+  const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+  if (s) {
+    let finalScore = {
+      p1Score: s.playerOneScore,
+      p2Score: s.playerTwoScore,
+      winner: ""
+    }
+    if (s.playerOneScore > s.playerTwoScore) {
+      finalScore.winner = "p1"
+    } else {
+      finalScore.winner = "p2"
+    }
+  }
+  console.log(chalk.red("FINAL SCORE: " + finalScore));
+});
 });
 
 
