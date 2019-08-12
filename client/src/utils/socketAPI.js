@@ -62,6 +62,12 @@ export default {
             callback(message)
         })
     },
+    subscribeEndTimer: callback => {
+        socket.on('timesUp', message => callback(message));
+    },
+    subscribeTimerDec: (callback) => {
+        socket.on('timerDec', message => callback(message));
+    },
     disconnect(){
         socket.disconnect()
     }

@@ -73,8 +73,19 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
+        socketAPI.subscribeTimerDec((timer) => {
+            // console.log("Timer" + timer);
+            this.setState({
+                timer: timer
+            })
+        });
 
-
+        socketAPI.subscribeEndTimer((message) => {
+            console.log("Time's Up!");
+            this.setUserAnswer((result) => {
+                socketAPI.publishPlayerSelect(result);
+            });
+        });
         //Setting up Socket Listeners for Game:
         //Message comes back after either user selects an answer
         socketAPI.subscribeScoreUpdate((message) => {
@@ -102,6 +113,20 @@ class GameContainer extends Component {
 
         socketAPI.subscribeFinalScore((score) => {
             console.log(JSON.stringify(score));
+            let userResult = "";
+            if (score.winner === "tie") {
+                userResult = this.state.userInfo.id
+            } else if (score.winner === this.state.userInfo.id) {
+                userResult = "win";
+            } else if (score.winner !== this.state.userInfo.id) {
+                userResult = "loss";
+            }
+
+            // API.updateUserScore(this.state.userInfo.id)
+            // .then(res => {
+            //     console.log(res);
+            // })
+            this.setState({ redirectTo: "/home" });
         })
     }
 
@@ -135,17 +160,17 @@ class GameContainer extends Component {
     }
 
     // This function decreases the time limit of the game 
-    decrimentTime() {
-        if (this.state.timer !== 0) {
-            this.setState({
-                timer: this.state.timer - 1
-            });
-        } else {
-            this.setUserAnswer((result) => {
-                socketAPI.publishPlayerSelect(result)
-            });
-        }
-    }
+    // decrimentTime = () => {
+    //     if (this.state.timer !== 0) {
+    //         this.setState({
+    //             timer: this.state.timer - 1
+    //         });
+    //     } else {
+    //         this.setUserAnswer((result) => {
+    //             socketAPI.publishPlayerSelect(result)
+    //         });
+    //     }
+    // }
 
     //Click Handler
     publishPlayerSelect(selection) {
@@ -226,7 +251,6 @@ class GameContainer extends Component {
         } else {
             console.log("Player 2 waiting on score");
         }
-        // clearInterval(this.timerID);
     }
 
 
