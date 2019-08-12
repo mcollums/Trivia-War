@@ -63,18 +63,20 @@ class GameContainer extends Component {
                     this.setState({
                         category: info.categoryId,
                         position: userPosition,
-                        oppEmail: oppInfo 
+                        oppEmail: oppInfo
                     }, () => {
                         console.log("User position in state " + this.state.position);
                         console.log("Opponent email " + this.state.oppEmail);
-                        API.getOneUserEmail(this.state.oppEmail)
-                            .then(res => {
-                                console.log(res.data);
-                                this.getGame(this.state.category);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            })
+                        // API.getOneUserEmail(this.state.oppEmail)
+                        //     .then(res => {
+                        //         console.log(res.data);
+                        //         this.getGame(this.state.category);
+                        //     })
+                        //     .catch(err => {
+                        //         console.log(err);
+                        //     })
+                        this.getGame(this.state.category);
+
                     })
                 });
             }).catch(err => {
@@ -108,7 +110,7 @@ class GameContainer extends Component {
         //Also updates to the next question
         socketAPI.subscribeNextQuestion((score) => {
             console.log("New Score = " + JSON.stringify(score));
-            if(this.state.position === "p1") {
+            if (this.state.position === "p1") {
                 this.setState({
                     oppCorrect: score.playerOne
                 })
@@ -315,7 +317,7 @@ class GameContainer extends Component {
                             <h5 style={{ color: "white" }}>Score: {this.state.correct}</h5>
                         </Col>
                         <Col size="4" id="message">
-                            <h4 style={{ color: "white", marginTop: "20px"}}> {this.state.message} </h4>
+                            <h4 style={{ color: "white", marginTop: "20px" }}> {this.state.message} </h4>
                         </Col>
                         <Col size="4" id="player2">
                             <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo} />
