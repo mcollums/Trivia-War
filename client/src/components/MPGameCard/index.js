@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./style.css";
 
 const styles = {
     marginTop: "20px",
@@ -9,8 +9,8 @@ const styles = {
 const MPGameCard = props => (
 
     <div>
-        <div style={styles} id={props.answer} onClick={() => props.publishPlayerSelect(props.id)} className="card grow" >
-            <h3>{props.id}</h3>
+        <div style={styles} id={props.answer} onClick={() => props.publishPlayerSelect(props.id)} className="card grow mpAnswer" >
+            <h3 className="mpAnswer">{props.id}</h3>
         </div>
     </div>
 
