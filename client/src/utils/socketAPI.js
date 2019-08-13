@@ -39,6 +39,9 @@ export default {
     subscribeSessionInfo: (callback) => {
         socket.on('sessionInfo', sessionInfo => callback(sessionInfo));
     },
+    subscribeHideIntro: ((callback) => {
+        socket.on('hideIntro', message => callback(message));
+    }),
     //when the player makes a choice...
     publishPlayerSelect: (result) => {
         socket.emit('playerChoice', result);

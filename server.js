@@ -229,8 +229,9 @@ io.on('connection', function (player) {
       //Send to both users
       s.playerOne.socket.emit("sessionInfo", sessionInfo);
       s.playerTwo.socket.emit("sessionInfo", sessionInfo);
+
       //Start timer
-      startTimer(s, 10);
+      startTimer(s, 16);
     }
   })
 

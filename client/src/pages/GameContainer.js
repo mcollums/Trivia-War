@@ -22,7 +22,7 @@ class GameContainer extends Component {
             answers: [],
             correctAnswer: "",
             correct: 0,
-            incorrect: 0,
+            // incorrect: 0,
             userSelect: "",
             message: "",
             index: 0,
@@ -32,9 +32,12 @@ class GameContainer extends Component {
             oppEmail: "",
             oppInfo: "",
             redirectTo: null,
+            introShow: true
         };
 
         this.publishPlayerSelect = this.publishPlayerSelect.bind(this)
+        this.startIntroTimer = this.startIntroTimer.bind(this);
+
     }
 
     //TODO: Add route that will get the game based on the user's selection
@@ -85,6 +88,8 @@ class GameContainer extends Component {
                 this.setState({ redirectTo: "/" })
             });
 
+        this.startIntroTimer();
+
         socketAPI.subscribeTimerDec((timer) => {
             // console.log("Timer" + timer);
             this.setState({
@@ -114,11 +119,13 @@ class GameContainer extends Component {
             console.log("New Score = " + JSON.stringify(score));
             if (this.state.position === "p1") {
                 this.setState({
-                    oppCorrect: score.playerOne
+                    correct: score.playerOne,
+                    oppCorrect: score.playerTwo
                 })
             } else if (this.state.position === "p2") {
                 this.setState({
-                    oppCorrect: score.playerTwo
+                    correct: score.playerTwo,
+                    oppCorrect: score.playerOne
                 })
             }
             //This variable is checking to see what the next index value will be
@@ -156,6 +163,13 @@ class GameContainer extends Component {
         })
     }
 
+    startIntroTimer = () => {
+        setTimeout(() => {
+            this.setState({
+                introShow: false
+            })
+        }, 6000);
+    }
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -164,24 +178,51 @@ class GameContainer extends Component {
                 //quiz Questions will be held outside the component 
                 //so we can go through the questions/answers with an index value
                 quizQuestions = res.data;
-                // console.log("quizz questions " + JSON.stringify(quizQuestions))
+                console.log("Quiz Questions" + JSON.stringify(quizQuestions));
+
                 this.setQuestionState(res.data);
             });
     }
 
+    shuffleQuestions(array) {
+        var currentIndex = array.length;
+        var temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
     // Setting the state of the game
     setQuestionState(data) {
-        // console.log(data);
         let index = this.state.index;
+        let allAnswers = data.questions[index].answers.answersObject;
+        //push correct answer
+        allAnswers.push(data.questions[index].correctAnswer);
+        // console.log("All answers" + allAnswers);
+        //push incorrect answers
+        let shuffledArr = this.shuffleQuestions(allAnswers);
+        // console.log(data);
+
         this.setState({
             title: data.title,
             category: data.category,
             question: data.questions[index].question,
-            answers: data.questions[index].answers.answersObject,
+            answers: shuffledArr,
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
-            // console.log("STATE" + JSON.stringify(this.state));
+            console.log("STATE" + JSON.stringify(this.state.answers));
             // console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
         });
     }
@@ -196,7 +237,12 @@ class GameContainer extends Component {
             //before setUserAnswer is called
             this.setUserAnswer((result) => {
                 console.log("User is " + result);
-                socketAPI.publishPlayerSelect(result);
+                let message = "You were " + result;
+                this.setState({
+                    message: message
+                }, () => {
+                    socketAPI.publishPlayerSelect(result);
+                })
             });
         })
     };
@@ -209,29 +255,14 @@ class GameContainer extends Component {
 
         //if the user didn't select an answer add to incorrect
         if (this.state.userSelect === "") {
-            // console.log("No answer selected");
-            let newIncorrect = this.state.incorrect + 1;
-            this.setState({
-                incorrect: newIncorrect
-            });
             userAnswerResult = "incorrect";
 
             //if the user selected the correct answer, add to correct
         } else if (this.state.userSelect === this.state.correctAnswer) {
-            // console.log("Correct answer selected");
-            let newCorrect = this.state.correct + 1;
-            this.setState({
-                correct: newCorrect
-            });
             userAnswerResult = "correct"
 
             //if the user selected the incorrect answer, add to incorrect
         } else if (this.state.userSelect !== this.state.correctAnswer) {
-            // console.log("Incorrect Answer selected");
-            let newIncorrect = this.state.incorrect + 1;
-            this.setState({
-                incorrect: newIncorrect
-            });
             userAnswerResult = "incorrect";
         }
 
@@ -245,11 +276,18 @@ class GameContainer extends Component {
 
     setNextQuestion = () => {
         let newIndex = this.state.index + 1;
+        let allAnswers = quizQuestions.questions[newIndex].answers.answersObject;
+        //push correct answer
+        allAnswers.push(quizQuestions.questions[newIndex].correctAnswer);
+        // console.log("All answers" + allAnswers);
+        //push incorrect answers
+        let shuffledArr = this.shuffleQuestions(allAnswers);
+
         this.setState({
             index: newIndex,
             timer: 10,
             question: quizQuestions.questions[newIndex].question,
-            answers: quizQuestions.questions[newIndex].answers.answersObject,
+            answers: shuffledArr,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
             userSelect: "",
             message: ""
@@ -277,8 +315,8 @@ class GameContainer extends Component {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
-        return (
-            <div>
+        if (this.state.introShow === true) {
+            return (
                 <Container fluid="-fluid">
                     <Row>
                         <Col size="12" id="titleCol">
@@ -287,39 +325,83 @@ class GameContainer extends Component {
                         </Col>
                     </Row>
                     <Row>
+
                         <GameCol size="12">
-                            <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
-                                <h2>{this.state.question}</h2>
-                                <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
-                                {this.state.answers.map(answer => (
-                                    <MPGameCard
-                                        id={answer}
-                                        key={answer}
-                                        publishPlayerSelect={this.publishPlayerSelect}
-                                    />
-                                ))}
+                            <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
+                                <h2>Get Ready for Trivia!</h2>
+                                <h5>Instructions:</h5>
+                                <p> Both players will have 10 seconds to answer each of 10 question. Don't let time run out or
+                                    your round will be counted as incorrect. If both users answer before the timer ends
+                                    the next question will automatically appear, so be ready!
+                                </p>
                             </Jumbotron>
                         </GameCol>
 
                     </Row>
                     <Row>
                         <Col size="4" id="player1">
-                            <h5 style={{marginTop: "15px", color: "white"}}>{this.state.userInfo.name}</h5>
+                            <h5 style={{ marginTop: "15px", color: "white" }}>{this.state.userInfo.name}</h5>
                             <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
-                            <h5 style={{ color: "white", marginTop:"8px" }}>Score: {this.state.correct}</h5>
+                            <h5 style={{ color: "white", marginTop: "8px" }}>Score: {this.state.correct}</h5>
                         </Col>
                         <Col size="4" id="message">
                             <h5 style={{ color: "white", marginTop: "30px" }}> {this.state.message} </h5>
                         </Col>
                         <Col size="4" id="player2">
-                            <h5 style={{marginTop: "15px", color:"white"}}>{this.state.oppInfo.username}</h5>
+                            <h5 style={{ marginTop: "15px", color: "white" }}>{this.state.oppInfo.username}</h5>
                             <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo.picLink} />
                             <h5 style={{ color: "white", marginTop: "8px" }}> Score {this.state.oppCorrect} </h5>
                         </Col>
                     </Row>
                 </Container>
-            </div>
-        )
+            )
+        }
+        else if (this.state.introShow === false) {
+            return (
+                <div>
+                    <Container fluid="-fluid">
+                        <Row>
+                            <Col size="12" id="titleCol">
+                                <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }}
+                                    className="text-center"> {this.state.title} </h5>
+                            </Col>
+                        </Row>
+                        <Row>
+
+                            <GameCol size="12">
+                                <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+                                    <h2>{this.state.question}</h2>
+                                    <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
+                                    {this.state.answers.map(answer => (
+                                        <MPGameCard
+                                            id={answer}
+                                            key={answer}
+                                            publishPlayerSelect={this.publishPlayerSelect}
+                                        />
+                                    ))}
+                                </Jumbotron>
+                            </GameCol>
+
+                        </Row>
+                        <Row>
+                            <Col size="4" id="player1">
+                                <h5 style={{ marginTop: "15px", color: "white" }}>{this.state.userInfo.name}</h5>
+                                <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
+                                <h5 style={{ color: "white", marginTop: "8px" }}>Score: {this.state.correct}</h5>
+                            </Col>
+                            <Col size="4" id="message">
+                                <h5 style={{ color: "white", marginTop: "30px" }}> {this.state.message} </h5>
+                            </Col>
+                            <Col size="4" id="player2">
+                                <h5 style={{ marginTop: "15px", color: "white" }}>{this.state.oppInfo.username}</h5>
+                                <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo.picLink} />
+                                <h5 style={{ color: "white", marginTop: "8px" }}> Score {this.state.oppCorrect} </h5>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+            )
+        }
     }
 }
 
