@@ -78,7 +78,7 @@ class Authentication extends Component {
                     console.log(result);
                 })
                 .catch(err => {
-                    this.setState({ registerErrorMessage: "*Duplicate email" })
+                    this.setState({ registerErrorMessage: "*Email is already in use" })
                 })
         }
     }
