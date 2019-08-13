@@ -56,7 +56,6 @@ runSeeds = (i) => {
                     questions: [
                         {
                             "question": htmlToText.fromString(results[0].question),
-                            // "answers": htmlToText.fromString(results[0].incorrect_answers),
                             "answers": makeArr(results[0].incorrect_answers),
                             "correctAnswer": htmlToText.fromString(results[0].correct_answer)
                         },
