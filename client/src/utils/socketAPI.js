@@ -57,11 +57,6 @@ export default {
     subscribeFinalScore: (callback) => {
         socket.on('finalScore', result => callback(result))
     },
-    subscribeSeekError: callback => {
-        socket.on("seekError", message => {
-            callback(message)
-        })
-    },
     subscribeEndTimer: callback => {
         socket.on('timesUp', message => callback(message));
     },

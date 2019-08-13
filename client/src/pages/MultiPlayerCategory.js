@@ -15,11 +15,11 @@ class MultiPlayer extends Component {
             gameStart: false,
             matchmakingOpen: false,
         }
-
         this.handleCatSelect = this.handleCatSelect.bind(this);
     }
 
     componentDidMount() {
+        //Get all the games from the database
         API.getGames().then(res => {
             this.setState({
                 category: res.data
@@ -28,9 +28,6 @@ class MultiPlayer extends Component {
 
         //Listens for matchmaking message from the server
         socketAPI.subscribeMatchmaking((message) => {
-            //this message says that the player is waiting in matchmaking
-            // console.log(message);
-
             //function that shows matchmaking modal
             this.setState({ matchmakingOpen: true });
         });
@@ -38,20 +35,9 @@ class MultiPlayer extends Component {
         //Listens for the gameStart information from the server
         //this will happen when two users have joined the session
         socketAPI.subscribeGameStart((info) => {
-            this.setState({ matchmakingOpen: false }, 
-                () => {
-                    this.props.history.push('/game');
-                });
-            // this.setState({
-            //     position: info.position
-            // }, () => {
-            //     console.log("Start Game Info" + JSON.stringify(info))
-            //     // console.log("MultiplayerCat Position = " + this.state.position);
-            //     this.setState({ matchmakingOpen: false }, 
-            //         () => {
-            //             this.props.history.push('/game');
-            //         });
-            // })
+            this.setState({ 
+                matchmakingOpen: false 
+            }, () => this.props.history.push('/game'));
         });
     }
 
