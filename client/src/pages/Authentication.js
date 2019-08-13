@@ -13,7 +13,8 @@ class Authentication extends Component {
         picLink: "",
         email: "",
         password: "",
-        errorMessage: "",
+        loginErrorMessage: "",
+        registerErrorMessage: "",
         welcomeEmail: "",
         googleSigninUrl: "",
         redirectTo: null,
@@ -21,9 +22,6 @@ class Authentication extends Component {
         registerOpen: false,
 
     }
-
-
-
 
 
     openModal = modal => {
@@ -53,7 +51,7 @@ class Authentication extends Component {
                 this.setState({ redirectTo: "/home" });
             })
             .catch(err => {
-                this.setState({ errorMessage: "Please enter a valid email or password" })
+                this.setState({ loginErrorMessage: "*Please enter a valid email or password" })
             })
     }
 
@@ -66,14 +64,18 @@ class Authentication extends Component {
                 //this.loadProfileInfo()
                 // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
-            }).catch(err => {
-                console.log(err)
-                if (!username || !picLink || !email || !password) {
-                    this.setState({ errorMessage: "Please fill in all fields" })
-                }
-                else if (password <= 6) {
-                    this.setState({ errorMessage: "Password needs to be at least 6 characters" })
-                }
+                console.log(result);
+            })
+            .catch(err => {
+                // this.setState({ errorMessage: err })
+
+                // res.json(err)
+                // if (!username || !picLink || !email || !password) {
+                //     this.setState({ errorMessage: "Please fill in all fields" })
+                // }
+                // else if (password <= 6) {
+                //     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
+                // }
             })
     }
 
@@ -131,8 +133,11 @@ class Authentication extends Component {
 
             <div className="logCon">
                 <div className="logInCon">
+
+                    {/* Login button */}
                     <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
 
+                    {/* Login Modal */}
                     <Modal
                         ariaHideApp={false}
                         isOpen={this.state.loginOpen}
@@ -151,7 +156,7 @@ class Authentication extends Component {
                                 backgroundColor: 'rgba(52, 58, 64, 0.56)'
                             },
                             content: {
-                                width: "400px",
+                                width: "350px",
                                 height: "200px",
                                 border: '1px solid #ccc',
                                 background: '#fff',
@@ -163,10 +168,11 @@ class Authentication extends Component {
                             }
                         }}
                     >
+                        {/* Form inputs */}
                         <form>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
-                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
+                            {this.state.loginErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.loginErrorMessage}</div> : null}
 
                             <button type="submit" style={{ marginTop: "15px", marginLeft: "40%" }} className="btn btn-dark" onClick={this.handleFormSubmit}>Login</button>
 
@@ -174,9 +180,10 @@ class Authentication extends Component {
                     </Modal>
 
 
-
+                    {/* Register button */}
                     <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
 
+                    {/* Register modal */}
                     <Modal
                         ariaHideApp={false}
                         isOpen={this.state.registerOpen}
@@ -195,7 +202,7 @@ class Authentication extends Component {
                                 backgroundColor: 'rgba(52, 58, 64, 0.56)'
                             },
                             content: {
-                                width: "400px",
+                                width: "350px",
                                 height: "300px",
                                 border: '1px solid #ccc',
                                 background: '#fff',
@@ -207,25 +214,22 @@ class Authentication extends Component {
                             }
                         }}
                     >
-
+                        {/* Form inputs */}
                         <form>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
-                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
+                            {this.state.registerErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.registerErrorMessage}</div> : null}
 
                             <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
 
                         </form>
                     </Modal>
-
-
-
                 </div>
 
-
-                <Jumbotron jumboHeight="80%">
+                {/* Leader board */}
+                <Jumbotron style={{ height: "auto" }}>
                     <h4>LEADER BOARD</h4>
                     <table className="table">
                         <thead className="thead-dark">
@@ -237,6 +241,7 @@ class Authentication extends Component {
                             </tr>
                         </thead>
                         <tbody>
+                            {/* Map each user data to leader board */}
                             {
                                 this.state.users.slice(0, 5).map((user, index) => {
                                     return (
