@@ -34,6 +34,7 @@ class SingleCategory extends Component {
         this.setState({
             category: addCategory
         }, () => {
+            addCategory = [];
             console.log("State category", this.state.category);
         });
     }
@@ -55,6 +56,7 @@ class SingleCategory extends Component {
 
                     </div>
                 ) : (
+
                         <SPGameContainer id={this.state.id} />
                     )}
 
