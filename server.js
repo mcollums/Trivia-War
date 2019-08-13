@@ -108,7 +108,7 @@ io.on('connection', function (player) {
       clearInterval(countdown)
     }
   }
-  let clearFn = () => {};
+  let clearFn = () => { };
   var startTimer = (s, duration) => {
     var timer = duration, minutes, seconds;
 
@@ -133,7 +133,7 @@ io.on('connection', function (player) {
     }, 1000);
 
 
-    player.off('playerChoice', clearFn)
+    player.off('playerChoice', clearFn);
     player.off('gameOver', clearFn);
     clearFn = makeClearInterval(countdown);
     player.on('playerChoice', clearFn);
@@ -189,7 +189,7 @@ io.on('connection', function (player) {
       newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
     } else {
       // Look for a game without a playerTwo...
-      const s = sessions.find(s => s.playerTwo === null);
+      const s = sessions.find(s => s.playerTwo === null && s.categoryId === categoryId);
       if (s) {
         //Add this player as the session's player 2
         s.playerTwo = newPlayer;
@@ -235,6 +235,9 @@ io.on('connection', function (player) {
     }
   })
 
+  // player.on('noChoiceSelected', () => {
+  //   startTimer(s, 10);
+  // })
 
   //This function happens when the player chooses an answer in game...
   player.on('playerChoice', result => {
@@ -292,12 +295,20 @@ io.on('connection', function (player) {
         s.playerTwo.socket.emit('nextQuestion', updatedScore);
 
         //restart timer
-        startTimer(s, 10);
+        // startTimer(s, 10);
       }
     } else {
       console.log("No session found");
     }
   });
+
+  player.on("startTimer", () => {
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+      //restart time
+      startTimer(s, 10);
+    }
+  })
 
   //When the game has finished...
   player.on('gameOver', result => {

@@ -22,7 +22,6 @@ class GameContainer extends Component {
             answers: [],
             correctAnswer: "",
             correct: 0,
-            // incorrect: 0,
             userSelect: "",
             message: "",
             index: 0,
@@ -47,10 +46,10 @@ class GameContainer extends Component {
                 // this runs if the user is logged in
                 this.setState({ userInfo: response.data });
                 //Grab the session info from the server
-                socketAPI.publishGCMount();
+                socketAPI.publishGCMount(() => {});
                 //Then set the state with the session info
                 socketAPI.subscribeSessionInfo((info) => {
-                    console.log("Subcribe Session Info" + JSON.stringify(info));
+                    // console.log("Subcribe Session Info" + JSON.stringify(info));
                     let userPosition = "";
                     let oppInfo = "";
 
@@ -69,18 +68,16 @@ class GameContainer extends Component {
                     }, () => {
                         API.getUserByEmail(this.state.oppEmail)
                             .then(res => {
+                                this.getGame(this.state.category);
                                 this.setState({
                                     oppInfo: res.data
                                 }, () => {
                                     // console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
-                                    this.getGame(this.state.category);
                                 })
                             })
                             .catch(err => {
                                 console.log(err);
                             })
-                        this.getGame(this.state.category);
-
                     })
                 });
             }).catch(err => {
@@ -99,6 +96,12 @@ class GameContainer extends Component {
 
         socketAPI.subscribeEndTimer((message) => {
             console.log("Time's Up!");
+            // if(this.state.userSelect = "") {
+            //     // socketAPI.publishNoChoiceSelected();
+            // }
+            this.setState({
+                message: ""
+            })
             this.setUserAnswer((result) => {
                 socketAPI.publishPlayerSelect(result);
             });
@@ -138,6 +141,8 @@ class GameContainer extends Component {
             } else {
                 this.setNextQuestion();
             }
+
+            socketAPI.publishStartGameTimer();
         });
 
         socketAPI.subscribeFinalScore((score) => {
@@ -185,7 +190,7 @@ class GameContainer extends Component {
             })
         }, 6000);
     }
-    
+
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -413,7 +418,7 @@ class GameContainer extends Component {
                 </div>
             )
         }
-        else if(this.state.gameOver === true){
+        else if (this.state.gameOver === true) {
             return (
                 <Container fluid="-fluid">
                     <Row>
@@ -427,14 +432,14 @@ class GameContainer extends Component {
                         <GameCol size="12">
                             <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
                                 <h2>Final Score</h2>
-                                <Row> 
+                                <Row>
                                     <Col size="6">
                                         <h5>{this.state.userInfo.name}'s Score: </h5>
-                                        <h5>{this.state.correct}</h5>    
+                                        <h5>{this.state.correct}</h5>
                                     </Col>
-                                    <Col size ="6">
+                                    <Col size="6">
                                         <h5>{this.state.oppInfo.username}'s Score: </h5>
-                                        <h5>{this.state.oppCorrect}</h5>    
+                                        <h5>{this.state.oppCorrect}</h5>
                                     </Col>
                                 </Row>
                             </Jumbotron>
@@ -459,8 +464,8 @@ class GameContainer extends Component {
                 </Container>
             )
         }
-        }
-    
+    }
+
 }
 
 export default GameContainer
