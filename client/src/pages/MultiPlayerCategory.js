@@ -41,9 +41,12 @@ class MultiPlayer extends Component {
             this.setState({
                 position: info.position
             }, () => {
+                console.log("Start Game Info" + JSON.stringify(info))
                 // console.log("MultiplayerCat Position = " + this.state.position);
-                this.props.history.push('/game');
-                this.setState({ matchmakingOpen: false });
+                this.setState({ matchmakingOpen: false }, 
+                    () => {
+                        this.props.history.push('/game');
+                    });
             })
         });
     }

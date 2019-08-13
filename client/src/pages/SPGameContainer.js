@@ -8,7 +8,7 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import update from 'immutability-helper';
 import { Redirect } from "react-router-dom";
-const timer = require('react-native-timer');
+// const timer = require('react-native-timer');
 
 let quizQuestions = [];
 let nextIndex = 0;

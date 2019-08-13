@@ -233,11 +233,7 @@ io.on('connection', function (player) {
       //Start timer
       startTimer(s, 16);
     }
-  })
-
-  // player.on('noChoiceSelected', () => {
-  //   startTimer(s, 10);
-  // })
+  });
 
   //This function happens when the player chooses an answer in game...
   player.on('playerChoice', result => {

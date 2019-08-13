@@ -1,12 +1,12 @@
 import React from "react";
-// import "./GameCard.css";
+
 
 const styles = {
     marginTop: "20px",
     borderColor: "grey"
 }
 
-const GameCard = props => (
+const MPGameCard = props => (
 
     <div>
         <div style={styles} id={props.answer} onClick={() => props.publishPlayerSelect(props.id)} className="card grow" >
@@ -17,4 +17,4 @@ const GameCard = props => (
 );
 
 
-export default GameCard;
+export default MPGameCard;

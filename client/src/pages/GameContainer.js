@@ -7,6 +7,8 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import socketAPI from "../utils/socketAPI";
 
+
+//this holds all questions for the game to cycle through
 let quizQuestions = [];
 
 class GameContainer extends Component {
@@ -31,7 +33,8 @@ class GameContainer extends Component {
             oppEmail: "",
             oppInfo: "",
             redirectTo: null,
-            introShow: true
+            introShow: true,
+            addClass: false
         };
 
         this.publishPlayerSelect = this.publishPlayerSelect.bind(this)
@@ -39,14 +42,15 @@ class GameContainer extends Component {
         this.startEndTimer = this.startIntroTimer.bind(this);
     }
 
-    //TODO: Add route that will get the game based on the user's selection
+
     componentDidMount() {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                this.setState({ userInfo: response.data });
+                this.setState({ userInfo: response.data }, () => {
+                    socketAPI.publishGCMount();
+                });
                 //Grab the session info from the server
-                socketAPI.publishGCMount(() => {});
                 //Then set the state with the session info
                 socketAPI.subscribeSessionInfo((info) => {
                     // console.log("Subcribe Session Info" + JSON.stringify(info));
@@ -326,6 +330,9 @@ class GameContainer extends Component {
         })
     }
 
+    toggle() {
+        this.setState({addClass: !this.state.addClass});
+      }
 
     render() {
         if (this.state.redirectTo) {
@@ -373,6 +380,7 @@ class GameContainer extends Component {
             )
         }
         else if (this.state.gameOver === false && this.state.introShow === false) {
+
             return (
                 <div>
                     <Container fluid="-fluid">
@@ -390,6 +398,7 @@ class GameContainer extends Component {
                                     <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
                                     {this.state.answers.map(answer => (
                                         <MPGameCard
+                                            className="box"
                                             id={answer}
                                             key={answer}
                                             publishPlayerSelect={this.publishPlayerSelect}
