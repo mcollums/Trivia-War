@@ -113,6 +113,7 @@ class SinglePlayerGameContainer extends Component {
 
    // Setting the state of the game
    setQuestionState(data) {
+      // console.log("DATA " + JSON.stringify(data));
       let index = this.state.index;
       let allAnswers = data.questions[index].answers.answersObject;
       //push correct answer to the array
