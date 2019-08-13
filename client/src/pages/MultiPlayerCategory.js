@@ -38,16 +38,20 @@ class MultiPlayer extends Component {
         //Listens for the gameStart information from the server
         //this will happen when two users have joined the session
         socketAPI.subscribeGameStart((info) => {
-            this.setState({
-                position: info.position
-            }, () => {
-                console.log("Start Game Info" + JSON.stringify(info))
-                // console.log("MultiplayerCat Position = " + this.state.position);
-                this.setState({ matchmakingOpen: false }, 
-                    () => {
-                        this.props.history.push('/game');
-                    });
-            })
+            this.setState({ matchmakingOpen: false }, 
+                () => {
+                    this.props.history.push('/game');
+                });
+            // this.setState({
+            //     position: info.position
+            // }, () => {
+            //     console.log("Start Game Info" + JSON.stringify(info))
+            //     // console.log("MultiplayerCat Position = " + this.state.position);
+            //     this.setState({ matchmakingOpen: false }, 
+            //         () => {
+            //             this.props.history.push('/game');
+            //         });
+            // })
         });
     }
 

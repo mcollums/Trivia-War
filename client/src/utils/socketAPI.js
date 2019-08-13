@@ -1,6 +1,6 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket(process.env.SOCKET_URL || 'http://localhost:3001')
+const socket = openSocket(process.env.REACT_APP_SOCKET_URL || 'http://localhost:3001')
 
 //As soon as a user connects, add them to the UsersArray
 socket.on("message", message => console.log(message));
@@ -10,7 +10,6 @@ export default {
     subscribeTimer: (callback) => {
         socket.on("timer", time => callback(time));
     },
-
     //Authenticating User and Adding to playersArray in server
     publishLogin: userData => {
         socket.emit("setuser", userData);
@@ -18,7 +17,6 @@ export default {
     subscribeAuthorized: callback => {
         socket.on("authorized", (message) => callback(message));
     },
-
     //When the user wants to join a game
     publishSeekGame: categoryId => {
         socket.emit("seekGame", categoryId);

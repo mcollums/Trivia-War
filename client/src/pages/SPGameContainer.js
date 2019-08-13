@@ -40,7 +40,7 @@ class SinglePlayerGameContainer extends Component {
    componentDidMount() {
       setTimeout(() => {
          this.setState({ showLoading: false });
-     }, 2000);
+     }, 500);
       this.getGame(this.props.id);
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
       this.getUserPic();
