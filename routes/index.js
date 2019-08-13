@@ -12,9 +12,15 @@ router.post("/register",(req,res)=>{
   .then((newUser)=>{
     res.redirect(307, "/login")
   })
-  // .catch((err)=>{
-  //   res.json(err);
-  // })
+  .catch((err)=>{
+    if (err.code === 11000) {
+      console.log("duplicate email")
+      res.status(401).json({ error: "That email already exists." })
+    }
+    else {
+      res.json(err);
+    }
+  })
 });
 
 router.post('/login', passport.authenticate("local"),  (req, res) => {

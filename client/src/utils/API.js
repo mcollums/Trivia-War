@@ -21,11 +21,11 @@ export default {
   getOneUser: function (id) {
     return axios.get("/api/user/" + id);
   },
-  getUserByEmail: function(email) {
+  getUserByEmail: function (email) {
     return axios.get("api/user/email/" + email);
   },
-  updateUserScore: function(id,obj) {
-    return axios.put("api/user/score/" + id,obj);
+  updateUserScore: function (id, obj) {
+    return axios.put("api/user/score/" + id, obj);
   },
   postGameDetails: function (user) {
     return axios.post("/api/user", {
@@ -33,6 +33,12 @@ export default {
       wins: user.wins,
       losses: user.losses
     });
+  },
+  addWin: function (userId) {
+    return axios.get("/api/user/add-win/" + userId);
+  },
+  addLoss: function (userId) {
+    return axios.get("/api/user/add-loss/" + userId);
   }
 };
 
