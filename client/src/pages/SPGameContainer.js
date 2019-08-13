@@ -196,7 +196,7 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             correct: newCorrect,
             counter: true,
-         })
+         }, () => { console.log("Correct Answer", this.state.correct) })
 
       }
 
@@ -208,7 +208,7 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             incorrect: newIncorrect,
             counter: false,
-         }, () => { console.log("Updating the state", this.state.userInfo) })
+         }, () => { console.log("incoreect Answer", this.state.incorrect) })
 
       }
    }
@@ -235,8 +235,7 @@ class SinglePlayerGameContainer extends Component {
    handlePlayAgainBtn = (user) => {
       this.stopTimer();
       if (this.state.userInfo.id === user.id) {
-
-         if (this.state.correct === 7) {
+         if (this.state.correct >= 7) {
             API.addWin(user.id).then(() => this.setState({ redirectTo: "/home" }));
          }
 
