@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter,  Redirect } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
 import Modal from 'react-modal';
 import axios from 'axios';
@@ -19,7 +19,8 @@ class Authentication extends Component {
         googleSigninUrl: "",
         redirectTo: null,
         loginOpen: false,
-        registerOpen: false
+        registerOpen: false,
+
     }
 
 
@@ -40,7 +41,7 @@ class Authentication extends Component {
 
     // let's try and login   
     handleFormSubmit = event => {
-        event.preventDefault()
+        event.preventDefault();
         const { email, password } = this.state
         axios.post('/login', { email, password })
             .then(result => {
@@ -55,7 +56,7 @@ class Authentication extends Component {
     }
 
     handleFormRegister = event => {
-        event.preventDefault()
+        event.preventDefault();
         const { username, picLink, email, password } = this.state
         const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         if (!username || !picLink || !email || !password) {
@@ -100,7 +101,7 @@ class Authentication extends Component {
                 //     this.setState({ googleSigninUrl: response.data.url })
                 // })
             })
-    }
+    };
 
     componentDidMount() {
         // Mostly just for developing locally
@@ -113,7 +114,7 @@ class Authentication extends Component {
             // this.loadProfileInfo()
         }
         this.loadUsers();
-    }
+    };
 
     loadUsers() {
         API.getUsers()
@@ -231,7 +232,7 @@ class Authentication extends Component {
                 </div>
 
                 {/* Leader board */}
-                <Jumbotron style={{height:"auto"}}>
+                <Jumbotron style={{ height: "auto" }}>
                     <h4>LEADER BOARD</h4>
                     <table className="table">
                         <thead className="thead-dark">

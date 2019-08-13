@@ -8,7 +8,8 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import update from 'immutability-helper';
 import { Redirect } from "react-router-dom";
-// const timer = require('react-native-timer');
+import clicksound from "../sound/352804__josepharaoh99__timer-click-track.wav";
+
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -33,14 +34,24 @@ class SinglePlayerGameContainer extends Component {
       userInfo: {},
       redirectTo: null,
       click: false,
-      counter: false
+      counter: false,
+      play: false,
+      pause: true,
    };
+   play = () => {
+      this.audio = new Audio(clicksound);
+      this.setState({ play: true, pause: false })
+      this.audio.play();
+   }
+   pause = () => {
+      this.setState({ play: false, pause: true })
+      this.audio.pause();
+   }
+
+
 
    //TODO: Add route that will get the game based on the user's selection
    componentDidMount() {
-      setTimeout(() => {
-         this.setState({ showLoading: false });
-     }, 2000);
       this.getGame(this.props.id);
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
       this.getUserPic();
@@ -86,7 +97,7 @@ class SinglePlayerGameContainer extends Component {
          answers: data.questions[index].answers.answersObject,
          correctAnswer: data.questions[index].correctAnswer,
          questionCount: data.questions.length
-      }, () => { });
+      }, () => { this.play() });
    }
 
    // This function decreases the time limit of the game 
@@ -107,6 +118,7 @@ class SinglePlayerGameContainer extends Component {
    //This method updates the game state basked on what the user clicked.
    handleSelection = id => {
       this.stopTimer();
+      this.pause();
       console.log(id);
       this.setState({
          userSelect: id,
@@ -185,6 +197,7 @@ class SinglePlayerGameContainer extends Component {
 
       //This variable is checking to see what the next index value will be
       this.stopTimer();
+      this.pause();
       nextIndex = (this.state.index + 1);
 
       //if the next index value is equal to the total amount of questions then stop the game
@@ -212,6 +225,7 @@ class SinglePlayerGameContainer extends Component {
    checkforNextQuestion = () => {
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
       newIndex = this.state.index + 1;
+      this.play();
       console.log("New index", newIndex, "questionCount", this.state.questionCount);
       console.log();
       if (newIndex !== this.state.questionCount) {
@@ -221,12 +235,12 @@ class SinglePlayerGameContainer extends Component {
       else {
          this.setState({
             outcome: true
-         })
+         }, () => { this.pause() })
       }
    }
 
    setNextQuestion = (newIndex) => {
-
+      // this.play();
       this.setState({
          index: newIndex,
          timer: 10,
@@ -247,6 +261,7 @@ class SinglePlayerGameContainer extends Component {
       console.log("GAME OVER");
       console.log(this.state);
       this.stopTimer();
+      this.pause();
 
    }
 
@@ -259,13 +274,13 @@ class SinglePlayerGameContainer extends Component {
    //Send back to user's homepage
 
    render() {
-      if(this.state.showLoading) {
+      if (this.state.showLoading) {
          return (
-             <div className="circlecontainer">
-             <div class="lds-circle"><div></div></div>
-             </div>
+            <div className="circlecontainer">
+               <div class="lds-circle"><div></div></div>
+            </div>
          );
-     }
+      }
 
       if (this.state.redirectTo) {
          clearInterval(this.state.timer);
@@ -307,7 +322,7 @@ class SinglePlayerGameContainer extends Component {
                                     ? (
                                        <div>
                                           <h2>{this.state.question}</h2>
-                                          <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
+                                          <h4>Tick Tock <strong>{this.state.timer}s </strong> left</h4>
 
 
                                           {this.state.answers.map(answer => (
