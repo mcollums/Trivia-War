@@ -8,7 +8,6 @@ const { google } = require("googleapis")
 const session = require('express-session')
 const path = require("path");
 const chalk = require('chalk');
-const timer = require('./timer');
 
 
 app.use(session({ secret: process.env.SESSION_SECRET || "the cat ate my keyboard", resave: true, saveUninitialized: true }))
@@ -57,6 +56,7 @@ app.use(express.json());
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
+app.use(express.static("public"));
 
 // Add routes, both API and view
 app.use(routes);
@@ -99,67 +99,19 @@ const makeSession = (id, creator, categoryId) => {
   }
 }
 
-// // This function decreases the time limit of the game 
-// startTimer = (s, duration) => {
-//   var timer = duration, minutes, seconds;
-//   var countdown = setInterval(function () {
-//     minutes = parseInt(timer / 60, 10);
-//     seconds = parseInt(timer % 60, 10);
-
-//     minutes = minutes < 10 ? "0" + minutes : minutes;
-//     seconds = seconds < 10 ? "0" + seconds : seconds;
-
-//     s.playerOne.socket.emit('timerDec', timer);
-//     s.playerTwo.socket.emit('timerDec', timer);
-//     console.log("Timer: " + timer);
-
-//     player.on('playerChoice', () => {
-//       clearInterval(countdown);
-//     });
-
-//     if (--timer < 0) {
-//       timer = duration;
-//     } else if (timer === 0) {
-//       s.playerOne.socket.emit('timesUp');
-//       s.playerTwo.socket.emit('timesUp');
-//       clearInterval(countdown); 
-//     }
-//   }, 1000);
-// }
-// startTimer = (s, duration) => {
-//   var timer = duration, seconds;
-//   var countdown = setInterval(function () {
-//     console.log(timer);
-//     seconds = parseInt(timer % 60, 10);
-//     s.playerOne.socket.emit('timerDec', timer);
-//     s.playerTwo.socket.emit('timerDec', timer);
-
-//     if (--timer < 0) {
-//       timer = duration;  
-//   } else if (timer === 0) {
-//     s.playerOne.socket.emit('timesUp');
-//     s.playerTwo.socket.emit('timesUp');
-//     console.log("Time's Up!");
-//     clearInterval(countdown); 
-//   } }, 1000);
-// }
-
-
-// decrimentTime = (s) => {
-//   if (s.timer !== 0) {
-//     console.log("Timer" + s.timer);
-//     s.timer = s.timer--
-//   } else {
-//     socket.emit("timesUp", "Time's Up!");
-//   }
-// }
-
 
 io.on('connection', function (player) {
 
   // This function decreases the time limit of the game 
+  const makeClearInterval = (countdown) => {
+    return () => {
+      clearInterval(countdown)
+    }
+  }
+  let clearFn = () => { };
   var startTimer = (s, duration) => {
     var timer = duration, minutes, seconds;
+
     var countdown = setInterval(function () {
       minutes = parseInt(timer / 60, 10);
       seconds = parseInt(timer % 60, 10);
@@ -169,15 +121,7 @@ io.on('connection', function (player) {
 
       s.playerOne.socket.emit('timerDec', timer);
       s.playerTwo.socket.emit('timerDec', timer);
-      console.log("Timer: " + timer);
-
-      player.on('playerChoice', () => {
-        clearInterval(countdown);
-      });
-
-      player.on('gameOver', () => {
-        clearInterval(countdown);
-      });
+      // console.log("Timer: " + timer);
 
       if (--timer < 0) {
         timer = duration;
@@ -187,6 +131,13 @@ io.on('connection', function (player) {
         clearInterval(countdown);
       }
     }, 1000);
+
+
+    player.off('playerChoice', clearFn);
+    player.off('gameOver', clearFn);
+    clearFn = makeClearInterval(countdown);
+    player.on('playerChoice', clearFn);
+    player.on('gameOver', clearFn);
   }
 
   //On connection, create a new player that's now authorized.
@@ -201,11 +152,11 @@ io.on('connection', function (player) {
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
     const index = playerArr.findIndex(p => p.id === player.id);
-    playerArr.splice(index, 1);
     // Look for any games they are a part of and kill them
+    playerArr.splice(index, 1);
   })
 
-
+  //Add users email to their socket when they login.
   player.on("setuser", (data) => {
     console.log('==================================================================');
     // console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
@@ -223,12 +174,11 @@ io.on('connection', function (player) {
     }
   });
 
-
+  //Function helps user find or create a session
   player.on("seekGame", (categoryId) => {
 
     let p1Info = {};
     let p2Info = {};
-
 
     // Try and find them a game, if we can, great!
     // Otherwise just make a new one and put them in it
@@ -239,7 +189,7 @@ io.on('connection', function (player) {
       newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
     } else {
       // Look for a game without a playerTwo...
-      const s = sessions.find(s => s.playerTwo === null);
+      const s = sessions.find(s => s.playerTwo === null && categoryId === s.categoryId);
       if (s) {
         //Add this player as the session's player 2
         s.playerTwo = newPlayer;
@@ -265,24 +215,27 @@ io.on('connection', function (player) {
     }
   });
 
+  //This sends the session info to the game container so both users have 
+  //their positions and the gameId to load questions
   player.on('GCMount', () => {
     const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
     if (s) {
-
+      //info needed for the session
       let sessionInfo = {
         categoryId: s.categoryId,
         playerOne: s.playerOne.email,
         playerTwo: s.playerTwo.email
       };
-
+      //Send to both users
       s.playerOne.socket.emit("sessionInfo", sessionInfo);
       s.playerTwo.socket.emit("sessionInfo", sessionInfo);
 
-      startTimer(s, 10);
+      //Start timer
+      startTimer(s, 16);
     }
-  })
+  });
 
-
+  //This function happens when the player chooses an answer in game...
   player.on('playerChoice', result => {
     //Find this user's session...
     const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
@@ -327,7 +280,7 @@ io.on('connection', function (player) {
         s.playerOneSelect = false;
         s.playerTwoSelect = false;
 
-        //Creating Object to send back with scores
+        //Creating Object to send back with new scores
         let updatedScore = {
           playerOne: s.playerOneScore,
           playerTwo: s.playerTwoScore
@@ -336,18 +289,29 @@ io.on('connection', function (player) {
         //Let both players know the current score
         s.playerOne.socket.emit('nextQuestion', updatedScore);
         s.playerTwo.socket.emit('nextQuestion', updatedScore);
-        startTimer(s, 10);
+
+        //restart timer
+        // startTimer(s, 10);
       }
     } else {
       console.log("No session found");
     }
   });
 
+  player.on("startTimer", () => {
+    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    if (s) {
+      //restart time
+      startTimer(s, 10);
+    }
+  })
+
   //When the game has finished...
   player.on('gameOver', result => {
     //Find that user's session...
-    const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
+    const s = sessions.find((s) => (s.playerOne.email === newPlayer.email || s.playerTwo.email === newPlayer.email));
     if (s) {
+
       let finalScore = {
         p1Score: s.playerOneScore,
         p2Score: s.playerTwoScore,
@@ -356,21 +320,21 @@ io.on('connection', function (player) {
       if (s.playerOneScore === s.playerTwoScore) {
         finalScore.winner = "tie"
       } else if (s.playerOneScore > s.playerTwoScore) {
-        finalScore.winner = s.playerOne.id;
-      } else {
-        finalScore.winner = s.playerTwo.id
+        finalScore.winner = s.playerOne.email;
+      } else if (s.playerOneScore < s.playerTwoScore) {
+        finalScore.winner = s.playerTwo.email
       }
 
       console.log(chalk.red("FINAL SCORE: " + JSON.stringify(finalScore)));
       s.playerOne.socket.emit('finalScore', finalScore);
       s.playerTwo.socket.emit('finalScore', finalScore);
 
-      //remove session once finished
-      sessions.splice(s, 1);
+      const index = sessions.findIndex(index => (index.playerOne.email === newPlayer.email || index.playerTwo.email === newPlayer.email));
+      // remove session once finished
+      sessions.splice(index, 1);
     }
   });
 });
-
 
 
 // ROUTES FOR GOOGLE AUTHENTICATION

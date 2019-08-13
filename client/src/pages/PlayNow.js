@@ -14,7 +14,7 @@ class PlayNow extends Component {
             .then(response => {
                 // this runs if the user is logged in
                 // console.log("response: ", response)
-                console.log("user authenticated");
+                // console.log("user authenticated");
             })
             .catch(err => {
                 // this runs if the uer is NOT logged in

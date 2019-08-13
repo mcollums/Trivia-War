@@ -43,6 +43,9 @@ userSchema.methods.checkPassword = function (password) {
 }
 
 userSchema.pre('save', function (next) {
+    if(!this.isNew){
+        return Promise.resolve()
+    }
     if (this.authType !== "google") {
         return bcrypt.genSalt(10).then(salt => {
             return bcrypt.hash(this.password, salt)

@@ -8,8 +8,18 @@ const passport = require("../config/passport");
 router.use("/api", apiRoutes);
 
 router.post("/register",(req,res)=>{
-  db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password}).then((newUser)=>{
+  db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password})
+  .then((newUser)=>{
     res.redirect(307, "/login")
+  })
+  .catch((err)=>{
+    if (err.code === 11000) {
+      console.log("duplicate email")
+      res.status(401).json({ error: "That email already exists." })
+    }
+    else {
+      res.json(err);
+    }
   })
 });
 
@@ -28,6 +38,7 @@ router.get('/user/me', function(req, res){
   if(req.user){
       res.json({
           email: req.user.email,
+          name: req.user.name,
           picLink: req.user.picLink,
           name:req.user.username,
           wins: req.user.totalWins,

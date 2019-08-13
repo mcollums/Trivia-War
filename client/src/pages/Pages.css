@@ -8,7 +8,6 @@
     border: white 3px solid;  
     position: relative;
     margin-top: 120px;
-
 }
 
 .logCon {
@@ -18,7 +17,6 @@
   justify-content: space-evenly;
   position: absolute;
   flex-wrap: wrap;
-
 }
 
 #loginModal {
@@ -45,7 +43,6 @@
   margin-top: 100px;
   border-radius: 10%;
   background-color: #62cbc2;
-
 }
 
 #authB {
@@ -111,16 +108,16 @@
     height: 250px;
     background-color: white;
     margin-top: 15px;
-    border: #62cbc2 solid 5px;
-    
-    
+    border: #62cbc2 solid 5px;  
 }
 
 .scatcat {
     height: 75px;
     width: 330px;
     background-color: #62cbc2;
-    margin-top: 165px;
+    text-align: center;
+    padding-top:25px;
+    /* margin-top: 165px; */
     
 }
 
@@ -129,8 +126,7 @@
     height: 250px;
     background-color: white;
     margin-top: 15px;
-    border: teal solid 5px;
-    
+    border: teal solid 5px; 
 }
 
 .mcatcat {
@@ -138,7 +134,6 @@
     width: 280px;
     background-color: #62cbc2;
     margin-top: 165px;
-    
 }
 
 .scategory:hover {
@@ -154,7 +149,6 @@
     align-content: space-between;
     flex-wrap: wrap;
     justify-content: space-around;
-
 }
 
 .gif {
@@ -183,8 +177,6 @@ body {
 .lds-circle {
     /* display: inline-block; */
     transform: translateZ(1px);
-   
-    
   }
 
   .circlecontainer {
@@ -196,6 +188,7 @@ body {
       display: flex;
       justify-content: center;
   }
+
   .lds-circle > div {
     /* display: inline-block; */
     width: 200px;
@@ -245,8 +238,6 @@ body {
     height: 2em;
     text-align: center;
   }
-
-  
   
   .ml8 .letters {
     position: relative;
@@ -296,7 +287,5 @@ body {
     width: 2.3em;
     height: 2.3em;
   }
-
-
 
 
