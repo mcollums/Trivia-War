@@ -11,7 +11,6 @@ import { Redirect } from "react-router-dom";
 import clicksound from "../sound/352804__josepharaoh99__timer-click-track.wav";
 import { UserRefreshClient } from "google-auth-library";
 
-
 let quizQuestions = [];
 let nextIndex = 0;
 let newIndex = 0;
@@ -40,31 +39,38 @@ class SinglePlayerGameContainer extends Component {
       pause: true,
 
    };
+
    play = () => {
       this.audio = new Audio(clicksound);
       this.setState({ play: true, pause: false })
       this.audio.play();
    }
+
    pause = () => {
       this.setState({ play: false, pause: true })
       this.audio.pause();
    }
 
 
-
-   //TODO: Add route that will get the game based on the user's selection
    componentDidMount() {
-      this.getGame(this.props.id);
+
+      setTimeout(() => {
+         this.setState({ showLoading: false });
+      }, 500);
+
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
+
+      this.getGame(this.props.id);
       this.getUserPic();
-      console.log(this.state.userInfo);
+
+      // console.log(this.state.userInfo);
    }
 
    getUserPic = () => {
       API.checkAuth()
          .then(response => {
             // this runs if the user is logged in
-            console.log("response: ", response.data)
+            // console.log("response: ", response.data)
             this.setState({ userInfo: response.data }, this.loadUsers);
          })
          .catch(err => {
@@ -75,8 +81,8 @@ class SinglePlayerGameContainer extends Component {
 
    stopTimer = () => {
       clearInterval(this.timerID);
-
    }
+
    //Getting the game information from the Database based on the game's ID
    //Then updating the state
    getGame(gameId) {
@@ -89,14 +95,39 @@ class SinglePlayerGameContainer extends Component {
          });
    }
 
+   shuffleQuestions(array) {
+      var currentIndex = array.length;
+      var temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+         // Pick a remaining element...
+         randomIndex = Math.floor(Math.random() * currentIndex);
+         currentIndex -= 1;
+
+         // And swap it with the current element.
+         temporaryValue = array[currentIndex];
+         array[currentIndex] = array[randomIndex];
+         array[randomIndex] = temporaryValue;
+      }
+      return array;
+   }
+
    // Setting the state of the game
    setQuestionState(data) {
+      // console.log("DATA " + JSON.stringify(data));
       let index = this.state.index;
+      let allAnswers = data.questions[index].answers.answersObject;
+      //push correct answer to the array
+      allAnswers.push(data.questions[index].correctAnswer);
+      //shuffle all questions
+      let shuffledArr = this.shuffleQuestions(allAnswers);
+
       this.setState({
          title: data.title,
          category: data.category,
          question: data.questions[index].question,
-         answers: data.questions[index].answers.answersObject,
+         answers: shuffledArr,
          correctAnswer: data.questions[index].correctAnswer,
          questionCount: data.questions.length
       }, () => { this.play() });
@@ -113,19 +144,20 @@ class SinglePlayerGameContainer extends Component {
             timer: 10
          }, this.setUserAnswer()
          )
-
       }
    }
 
    //This method updates the game state basked on what the user clicked.
    handleSelection = id => {
+      //Stop timer and audio
       this.stopTimer();
       this.pause();
-      console.log(id);
+      // console.log(id);
+
+      //update state with user selection
       this.setState({
          userSelect: id,
          click: true
-
       }, () => {
          //putting this in a callback so we're sure the state has been updated
          //before setUserAnswer is called
@@ -137,25 +169,28 @@ class SinglePlayerGameContainer extends Component {
    //game continues or not based on if there are any questions left
    setUserAnswer = () => {
       //if the user didn't select an answer add to incorrect
-      console.log(this.state.index);
-      console.log(this.state.questionCount);
       if (this.state.userSelect === "") {
-         console.log("No answer selected");
-         // stop the timer,
+         // console.log("No answer selected");
+
+         // stop the timer, and add to incorrect state
          let newIncorrect = this.state.incorrect + 1;
          this.stopTimer();
-         console.log("New incorrect", newIncorrect);
-         console.log("state incorrect", this.state.incorrect);
          this.setState({
             incorrect: newIncorrect,
             counter: false,
             click: true,
+         }, () => {
+            // this.setState({
+            //    userInfo: update(this.state.userInfo, {
+            //       losses: { $set: newIncorrect }
+            //    })
+            // })
          }, () => this.handleSelection(this.state.userInfo._id))
       }
 
       //if the user selected the correct answer, add to correct
       else if (this.state.userSelect === this.state.correctAnswer) {
-         console.log("Correct answer selected");
+         // console.log("Correct answer selected");
          this.stopTimer(this.timerID);
          let newCorrect = this.state.correct + 1;
          this.setState({
@@ -164,9 +199,10 @@ class SinglePlayerGameContainer extends Component {
          })
 
       }
+
       //if the user selected the incorrect answer, add to incorrect
       else if (this.state.userSelect !== this.state.correctAnswer) {
-         console.log("Incorrect Answer selected");
+         // console.log("Incorrect Answer selected");
          let newIncorrect = this.state.incorrect + 1;
          this.stopTimer(this.timerID);
          this.setState({
@@ -178,18 +214,15 @@ class SinglePlayerGameContainer extends Component {
    }
 
    nextQuestion = () => {
-
-
       //This variable is checking to see what the next index value will be
       this.stopTimer();
       this.pause();
       nextIndex = (this.state.index + 1);
 
+
       //if the next index value is equal to the total amount of questions then stop the game
       //otherwise, keep going
       if (nextIndex === this.state.questionCount) {
-         console.log("Question state", this.state.questionCount);
-         console.log("state ", this.state);
          this.stopTimer();
          this.endGame();
       } else {
@@ -200,7 +233,6 @@ class SinglePlayerGameContainer extends Component {
    // button for Play again, updates the users scores and returns to the home page.
    // first checking the database, then pulling the userinfo and updating the wins based what is the current wins.
    handlePlayAgainBtn = (user) => {
-      console.log("user details after click play again", user);
       this.stopTimer();
       if (this.state.userInfo.id === user.id) {
 
@@ -217,16 +249,15 @@ class SinglePlayerGameContainer extends Component {
 
 
    checkforNextQuestion = () => {
+      //start timer and sound
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
-      newIndex = this.state.index + 1;
       this.play();
-      console.log("New index", newIndex, "questionCount", this.state.questionCount);
-      console.log();
+
+      //grab next index
+      newIndex = this.state.index + 1;
       if (newIndex !== this.state.questionCount) {
          this.setNextQuestion(newIndex);
-
-      }
-      else {
+      } else {
          this.setState({
             outcome: true
          }, () => { this.pause() })
@@ -234,38 +265,32 @@ class SinglePlayerGameContainer extends Component {
    }
 
    setNextQuestion = (newIndex) => {
+      let allAnswers = quizQuestions.questions[newIndex].answers.answersObject;
+      //push correct answer to the array
+      allAnswers.push(quizQuestions.questions[newIndex].correctAnswer);
+      //shuffle all questions
+      let shuffledArr = this.shuffleQuestions(allAnswers);
       // this.play();
       this.setState({
          index: newIndex,
          timer: 10,
          question: quizQuestions.questions[newIndex].question,
-         answers: quizQuestions.questions[newIndex].answers.answersObject,
+         answers: shuffledArr,
          correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
          userSelect: "",
          click: false
-
-      }, function () {
-         console.log(this.state);
+      }, () => {
+         // console.log(this.state);
       });
-
-
    }
 
    endGame = () => {
       console.log("GAME OVER");
-      console.log(this.state);
       this.stopTimer();
       this.pause();
-
    }
 
 
-   //Query the db to compare user's scores and determine a winner
-   //If this user is the winner, display "winner"
-   //Else display "Try again next time"
-   //PUT result in db
-   //Set timer for 5 seconds and then...  
-   //Send back to user's homepage
 
    render() {
       if (this.state.showLoading) {
@@ -300,7 +325,7 @@ class SinglePlayerGameContainer extends Component {
                                  this.state.counter
                                     ?
                                     <div>
-                                       <h4>You are Correct!!! </h4>
+                                       <h4>You are Correct!!!</h4>
                                        <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question</button>
                                     </div>
                                     :
