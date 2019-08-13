@@ -226,6 +226,7 @@ class SinglePlayerGameContainer extends Component {
       this.stopTimer();
       this.pause();
       nextIndex = (this.state.index + 1);
+   
 
       //if the next index value is equal to the total amount of questions then stop the game
       //otherwise, keep going
@@ -263,12 +264,17 @@ class SinglePlayerGameContainer extends Component {
    }
 
    setNextQuestion = (newIndex) => {
+      let allAnswers = quizQuestions.questions[newIndex].answers.answersObject;
+      //push correct answer to the array
+      allAnswers.push(quizQuestions.questions[newIndex].correctAnswer);
+      //shuffle all questions
+      let shuffledArr = this.shuffleQuestions(allAnswers);
       // this.play();
       this.setState({
          index: newIndex,
          timer: 10,
          question: quizQuestions.questions[newIndex].question,
-         answers: quizQuestions.questions[newIndex].answers.answersObject,
+         answers: shuffledArr,
          correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
          userSelect: "",
          click: false
