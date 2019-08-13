@@ -1,7 +1,7 @@
 import React from "react";
 
 const styles = {
-    marginTop: "10px"
+    marginTop: "30px"
 }
 
 const MPCategory = props => (

@@ -2,7 +2,7 @@ import React from "react";
 import './style.css';
 
 const styles = {
-    marginTop: "10px"
+    marginTop: "30px"
 }
 
 const SPGameCard = props => (
