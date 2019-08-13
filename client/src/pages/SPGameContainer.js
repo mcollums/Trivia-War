@@ -29,7 +29,7 @@ class SinglePlayerGameContainer extends Component {
       userSelect: "",
       outcome: false,
       index: 0,
-      timer: 10,
+      timer: 15,
       socketArr: "",
       userInfo: {},
       redirectTo: null,
