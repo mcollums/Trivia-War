@@ -189,7 +189,7 @@ io.on('connection', function (player) {
       newPlayer.socket.emit("matchmaking", "Server says: 'You've created a game. Waiting for another player to join.'");
     } else {
       // Look for a game without a playerTwo...
-      const s = sessions.find(s => s.playerTwo === null && s.categoryId === categoryId);
+      const s = sessions.find(s => s.playerTwo === null && categoryId === s.categoryId);
       if (s) {
         //Add this player as the session's player 2
         s.playerTwo = newPlayer;

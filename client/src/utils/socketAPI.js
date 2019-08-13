@@ -10,7 +10,6 @@ export default {
     subscribeTimer: (callback) => {
         socket.on("timer", time => callback(time));
     },
-
     //Authenticating User and Adding to playersArray in server
     publishLogin: userData => {
         socket.emit("setuser", userData);
@@ -18,7 +17,6 @@ export default {
     subscribeAuthorized: callback => {
         socket.on("authorized", (message) => callback(message));
     },
-
     //When the user wants to join a game
     publishSeekGame: categoryId => {
         socket.emit("seekGame", categoryId);
@@ -58,11 +56,6 @@ export default {
     },
     subscribeFinalScore: (callback) => {
         socket.on('finalScore', result => callback(result))
-    },
-    subscribeSeekError: callback => {
-        socket.on("seekError", message => {
-            callback(message)
-        })
     },
     subscribeEndTimer: callback => {
         socket.on('timesUp', message => callback(message));
