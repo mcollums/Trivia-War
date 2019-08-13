@@ -1,4 +1,5 @@
 import React from "react";
+import "./SPGameCard.css"
 
 const styles = {
     marginTop: "10px"

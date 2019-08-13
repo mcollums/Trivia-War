@@ -14,8 +14,8 @@ const userSeed = [
     email: "robert@email.com",
     password: "rob",
     picLink: "https://placehold.it/200x200",
-    totalWins: 5,
-    totalLosses: 8
+    totalWins: 1502,
+    totalLosses: 0
   },
   {
     username: "Joel",
@@ -30,8 +30,8 @@ const userSeed = [
     email: "michelle@email.com",
     password: "michelle",
     picLink: "https://placehold.it/200x200",
-    totalWins: 4,
-    totalLosses: 3
+    totalWins: 0,
+    totalLosses: 1502
   },
   {
     username: "Trihn",
