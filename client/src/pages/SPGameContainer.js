@@ -9,6 +9,7 @@ import Jumbotron from "../components/Jumbotron";
 import update from 'immutability-helper';
 import { Redirect } from "react-router-dom";
 import clicksound from "../sound/352804__josepharaoh99__timer-click-track.wav";
+import { UserRefreshClient } from "google-auth-library";
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -28,7 +29,7 @@ class SinglePlayerGameContainer extends Component {
       userSelect: "",
       outcome: false,
       index: 0,
-      timer: 10,
+      timer: 15,
       socketArr: "",
       userInfo: {},
       redirectTo: null,
@@ -36,6 +37,7 @@ class SinglePlayerGameContainer extends Component {
       counter: false,
       play: false,
       pause: true,
+
    };
 
    play = () => {
@@ -54,9 +56,9 @@ class SinglePlayerGameContainer extends Component {
 
       setTimeout(() => {
          this.setState({ showLoading: false });
-     }, 500);
+      }, 500);
 
-     this.timerID = setInterval(() => this.decrimentTime(), 1000);
+      this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
       this.getGame(this.props.id);
       this.getUserPic();
@@ -99,17 +101,17 @@ class SinglePlayerGameContainer extends Component {
 
       // While there remain elements to shuffle...
       while (0 !== currentIndex) {
-          // Pick a remaining element...
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex -= 1;
+         // Pick a remaining element...
+         randomIndex = Math.floor(Math.random() * currentIndex);
+         currentIndex -= 1;
 
-          // And swap it with the current element.
-          temporaryValue = array[currentIndex];
-          array[currentIndex] = array[randomIndex];
-          array[randomIndex] = temporaryValue;
+         // And swap it with the current element.
+         temporaryValue = array[currentIndex];
+         array[currentIndex] = array[randomIndex];
+         array[randomIndex] = temporaryValue;
       }
       return array;
-  }
+   }
 
    // Setting the state of the game
    setQuestionState(data) {
@@ -178,11 +180,11 @@ class SinglePlayerGameContainer extends Component {
             counter: false,
             click: true,
          }, () => {
-            this.setState({
-               userInfo: update(this.state.userInfo, {
-                  losses: { $set: newIncorrect }
-               })
-            })
+            // this.setState({
+            //    userInfo: update(this.state.userInfo, {
+            //       losses: { $set: newIncorrect }
+            //    })
+            // })
          }, () => this.handleSelection(this.state.userInfo._id))
       }
 
@@ -194,13 +196,8 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             correct: newCorrect,
             counter: true,
-         },
-            this.setState({
-               userInfo: update(this.state.userInfo, {
-                  wins: { $set: newCorrect }
-               })
-            })
-         )
+         }, () => { console.log("Correct Answer", this.state.correct) })
+
       }
 
       //if the user selected the incorrect answer, add to incorrect
@@ -211,13 +208,8 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             incorrect: newIncorrect,
             counter: false,
-         }, () => {
-            this.setState({
-               userInfo: update(this.state.userInfo, {
-                  losses: { $set: newIncorrect }
-               })
-            })
-         })
+         }, () => { console.log("incoreect Answer", this.state.incorrect) })
+
       }
    }
 
@@ -226,6 +218,7 @@ class SinglePlayerGameContainer extends Component {
       this.stopTimer();
       this.pause();
       nextIndex = (this.state.index + 1);
+
 
       //if the next index value is equal to the total amount of questions then stop the game
       //otherwise, keep going
@@ -238,12 +231,20 @@ class SinglePlayerGameContainer extends Component {
    }
 
    // button for Play again, updates the users scores and returns to the home page.
+   // first checking the database, then pulling the userinfo and updating the wins based what is the current wins.
    handlePlayAgainBtn = (user) => {
       this.stopTimer();
-      API.postGameDetails(user).then(res => {
-         this.setState({ redirectTo: "/home" })
-      })
+      if (this.state.userInfo.id === user.id) {
+         if (this.state.correct >= 7) {
+            API.addWin(user.id).then(() => this.setState({ redirectTo: "/home" }));
+         }
+
+         else {
+            API.addLoss(user.id).then(() => this.setState({ redirectTo: "/home" }));
+         }
+      }
    }
+
 
 
    checkforNextQuestion = () => {
@@ -263,16 +264,21 @@ class SinglePlayerGameContainer extends Component {
    }
 
    setNextQuestion = (newIndex) => {
+      let allAnswers = quizQuestions.questions[newIndex].answers.answersObject;
+      //push correct answer to the array
+      allAnswers.push(quizQuestions.questions[newIndex].correctAnswer);
+      //shuffle all questions
+      let shuffledArr = this.shuffleQuestions(allAnswers);
       // this.play();
       this.setState({
          index: newIndex,
          timer: 10,
          question: quizQuestions.questions[newIndex].question,
-         answers: quizQuestions.questions[newIndex].answers.answersObject,
+         answers: shuffledArr,
          correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
          userSelect: "",
          click: false
-      }, ()  => {
+      }, () => {
          // console.log(this.state);
       });
    }

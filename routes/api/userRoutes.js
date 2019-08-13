@@ -12,13 +12,16 @@ router.route("/email/:email")
 router.route("/score/:id")
   .put(userController.updateUserScore)
 //Matches with "/api/user/:id"
+// updates the winningscore on matching of the userid
+router.route("/add-win/:id")
+  .get(userController.addwinScore);
+
+// updates the loose score on matching of the userid
+router.route("/add-loss/:id")
+  .get(userController.addlossScore);
 
 router.route("/:id")
   .get(userController.findById)
-
-// Matches with "/api/user/:email"
-// router.route("/:email")
-//   .get(userController.findOne)
 
 //updates the single player wins and losses after the game
 // matches with "/api/user/:user"

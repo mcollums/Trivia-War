@@ -52,7 +52,7 @@ class SingleCategory extends Component {
                                 loadPage={this.loadPage}
                             />
                         ))}
-                    
+
                     </div>
                 ) : (
                         <SPGameContainer id={this.state.id} />

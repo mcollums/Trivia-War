@@ -1,6 +1,4 @@
-// import React from 'react';
 import React, { Component } from "react";
-// import openSocket from 'socket.io-client';
 import socketAPI from './utils/socketAPI';
 import Nav from "./components/Nav";
 import './App.css';
@@ -14,7 +12,6 @@ import NoMatch from "./pages/NoMatch";
 import SingleCategory from "./pages/SingleCategory";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-// const socket = openSocket("http://localhost:3001", {transports: ['websocket']});
 
 class App extends Component {
   state = {
@@ -25,7 +22,6 @@ class App extends Component {
 
   componentDidMount = () => {
     socketAPI.subscribeAuthorized((message) => {
-      // console.log("AUTHORIZED", message);
       if(message === true){
         this.setState({
           authorized: true

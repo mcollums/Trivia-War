@@ -27,7 +27,7 @@ class GameContainer extends Component {
             userSelect: "",
             message: "",
             index: 0,
-            timer: 10,
+            timer: 15,
             gameOver: false,
             oppCorrect: 0,
             oppEmail: "",
@@ -304,7 +304,7 @@ class GameContainer extends Component {
 
         this.setState({
             index: newIndex,
-            timer: 10,
+            timer: 15,
             question: quizQuestions.questions[newIndex].question,
             answers: shuffledArr,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
@@ -349,7 +349,7 @@ class GameContainer extends Component {
                             <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
                                 <h2>Get Ready for Trivia!</h2>
                                 <h5>Instructions:</h5>
-                                <p> Both players will have 10 seconds to answer each of 10 question. Don't let time run out or
+                                <p> Both players will have 15 seconds to answer each of the 10 questions. Don't let time run out or
                                     your round will be counted as incorrect. If both users answer before the timer ends
                                     the next question will automatically appear, so be ready!
                                 </p>

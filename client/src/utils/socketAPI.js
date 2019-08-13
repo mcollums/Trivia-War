@@ -30,9 +30,7 @@ export default {
         socket.on("startGame", sessionId => callback(sessionId));
     },
     //When the Game Container Mounts...
-    publishGCMount: () => {
-        socket.emit('GCMount');
-    },
+    publishGCMount: () => { socket.emit('GCMount') },
     //Send back info about this session
     subscribeSessionInfo: (callback) => {
         socket.on('sessionInfo', sessionInfo => callback(sessionInfo));
