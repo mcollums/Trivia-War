@@ -33,8 +33,7 @@ class GameContainer extends Component {
             oppEmail: "",
             oppInfo: "",
             redirectTo: null,
-            introShow: true,
-            addClass: false
+            introShow: true
         };
 
         this.publishPlayerSelect = this.publishPlayerSelect.bind(this)
@@ -48,7 +47,9 @@ class GameContainer extends Component {
             .then(response => {
                 // this runs if the user is logged in
                 this.setState({ userInfo: response.data }, () => {
-                    socketAPI.publishGCMount();
+                    setTimeout(() => {
+                    socketAPI.publishGCMount();                        
+                    }, 200);
                 });
                 //Grab the session info from the server
                 //Then set the state with the session info
@@ -234,10 +235,8 @@ class GameContainer extends Component {
         let allAnswers = data.questions[index].answers.answersObject;
         //push correct answer
         allAnswers.push(data.questions[index].correctAnswer);
-        // console.log("All answers" + allAnswers);
-        //push incorrect answers
+        //Shuffle all questions
         let shuffledArr = this.shuffleQuestions(allAnswers);
-        // console.log(data);
 
         this.setState({
             title: data.title,
@@ -330,10 +329,7 @@ class GameContainer extends Component {
         })
     }
 
-    toggle() {
-        this.setState({addClass: !this.state.addClass});
-      }
-
+    
     render() {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
