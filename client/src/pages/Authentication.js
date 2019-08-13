@@ -74,7 +74,8 @@ class Authentication extends Component {
                     // console.log(result.data)
                     //this.loadProfileInfo()
                     // this.props.history.push("/home")
-                    this.setState({ redirectTo: "/home" });
+                    // this.setState({ redirectTo: "/home" });
+                    window.location.href="/";
                     console.log(result);
                 })
                 .catch(err => {
