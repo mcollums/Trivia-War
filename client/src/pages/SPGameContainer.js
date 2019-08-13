@@ -9,6 +9,7 @@ import Jumbotron from "../components/Jumbotron";
 import update from 'immutability-helper';
 import { Redirect } from "react-router-dom";
 import clicksound from "../sound/352804__josepharaoh99__timer-click-track.wav";
+import { UserRefreshClient } from "google-auth-library";
 
 
 let quizQuestions = [];
@@ -37,6 +38,7 @@ class SinglePlayerGameContainer extends Component {
       counter: false,
       play: false,
       pause: true,
+
    };
    play = () => {
       this.audio = new Audio(clicksound);
@@ -148,12 +150,6 @@ class SinglePlayerGameContainer extends Component {
             incorrect: newIncorrect,
             counter: false,
             click: true,
-         }, () => {
-            this.setState({
-               userInfo: update(this.state.userInfo, {
-                  losses: { $set: newIncorrect }
-               }, () => { console.log("Updating the state", this.state.userInfo) })
-            })
          }, () => this.handleSelection(this.state.userInfo._id))
       }
 
@@ -165,13 +161,8 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             correct: newCorrect,
             counter: true,
-         },
-            this.setState({
-               userInfo: update(this.state.userInfo, {
-                  wins: { $set: newCorrect }
-               }, () => { console.log("Updating the state", this.state.userInfo) })
-            })
-         )
+         })
+
       }
       //if the user selected the incorrect answer, add to incorrect
       else if (this.state.userSelect !== this.state.correctAnswer) {
@@ -181,12 +172,6 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             incorrect: newIncorrect,
             counter: false,
-         }, () => {
-            this.setState({
-               userInfo: update(this.state.userInfo, {
-                  losses: { $set: newIncorrect }
-               }, () => { console.log("Updating the state", this.state.userInfo) })
-            })
          }, () => { console.log("Updating the state", this.state.userInfo) })
 
       }
@@ -213,15 +198,24 @@ class SinglePlayerGameContainer extends Component {
    }
 
    // button for Play again, updates the users scores and returns to the home page.
+   // first checking the database, then pulling the userinfo and updating the wins based what is the current wins.
    handlePlayAgainBtn = (user) => {
       console.log("user details after click play again", user);
       this.stopTimer();
-      API.postGameDetails(user).then(res => {
-         console.log(res);
-         this.setState({ redirectTo: "/home" })
-      })
+      if (this.state.userInfo.id === user.id) {
 
+         if (this.state.correct === 7) {
+            API.addWin(user.id).then(() => this.setState({ redirectTo: "/home" }));
+         }
+
+         else {
+            API.addLoss(user.id).then(() => this.setState({ redirectTo: "/home" }));
+         }
+      }
    }
+
+
+
    checkforNextQuestion = () => {
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
       newIndex = this.state.index + 1;
