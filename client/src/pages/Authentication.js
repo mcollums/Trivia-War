@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter,  Redirect } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
 import Modal from 'react-modal';
 import axios from 'axios';
@@ -18,9 +18,13 @@ class Authentication extends Component {
         googleSigninUrl: "",
         redirectTo: null,
         loginOpen: false,
-        registerOpen: false
+        registerOpen: false,
+
     }
-    
+
+
+
+
 
     openModal = modal => {
         this.setState({ [modal]: true });
@@ -39,9 +43,9 @@ class Authentication extends Component {
 
     // let's try and login   
     handleFormSubmit = event => {
-        event.preventDefault()
+        event.preventDefault();
         const { email, password } = this.state
-        axios.post('/login', {email, password})
+        axios.post('/login', { email, password })
             .then(result => {
                 // this.loadProfileInfo();
                 socketAPI.publishLogin(email);
@@ -54,7 +58,7 @@ class Authentication extends Component {
     }
 
     handleFormRegister = event => {
-        event.preventDefault()
+        event.preventDefault();
         const { username, picLink, email, password } = this.state
         axios.post("/register", { username, picLink, email, password })
             .then(result => {
@@ -92,7 +96,7 @@ class Authentication extends Component {
                 //     this.setState({ googleSigninUrl: response.data.url })
                 // })
             })
-    }
+    };
 
     componentDidMount() {
         // Mostly just for developing locally
@@ -105,7 +109,7 @@ class Authentication extends Component {
             // this.loadProfileInfo()
         }
         this.loadUsers();
-    }
+    };
 
     loadUsers() {
         API.getUsers()
@@ -125,131 +129,131 @@ class Authentication extends Component {
 
         return (
 
-                <div className="logCon">
-                        <div className="logInCon">
-                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
-                                    
-                                    <Modal
-                                        ariaHideApp={false}
-                                        isOpen={this.state.loginOpen}
-                                        onAfterOpen={this.afterOpenModal}
-                                        onRequestClose={() => this.closeModal("loginOpen")}
-                                        // style={customStyles}
-                                        contentLabel="Example Modal"
-                                        id="loginModal"
-                                        style={{
-                                            overlay: {
-                                                position: 'fixed',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
-                                            },
-                                            content: {
-                                                width: "400px",
-                                                height: "200px",
-                                                border: '1px solid #ccc',
-                                                background: '#fff',
-                                                overflow: 'auto',
-                                                WebkitOverflowScrolling: 'touch',
-                                                borderRadius: '4px',
-                                                outline: 'none',
-                                                padding: '20px'
-                                            }
-                                        }}
-                                    >
-                                        <form>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
-                                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
+            <div className="logCon">
+                <div className="logInCon">
+                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
 
-                                            <button type="submit" style={{ marginTop: "15px", marginLeft: "40%" }} className="btn btn-dark" onClick={this.handleFormSubmit}>Login</button>
+                    <Modal
+                        ariaHideApp={false}
+                        isOpen={this.state.loginOpen}
+                        onAfterOpen={this.afterOpenModal}
+                        onRequestClose={() => this.closeModal("loginOpen")}
+                        // style={customStyles}
+                        contentLabel="Example Modal"
+                        id="loginModal"
+                        style={{
+                            overlay: {
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
+                            },
+                            content: {
+                                width: "400px",
+                                height: "200px",
+                                border: '1px solid #ccc',
+                                background: '#fff',
+                                overflow: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                borderRadius: '4px',
+                                outline: 'none',
+                                padding: '20px'
+                            }
+                        }}
+                    >
+                        <form>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
+                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
 
-                                        </form>
-                                    </Modal>
-                                    
+                            <button type="submit" style={{ marginTop: "15px", marginLeft: "40%" }} className="btn btn-dark" onClick={this.handleFormSubmit}>Login</button>
 
-                             
-                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
+                        </form>
+                    </Modal>
 
-                                    <Modal
-                                        ariaHideApp={false}
-                                        isOpen={this.state.registerOpen}
-                                        onAfterOpen={this.afterOpenModal}
-                                        onRequestClose={() => this.closeModal("registerOpen")}
-                                        // style={customStyles}
-                                        contentLabel="Example Modal"
-                                        id="registerModal"
-                                        style={{
-                                            overlay: {
-                                                position: 'fixed',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
-                                            },
-                                            content: {
-                                                width: "400px",
-                                                height: "300px",
-                                                border: '1px solid #ccc',
-                                                background: '#fff',
-                                                overflow: 'auto',
-                                                WebkitOverflowScrolling: 'touch',
-                                                borderRadius: '4px',
-                                                outline: 'none',
-                                                padding: '20px'
-                                            }
-                                        }}
-                                    >
 
-                                        <form>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
-                                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
 
-                                            <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
+                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
 
-                                        </form>
-                                    </Modal>
+                    <Modal
+                        ariaHideApp={false}
+                        isOpen={this.state.registerOpen}
+                        onAfterOpen={this.afterOpenModal}
+                        onRequestClose={() => this.closeModal("registerOpen")}
+                        // style={customStyles}
+                        contentLabel="Example Modal"
+                        id="registerModal"
+                        style={{
+                            overlay: {
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
+                            },
+                            content: {
+                                width: "400px",
+                                height: "300px",
+                                border: '1px solid #ccc',
+                                background: '#fff',
+                                overflow: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                borderRadius: '4px',
+                                outline: 'none',
+                                padding: '20px'
+                            }
+                        }}
+                    >
 
-                               
+                        <form>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
+                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
 
-                        </div>
-                        
-                   
-                        <Jumbotron jumboHeight="80%">
-                            <h4>LEADER BOARD</h4>
-                            <table className="table">
-                                <thead className="thead-dark">
-                                    <tr>
-                                        <th scope="col">Ranking</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Wins</th>
-                                        <th scope="col">Losses</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        this.state.users.slice(0, 5).map((user, index) => {
-                                            return (
-                                                <tr key={index + 1}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{user.username}</td>
-                                                    <td>{user.totalWins}</td>
-                                                    <td>{user.totalLosses}</td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        </Jumbotron>
-        
-                 </div>
+                            <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
+
+                        </form>
+                    </Modal>
+
+
+
+                </div>
+
+
+                <Jumbotron jumboHeight="80%">
+                    <h4>LEADER BOARD</h4>
+                    <table className="table">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th scope="col">Ranking</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Wins</th>
+                                <th scope="col">Losses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.users.slice(0, 5).map((user, index) => {
+                                    return (
+                                        <tr key={index + 1}>
+                                            <td>{index + 1}</td>
+                                            <td>{user.username}</td>
+                                            <td>{user.totalWins}</td>
+                                            <td>{user.totalLosses}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </Jumbotron>
+
+            </div>
         )
     }
 }
