@@ -235,10 +235,8 @@ class GameContainer extends Component {
         let allAnswers = data.questions[index].answers.answersObject;
         //push correct answer
         allAnswers.push(data.questions[index].correctAnswer);
-        // console.log("All answers" + allAnswers);
-        //push incorrect answers
+        //Shuffle all questions
         let shuffledArr = this.shuffleQuestions(allAnswers);
-        // console.log(data);
 
         this.setState({
             title: data.title,
