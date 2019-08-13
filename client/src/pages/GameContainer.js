@@ -27,7 +27,7 @@ class GameContainer extends Component {
             userSelect: "",
             message: "",
             index: 0,
-            timer: 10,
+            timer: 15,
             gameOver: false,
             oppCorrect: 0,
             oppEmail: "",
@@ -304,7 +304,7 @@ class GameContainer extends Component {
 
         this.setState({
             index: newIndex,
-            timer: 10,
+            timer: 15,
             question: quizQuestions.questions[newIndex].question,
             answers: shuffledArr,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
