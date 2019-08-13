@@ -8,18 +8,16 @@ const { google } = require("googleapis")
 const session = require('express-session')
 const path = require("path");
 const chalk = require('chalk');
+const db = require("./models");
 
 
 app.use(session({ secret: process.env.SESSION_SECRET || "the cat ate my keyboard", resave: true, saveUninitialized: true }))
 app.use(passport.initialize());
 app.use(passport.session());
 
-const db = require("./models")
 
-// Added by jyoti for scoket connection 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-//Added by jyoti
 
 //OAuth
 //============================================================================
@@ -78,9 +76,6 @@ const makePlayer = (socket) => {
     socket: socket
   }
 }
-// const getPlayerById = (id) => {
-//   return playerArr.find(p => p.id === id)
-// }
 
 //Session Data on Server
 let sessionId = 1;
@@ -102,13 +97,15 @@ const makeSession = (id, creator, categoryId) => {
 
 io.on('connection', function (player) {
 
-  // This function decreases the time limit of the game 
+  //Clears the internal
   const makeClearInterval = (countdown) => {
     return () => {
       clearInterval(countdown)
     }
   }
-  let clearFn = () => { };
+  let clearFn = () => {};
+
+  //Keeps track of the game timing
   var startTimer = (s, duration) => {
     var timer = duration, minutes, seconds;
 
@@ -121,7 +118,6 @@ io.on('connection', function (player) {
 
       s.playerOne.socket.emit('timerDec', timer);
       s.playerTwo.socket.emit('timerDec', timer);
-      // console.log("Timer: " + timer);
 
       if (--timer < 0) {
         timer = duration;
@@ -132,7 +128,6 @@ io.on('connection', function (player) {
       }
     }, 1000);
 
-
     player.off('playerChoice', clearFn);
     player.off('gameOver', clearFn);
     clearFn = makeClearInterval(countdown);
@@ -140,7 +135,7 @@ io.on('connection', function (player) {
     player.on('gameOver', clearFn);
   }
 
-  //On connection, create a new player that's now authorized.
+  //On connection, create a new player and add 
   const newPlayer = makePlayer(player);
   playerArr.push(newPlayer)
 
@@ -149,6 +144,7 @@ io.on('connection', function (player) {
     p.socket.emit("message", "somebody else connected")
   });
 
+  //When the user disconnects, remove them from the array
   player.on('disconnect', () => {
     console.log("Player " + player.id + "is disconnecting");
     const index = playerArr.findIndex(p => p.id === player.id);
@@ -156,15 +152,14 @@ io.on('connection', function (player) {
     playerArr.splice(index, 1);
   })
 
-  //Add users email to their socket when they login.
+  //Add users email to their socket when they login
   player.on("setuser", (data) => {
     console.log('==================================================================');
     // console.log(chalk.green("Data from Server's SetUser ", JSON.stringify(data)));
-
     const index = playerArr.find(p => p.id === player.id);
 
     if (index) {
-      console.log("User found in playersArr, adding email:", data);
+      // console.log("User found in playersArr, adding email:", data);
       index.email = data;
       index.authorized = true;
       index.socket.emit("addedEmail", "We added your email to your user ID");
@@ -174,7 +169,7 @@ io.on('connection', function (player) {
     }
   });
 
-  //Function helps user find or create a session
+  //User can find or create a session
   player.on("seekGame", (categoryId) => {
 
     let p1Info = {};
@@ -231,7 +226,7 @@ io.on('connection', function (player) {
       s.playerTwo.socket.emit("sessionInfo", sessionInfo);
 
       //Start timer
-      startTimer(s, 16);
+      startTimer(s, 20);
     }
   });
 
@@ -240,7 +235,7 @@ io.on('connection', function (player) {
     //Find this user's session...
     const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
     if (s) {
-      console.log("Session Found! This player is in the session # " + s.id);
+      // console.log("Session Found! This player is in the session # " + s.id);
 
       //If this user is P1 and the answer is correct, update score
       //Also, update the session to mark that they've chosen an answer
@@ -298,11 +293,12 @@ io.on('connection', function (player) {
     }
   });
 
+  //Start timer
   player.on("startTimer", () => {
     const s = sessions.find((s) => (s.playerOne.id === newPlayer.id || s.playerTwo.id === newPlayer.id))
     if (s) {
       //restart time
-      startTimer(s, 10);
+      startTimer(s, 15);
     }
   })
 
@@ -311,12 +307,13 @@ io.on('connection', function (player) {
     //Find that user's session...
     const s = sessions.find((s) => (s.playerOne.email === newPlayer.email || s.playerTwo.email === newPlayer.email));
     if (s) {
-
+      //Grab info from the session
       let finalScore = {
         p1Score: s.playerOneScore,
         p2Score: s.playerTwoScore,
         winner: ""
       }
+      //Determin winner, loser or tie
       if (s.playerOneScore === s.playerTwoScore) {
         finalScore.winner = "tie"
       } else if (s.playerOneScore > s.playerTwoScore) {
@@ -324,8 +321,8 @@ io.on('connection', function (player) {
       } else if (s.playerOneScore < s.playerTwoScore) {
         finalScore.winner = s.playerTwo.email
       }
-
-      console.log(chalk.red("FINAL SCORE: " + JSON.stringify(finalScore)));
+      // console.log(chalk.red("FINAL SCORE: " + JSON.stringify(finalScore)));
+      //Send info back to each player
       s.playerOne.socket.emit('finalScore', finalScore);
       s.playerTwo.socket.emit('finalScore', finalScore);
 

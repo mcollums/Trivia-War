@@ -1,7 +1,6 @@
 const db = require("../models");
 
 module.exports = {
-  //TODO Check if these are working
   findAllGames: function (req, res) {
     db.Game
       .find()
@@ -29,5 +28,4 @@ module.exports = {
       })
       .catch(err => res.status(422).json(err));
   }
-
 };
