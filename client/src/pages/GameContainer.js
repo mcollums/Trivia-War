@@ -37,7 +37,7 @@ class GameContainer extends Component {
 
         this.publishPlayerSelect = this.publishPlayerSelect.bind(this)
         this.startIntroTimer = this.startIntroTimer.bind(this);
-
+        this.startEndTimer = this.startIntroTimer.bind(this);
     }
 
     //TODO: Add route that will get the game based on the user's selection
@@ -107,7 +107,7 @@ class GameContainer extends Component {
         //Setting up Socket Listeners for Game:
         //Message comes back after either user selects an answer
         socketAPI.subscribeScoreUpdate((message) => {
-            console.log(message);
+            // console.log(message);
             this.setState({
                 message: message
             }, () => { console.log("State Message " + this.state.message) })
@@ -116,7 +116,7 @@ class GameContainer extends Component {
         //Score comes back when both players have selected an ansnwer
         //Also updates to the next question
         socketAPI.subscribeNextQuestion((score) => {
-            console.log("New Score = " + JSON.stringify(score));
+            // console.log("New Score = " + JSON.stringify(score));
             if (this.state.position === "p1") {
                 this.setState({
                     correct: score.playerOne,
@@ -142,7 +142,7 @@ class GameContainer extends Component {
 
         socketAPI.subscribeFinalScore((score) => {
             console.log("Final Score from Server " + JSON.stringify(score));
-            console.log("User ID in state: " + this.state.userInfo.email);
+            // console.log("User ID in state: " + this.state.userInfo.email);
             let userResult = "";
             if (score.winner === "tie") {
                 userResult = "totalWins"
@@ -151,15 +151,19 @@ class GameContainer extends Component {
             } else if (score.winner !== this.state.userInfo.email) {
                 userResult = "totalLosses";
             }
-            console.log("User result " + userResult);
+            // console.log("User result " + userResult);
             let obj = {}
             obj[userResult] = true;
 
             API.updateUserScore(this.state.userInfo.id, obj)
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
+                    this.setState({
+                        gameOver: true
+                    })
+                    this.startEndTimer();
                 })
-            this.setState({ redirectTo: "/home" });
+            // this.setState({ redirectTo: "/home" });
         })
     }
 
@@ -170,6 +174,18 @@ class GameContainer extends Component {
             })
         }, 6000);
     }
+
+    startEndTimer = () => {
+        setTimeout(() => {
+            console.log("Start End Timer");
+            this.setState({
+                gameOver: false
+            }, () => {
+                this.setState({ redirectTo: "/home" });
+            })
+        }, 6000);
+    }
+    
     //Getting the game information from the Database based on the game's ID
     //Then updating the state
     getGame(gameId) {
@@ -178,7 +194,7 @@ class GameContainer extends Component {
                 //quiz Questions will be held outside the component 
                 //so we can go through the questions/answers with an index value
                 quizQuestions = res.data;
-                console.log("Quiz Questions" + JSON.stringify(quizQuestions));
+                // console.log("Quiz Questions" + JSON.stringify(quizQuestions));
 
                 this.setQuestionState(res.data);
             });
@@ -222,7 +238,7 @@ class GameContainer extends Component {
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
-            console.log("STATE" + JSON.stringify(this.state.answers));
+            // console.log("STATE" + JSON.stringify(this.state.answers));
             // console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
         });
     }
@@ -236,13 +252,8 @@ class GameContainer extends Component {
             //putting this in a callback so we're sure the state has been updated
             //before setUserAnswer is called
             this.setUserAnswer((result) => {
-                console.log("User is " + result);
-                let message = "You were " + result;
-                this.setState({
-                    message: message
-                }, () => {
-                    socketAPI.publishPlayerSelect(result);
-                })
+                // console.log("User is " + result);
+                socketAPI.publishPlayerSelect(result);
             });
         })
     };
@@ -356,7 +367,7 @@ class GameContainer extends Component {
                 </Container>
             )
         }
-        else if (this.state.introShow === false) {
+        else if (this.state.gameOver === false && this.state.introShow === false) {
             return (
                 <div>
                     <Container fluid="-fluid">
@@ -402,7 +413,54 @@ class GameContainer extends Component {
                 </div>
             )
         }
-    }
+        else if(this.state.gameOver === true){
+            return (
+                <Container fluid="-fluid">
+                    <Row>
+                        <Col size="12" id="titleCol">
+                            <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }}
+                                className="text-center"> {this.state.title} </h5>
+                        </Col>
+                    </Row>
+                    <Row>
+
+                        <GameCol size="12">
+                            <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
+                                <h2>Final Score</h2>
+                                <Row> 
+                                    <Col size="6">
+                                        <h5>{this.state.userInfo.name}'s Score: </h5>
+                                        <h5>{this.state.correct}</h5>    
+                                    </Col>
+                                    <Col size ="6">
+                                        <h5>{this.state.oppInfo.username}'s Score: </h5>
+                                        <h5>{this.state.oppCorrect}</h5>    
+                                    </Col>
+                                </Row>
+                            </Jumbotron>
+                        </GameCol>
+
+                    </Row>
+                    <Row>
+                        <Col size="4" id="player1">
+                            <h5 style={{ marginTop: "15px", color: "white" }}>{this.state.userInfo.name}</h5>
+                            <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
+                            <h5 style={{ color: "white", marginTop: "8px" }}>Score: {this.state.correct}</h5>
+                        </Col>
+                        <Col size="4" id="message">
+                            <h5 style={{ color: "white", marginTop: "30px" }}> {this.state.message} </h5>
+                        </Col>
+                        <Col size="4" id="player2">
+                            <h5 style={{ marginTop: "15px", color: "white" }}>{this.state.oppInfo.username}</h5>
+                            <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo.picLink} />
+                            <h5 style={{ color: "white", marginTop: "8px" }}> Score {this.state.oppCorrect} </h5>
+                        </Col>
+                    </Row>
+                </Container>
+            )
+        }
+        }
+    
 }
 
 export default GameContainer
