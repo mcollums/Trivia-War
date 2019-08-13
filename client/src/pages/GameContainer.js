@@ -48,7 +48,7 @@ class GameContainer extends Component {
                 // this runs if the user is logged in
                 this.setState({ userInfo: response.data }, () => {
                     setTimeout(() => {
-                    socketAPI.publishGCMount();                        
+                        socketAPI.publishGCMount();
                     }, 500);
                 });
                 //Grab the session info from the server
@@ -165,14 +165,25 @@ class GameContainer extends Component {
             let obj = {}
             obj[userResult] = true;
 
-            API.updateUserScore(this.state.userInfo.id, obj)
-                .then(res => {
-                    // console.log(res);
-                    this.setState({
-                        gameOver: true
+            setTimeout(() => {
+                API.updateUserScore(this.state.userInfo.id, obj)
+                    .then(res => {
+                        // console.log(res);
+                        this.setState({
+                            gameOver: true
+                        })
+                        this.startEndTimer();
                     })
-                    this.startEndTimer();
-                })
+            }, 500);
+
+            // API.updateUserScore(this.state.userInfo.id, obj)
+            //     .then(res => {
+            //         // console.log(res);
+            //         this.setState({
+            //             gameOver: true
+            //         })
+            //         this.startEndTimer();
+            //     })
             // this.setState({ redirectTo: "/home" });
         })
     }
@@ -322,14 +333,16 @@ class GameContainer extends Component {
         }, () => {
             if (this.state.position === "p1") {
                 console.log("Player One sending Game Data to server");
-                socketAPI.publishEndGame();
+                setTimeout(() => {
+                    socketAPI.publishEndGame();
+                }, 500);
             } else {
                 console.log("Player 2 waiting on score");
             }
         })
     }
 
-    
+
     render() {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
