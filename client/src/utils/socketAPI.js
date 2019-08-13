@@ -39,6 +39,9 @@ export default {
     subscribeSessionInfo: (callback) => {
         socket.on('sessionInfo', sessionInfo => callback(sessionInfo));
     },
+    publishStartGameTimer: () => {
+        socket.emit('startTimer');
+    },
     //when the player makes a choice...
     publishPlayerSelect: (result) => {
         socket.emit('playerChoice', result);
@@ -47,7 +50,6 @@ export default {
     subscribeScoreUpdate: (callback) => {
         socket.on('scoreUpdate', message => callback(message));
     },
-    //server tells page to go to next question
     subscribeNextQuestion: (callback) => {
         socket.on('nextQuestion', score => callback(score));
     },
