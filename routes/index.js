@@ -28,6 +28,7 @@ router.get('/user/me', function(req, res){
   if(req.user){
       res.json({
           email: req.user.email,
+          name: req.user.name,
           picLink: req.user.picLink,
           name:req.user.username,
           wins: req.user.totalWins,

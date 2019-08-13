@@ -15,6 +15,7 @@ let nextIndex = 0;
 let newIndex = 0;
 
 class SinglePlayerGameContainer extends Component {
+
    state = {
       title: "",
       category: "",
@@ -37,6 +38,9 @@ class SinglePlayerGameContainer extends Component {
 
    //TODO: Add route that will get the game based on the user's selection
    componentDidMount() {
+      setTimeout(() => {
+         this.setState({ showLoading: false });
+     }, 2000);
       this.getGame(this.props.id);
       this.timerID = setInterval(() => this.decrimentTime(), 1000);
       this.getUserPic();
@@ -79,7 +83,7 @@ class SinglePlayerGameContainer extends Component {
          title: data.title,
          category: data.category,
          question: data.questions[index].question,
-         answers: data.questions[index].answers,
+         answers: data.questions[index].answers.answersObject,
          correctAnswer: data.questions[index].correctAnswer,
          questionCount: data.questions.length
       }, () => { });
@@ -227,7 +231,7 @@ class SinglePlayerGameContainer extends Component {
          index: newIndex,
          timer: 10,
          question: quizQuestions.questions[newIndex].question,
-         answers: quizQuestions.questions[newIndex].answers,
+         answers: quizQuestions.questions[newIndex].answers.answersObject,
          correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
          userSelect: "",
          click: false
@@ -255,6 +259,14 @@ class SinglePlayerGameContainer extends Component {
    //Send back to user's homepage
 
    render() {
+      if(this.state.showLoading) {
+         return (
+             <div className="circlecontainer">
+             <div class="lds-circle"><div></div></div>
+             </div>
+         );
+     }
+
       if (this.state.redirectTo) {
          clearInterval(this.state.timer);
          return <Redirect to={this.state.redirectTo} />
@@ -283,6 +295,7 @@ class SinglePlayerGameContainer extends Component {
                                        <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question</button>
                                     </div>
                                     :
+
                                     <div>
                                        <h4> Correct Answer {this.state.correctAnswer}</h4>
                                        <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question </button>
@@ -304,6 +317,7 @@ class SinglePlayerGameContainer extends Component {
                                                 answer={answer}
                                                 correctAnswer={this.state.correctAnswer}
                                                 handleSelection={this.handleSelection}
+
                                              />
                                           ))}
                                        </div>
@@ -335,6 +349,7 @@ class SinglePlayerGameContainer extends Component {
          </div>
       )
    }
+
 }
 
 export default SinglePlayerGameContainer

@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { withRouter, Redirect } from "react-router-dom";
-import { Col, Row, Container } from "../components/Grid";
-import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API"
 
 class UserHome extends Component {
@@ -21,17 +19,12 @@ class UserHome extends Component {
     }
 
     loadUserById() {
-        // const id = this.props.match.params.id
-        console.log("User ID " + this.state.userInfo.id)
         const id = this.state.userInfo.id
         API.getOneUser(id)
             .then(res => {
-                // console.log(res.data);
-                // UsersInfo.push(res.data);
                 this.setState({
                     userInfoFromDB: res.data,
                 })
-                console.log(this.state.userInfoFromDB)
             })
             .catch(err => console.log(err));
     }
@@ -43,8 +36,6 @@ class UserHome extends Component {
         for (let i = 0; i < allUsers.length; i++) {
             if(allUsers[i]._id === this.state.userInfo.id){
                 ranking = (i + 1);
-                // console.log("user Found " + i)
-                // console.log(ranking)
                 break;
             }
             // console.log(allUsers[i]);
@@ -58,7 +49,6 @@ class UserHome extends Component {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                // console.log("response: ", response.data)
                 this.setState({userInfo:response.data}, this.loadUsers);
                 this.loadUserById();
             })
@@ -75,9 +65,7 @@ class UserHome extends Component {
                 this.setState({
                     users: res.data,
                 }, 
-                this.findRanking
-                )
-                // console.log(res.data)
+                this.findRanking)
             })
             .catch(err => console.log(err));
     }
@@ -91,14 +79,12 @@ class UserHome extends Component {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
         }
-        console.log("USER HOME RENDER");
         return (
-            <Container fluid>
-                <Row>
-                    <Col size="lg-5 md-12 sm-12">
-                        <Jumbotron addClass="userData" style={{maxWidth:"400px", maxHeight:"500px"}}>
+            <div className="playnowContain">
+                
+                        <div addclass="userData" id="userCon">
                             {/* User image goes here */}
-                            <img style={{width:"200px"}} alt={""} src={this.state.userInfoFromDB.picLink} />
+                            <img style={{maxWidth:"300px", maxHeight:"200px", borderRadius:"7%"}} alt={""} src={this.state.userInfoFromDB.picLink} />
                             <div className="name" style={{paddingTop: "25px"}}>
                                 <strong>Name: </strong> {this.state.userInfoFromDB.username}
                             </div>
@@ -108,19 +94,17 @@ class UserHome extends Component {
                             <div>
                                 <strong>Losses:</strong> {this.state.userInfoFromDB.totalLosses}
                             </div>
-                            <div className="ranking" style={{paddingBottom: "30px"}}>
+                            <div className="ranking" style={{paddingBottom: "20px"}}>
                                 <strong>Ranking:</strong> {this.state.ranking}
                             </div>
-                            <Row className="justify-content-center"style={{paddingTop:"35px !important"}} >
-                                <Col size="lg-12 md-12 sm-12">
-                                    <button className="btn btn-primary btn-dark"  onClick={() => this.handlePlayNowBtn()}>Play Game</button>
-                                </Col>
-                            </Row>
-                        </Jumbotron>
-                    </Col>
-                    <Col size="lg-7 md-12 sm-12">
-                        <Jumbotron style={{height:"500px"}}>
-                            <h4>LEADER BOARD</h4>
+                          
+                                
+                            <button className="btn btn-primary btn-dark" style={{marginBottom: "20px"}} onClick={() => this.handlePlayNowBtn()}>Play Game</button>
+                               
+                        </div>
+                    
+                        <div className="leaderB">
+                            <h4 style={{marginTop: "15px"}}>LEADER BOARD</h4>
                             <table className="table">
                                 <thead className="thead-dark">
                                     <tr>
@@ -145,10 +129,10 @@ class UserHome extends Component {
                                     }
                                 </tbody>
                             </table>
-                        </Jumbotron>
-                    </Col>
-                </Row>
-            </Container>
+                        </div>
+                    
+                
+            </div>
 
         )
     }

@@ -13,8 +13,7 @@ class GameContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: this.props.position,
-            quizId: this.props.selected,
+            position: "",
             userInfo: "",
             title: "",
             category: "",
@@ -25,12 +24,13 @@ class GameContainer extends Component {
             correct: 0,
             incorrect: 0,
             userSelect: "",
-            outcome: "",
             message: "",
             index: 0,
             timer: 10,
-
-            // showLoading: true,
+            gameOver: false,
+            oppCorrect: 0,
+            oppEmail: "",
+            oppInfo: "",
             redirectTo: null,
         };
 
@@ -42,30 +42,42 @@ class GameContainer extends Component {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                this.setState({ userInfo: response.data },
-                    () => console.log(JSON.stringify(this.state.userInfo)));
+                this.setState({ userInfo: response.data });
                 //Grab the session info from the server
                 socketAPI.publishGCMount();
                 //Then set the state with the session info
                 socketAPI.subscribeSessionInfo((info) => {
                     console.log("Subcribe Session Info" + JSON.stringify(info));
                     let userPosition = "";
+                    let oppInfo = "";
 
                     if (this.state.userInfo.email === info.playerOne) {
-                        userPosition = "p1"
+                        userPosition = "p1";
+                        oppInfo = info.playerTwo;
                     } else if (this.state.userInfo.email === info.playerTwo) {
-                        userPosition = "p2"
+                        userPosition = "p2";
+                        oppInfo = info.playerOne;
                     }
 
                     this.setState({
                         category: info.categoryId,
-                        position: userPosition
+                        position: userPosition,
+                        oppEmail: oppInfo
                     }, () => {
-                        console.log("User position in state " + this.state.position);
+                        API.getUserByEmail(this.state.oppEmail)
+                            .then(res => {
+                                this.setState({
+                                    oppInfo: res.data
+                                }, () => {
+                                    // console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
+                                    this.getGame(this.state.category);
+                                })
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
                         this.getGame(this.state.category);
 
-                        //Start Timer
-                        // this.timerID = setInterval(() => this.decrimentTime(), 1000);
                     })
                 });
             }).catch(err => {
@@ -86,19 +98,29 @@ class GameContainer extends Component {
                 socketAPI.publishPlayerSelect(result);
             });
         });
+
         //Setting up Socket Listeners for Game:
         //Message comes back after either user selects an answer
         socketAPI.subscribeScoreUpdate((message) => {
             console.log(message);
             this.setState({
                 message: message
-            })
+            }, () => { console.log("State Message " + this.state.message) })
         });
 
         //Score comes back when both players have selected an ansnwer
         //Also updates to the next question
         socketAPI.subscribeNextQuestion((score) => {
             console.log("New Score = " + JSON.stringify(score));
+            if (this.state.position === "p1") {
+                this.setState({
+                    oppCorrect: score.playerOne
+                })
+            } else if (this.state.position === "p2") {
+                this.setState({
+                    oppCorrect: score.playerTwo
+                })
+            }
             //This variable is checking to see what the next index value will be
             let nextIndex = (this.state.index + 1);
 
@@ -112,20 +134,24 @@ class GameContainer extends Component {
         });
 
         socketAPI.subscribeFinalScore((score) => {
-            console.log(JSON.stringify(score));
+            console.log("Final Score from Server " + JSON.stringify(score));
+            console.log("User ID in state: " + this.state.userInfo.email);
             let userResult = "";
             if (score.winner === "tie") {
-                userResult = this.state.userInfo.id
-            } else if (score.winner === this.state.userInfo.id) {
-                userResult = "win";
-            } else if (score.winner !== this.state.userInfo.id) {
-                userResult = "loss";
+                userResult = "totalWins"
+            } else if (score.winner === this.state.userInfo.email) {
+                userResult = "totalWins";
+            } else if (score.winner !== this.state.userInfo.email) {
+                userResult = "totalLosses";
             }
+            console.log("User result " + userResult);
+            let obj = {}
+            obj[userResult] = true;
 
-            // API.updateUserScore(this.state.userInfo.id)
-            // .then(res => {
-            //     console.log(res);
-            // })
+            API.updateUserScore(this.state.userInfo.id, obj)
+                .then(res => {
+                    console.log(res);
+                })
             this.setState({ redirectTo: "/home" });
         })
     }
@@ -138,6 +164,7 @@ class GameContainer extends Component {
                 //quiz Questions will be held outside the component 
                 //so we can go through the questions/answers with an index value
                 quizQuestions = res.data;
+                // console.log("quizz questions " + JSON.stringify(quizQuestions))
                 this.setQuestionState(res.data);
             });
     }
@@ -150,7 +177,7 @@ class GameContainer extends Component {
             title: data.title,
             category: data.category,
             question: data.questions[index].question,
-            answers: data.questions[index].answers,
+            answers: data.questions[index].answers.answersObject,
             correctAnswer: data.questions[index].correctAnswer,
             questionCount: data.questions.length
         }, () => {
@@ -158,19 +185,6 @@ class GameContainer extends Component {
             // console.log("QUIZ QUESTIONS " + JSON.stringify(quizQuestions));
         });
     }
-
-    // This function decreases the time limit of the game 
-    // decrimentTime = () => {
-    //     if (this.state.timer !== 0) {
-    //         this.setState({
-    //             timer: this.state.timer - 1
-    //         });
-    //     } else {
-    //         this.setUserAnswer((result) => {
-    //             socketAPI.publishPlayerSelect(result)
-    //         });
-    //     }
-    // }
 
     //Click Handler
     publishPlayerSelect(selection) {
@@ -221,7 +235,7 @@ class GameContainer extends Component {
             userAnswerResult = "incorrect";
         }
 
-        console.log("User answer result = " + userAnswerResult);
+        // console.log("User answer result = " + userAnswerResult);
         callback(userAnswerResult);
         this.setState({
             userSelect: ""
@@ -235,9 +249,10 @@ class GameContainer extends Component {
             index: newIndex,
             timer: 10,
             question: quizQuestions.questions[newIndex].question,
-            answers: quizQuestions.questions[newIndex].answers,
+            answers: quizQuestions.questions[newIndex].answers.answersObject,
             correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
-            userSelect: ""
+            userSelect: "",
+            message: ""
         }, function () {
             // console.log(this.state);
         });
@@ -245,21 +260,17 @@ class GameContainer extends Component {
 
     endGame = () => {
         console.log("GAME OVER");
-        if (this.state.position === "p1") {
-            console.log("Player One sending Game Data to server");
-            socketAPI.publishEndGame();
-        } else {
-            console.log("Player 2 waiting on score");
-        }
+        this.setState({
+            gameOver: true,
+        }, () => {
+            if (this.state.position === "p1") {
+                console.log("Player One sending Game Data to server");
+                socketAPI.publishEndGame();
+            } else {
+                console.log("Player 2 waiting on score");
+            }
+        })
     }
-
-
-    //Query the db to compare user's scores and determine a winner
-    //If this user is the winner, display "winner"
-    //Else display "Try again next time"
-    //PUT result in db
-    //Set timer for 5 seconds and then...  
-    //Send back to user's homepage
 
 
     render() {
@@ -278,7 +289,6 @@ class GameContainer extends Component {
                     <Row>
                         <GameCol size="12">
                             <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
-
                                 <h2>{this.state.question}</h2>
                                 <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
                                 {this.state.answers.map(answer => (
@@ -289,21 +299,22 @@ class GameContainer extends Component {
                                     />
                                 ))}
                             </Jumbotron>
-
                         </GameCol>
 
                     </Row>
                     <Row>
-                        <Col size="5" id="player1">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://yokoent.com/images/iron-man-png-chibi-1.png"} />
-                            <h5 style={{ color: "white" }}>Score</h5>
+                        <Col size="4" id="player1">
+                            <h5 style={{marginTop: "15px", color: "white"}}>{this.state.userInfo.name}</h5>
+                            <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.userInfo.picLink} />
+                            <h5 style={{ color: "white", marginTop:"8px" }}>Score: {this.state.correct}</h5>
                         </Col>
-                        <Col size="2" id="message">
-                            <h3>{this.state.message}</h3>
+                        <Col size="4" id="message">
+                            <h5 style={{ color: "white", marginTop: "30px" }}> {this.state.message} </h5>
                         </Col>
-                        <Col size="5" id="player2">
-                            <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={"https://i.pinimg.com/originals/2c/16/8a/2c168a24a066e44e3b0903f453449fe5.jpg"} />
-                            <h5 style={{ color: "white" }}>Score</h5>
+                        <Col size="4" id="player2">
+                            <h5 style={{marginTop: "15px", color:"white"}}>{this.state.oppInfo.username}</h5>
+                            <img style={{ marginTop: "10px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={this.state.oppInfo.picLink} />
+                            <h5 style={{ color: "white", marginTop: "8px" }}> Score {this.state.oppCorrect} </h5>
                         </Col>
                     </Row>
                 </Container>
