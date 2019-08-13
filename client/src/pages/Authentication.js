@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Col, Row, Container } from "../components/Grid";
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter,  Redirect } from 'react-router-dom'
 import Jumbotron from "../components/Jumbotron";
 import Modal from 'react-modal';
 import axios from 'axios';
@@ -168,6 +167,7 @@ class Authentication extends Component {
                             }
                         }}
                     >
+                        {/* Form inputs */}
                         <form>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
@@ -213,7 +213,7 @@ class Authentication extends Component {
                             }
                         }}
                     >
-
+                        {/* Form inputs */}
                         <form>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
                             <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
@@ -240,6 +240,7 @@ class Authentication extends Component {
                             </tr>
                         </thead>
                         <tbody>
+                            {/* Map each user data to leader board */}
                             {
                                 this.state.users.slice(0, 5).map((user, index) => {
                                     return (
@@ -257,8 +258,6 @@ class Authentication extends Component {
                 </Jumbotron>
 
             </div>
-
-
         )
     }
 }

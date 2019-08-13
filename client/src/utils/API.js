@@ -3,7 +3,6 @@ import axios from "axios";
 export default {
   // Gets all games
   getGames: function () {
-    console.log("API Get Games");
     return axios.get("/api/game");
   },
   // Gets the game with the given id
@@ -22,8 +21,11 @@ export default {
   getOneUser: function (id) {
     return axios.get("/api/user/" + id);
   },
-  getOneUserEmail: function (email) {
-    return axios.get("/api/user/" + email);
+  getUserByEmail: function(email) {
+    return axios.get("api/user/email/" + email);
+  },
+  updateUserScore: function(id,obj) {
+    return axios.put("api/user/score/" + id,obj);
   },
   postGameDetails: function (user) {
     return axios.post("/api/user", {
@@ -31,11 +33,6 @@ export default {
       wins: user.wins,
       losses: user.losses
     });
-
-
   }
-  // updateUserScore: function(id) {
-  //   return axios.put("api/user/score/" + id);
-  // }
 };
 
