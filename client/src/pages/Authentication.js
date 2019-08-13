@@ -57,27 +57,30 @@ class Authentication extends Component {
     handleFormRegister = event => {
         event.preventDefault()
         const { username, picLink, email, password } = this.state
-        axios.post("/register", { username, picLink, email, password })
-            .then(result => {
-                // console.log(result.data)
-                //this.loadProfileInfo()
-                // this.props.history.push("/home")
-                this.setState({ redirectTo: "/home" });
-                console.log(result);
-            })
-            .catch(err => {
-                // this.setState({ errorMessage: err })
-
-                // res.json(err)
-                // if (!username || !picLink || !email || !password) {
-                //     this.setState({ errorMessage: "Please fill in all fields" })
-                // }
-                // else if (password <= 6) {
-                //     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
-                // }
-            })
+        const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!username || !picLink || !email || !password) {
+            this.setState({ registerErrorMessage: "*Please fill in all fields" })
+        }
+        else if(password.length < 6) {
+            this.setState({ registerErrorMessage: "*Password needs to be at least 6 characters" })
+        }
+        else if(!emailReg.test(email)) {
+            this.setState({ registerErrorMessage: "*Please enter a valid email" })
+        }
+        else {
+            axios.post("/register", { username, picLink, email, password })
+                .then(result => {
+                    // console.log(result.data)
+                    //this.loadProfileInfo()
+                    // this.props.history.push("/home")
+                    this.setState({ redirectTo: "/home" });
+                    console.log(result);
+                })
+                .catch(err => {
+                    this.setState({ registerErrorMessage: "*Duplicate email" })
+                })
+        }
     }
-
 
     handleFormLogout = event => {
         event.preventDefault()
