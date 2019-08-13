@@ -8,6 +8,7 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import update from 'immutability-helper';
 import { Redirect } from "react-router-dom";
+const timer = require('react-native-timer');
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -55,6 +56,10 @@ class SinglePlayerGameContainer extends Component {
          })
    }
 
+   stopTimer = () => {
+      clearInterval(this.timerID);
+
+   }
    //Getting the game information from the Database based on the game's ID
    //Then updating the state
    getGame(gameId) {
@@ -77,8 +82,7 @@ class SinglePlayerGameContainer extends Component {
          answers: data.questions[index].answers,
          correctAnswer: data.questions[index].correctAnswer,
          questionCount: data.questions.length
-      }, () => {
-      });
+      }, () => { });
    }
 
    // This function decreases the time limit of the game 
@@ -88,12 +92,17 @@ class SinglePlayerGameContainer extends Component {
             timer: this.state.timer - 1
          });
       } else {
-         this.setUserAnswer();
+         this.setState({
+            timer: 10
+         }, this.setUserAnswer()
+         )
+
       }
    }
 
    //This method updates the game state basked on what the user clicked.
    handleSelection = id => {
+      this.stopTimer();
       console.log(id);
       this.setState({
          userSelect: id,
@@ -114,38 +123,56 @@ class SinglePlayerGameContainer extends Component {
       console.log(this.state.questionCount);
       if (this.state.userSelect === "") {
          console.log("No answer selected");
-
+         // stop the timer,
          let newIncorrect = this.state.incorrect + 1;
+         this.stopTimer();
+         console.log("New incorrect", newIncorrect);
+         console.log("state incorrect", this.state.incorrect);
          this.setState({
             incorrect: newIncorrect,
             counter: false,
-            userInfo: update(this.state.userInfo, {
-               losses: { $set: newIncorrect }
-            }, () => { console.log("Updating the state", this.state.userInfo) })
-         })
+            click: true,
+         }, () => {
+            this.setState({
+               userInfo: update(this.state.userInfo, {
+                  losses: { $set: newIncorrect }
+               }, () => { console.log("Updating the state", this.state.userInfo) })
+            })
+         }, () => this.handleSelection(this.state.userInfo._id))
       }
+
       //if the user selected the correct answer, add to correct
       else if (this.state.userSelect === this.state.correctAnswer) {
          console.log("Correct answer selected");
+         this.stopTimer(this.timerID);
          let newCorrect = this.state.correct + 1;
          this.setState({
             correct: newCorrect,
             counter: true,
-            userInfo: update(this.state.userInfo, {
-               wins: { $set: newCorrect }
-            }, () => { console.log("Updating the state", this.state.userInfo) })
-         });
-         //if the user selected the incorrect answer, add to incorrect
-      } else if (this.state.userSelect !== this.state.correctAnswer) {
+         },
+            this.setState({
+               userInfo: update(this.state.userInfo, {
+                  wins: { $set: newCorrect }
+               }, () => { console.log("Updating the state", this.state.userInfo) })
+            })
+         )
+      }
+      //if the user selected the incorrect answer, add to incorrect
+      else if (this.state.userSelect !== this.state.correctAnswer) {
          console.log("Incorrect Answer selected");
          let newIncorrect = this.state.incorrect + 1;
+         this.stopTimer(this.timerID);
          this.setState({
             incorrect: newIncorrect,
             counter: false,
-            userInfo: update(this.state.userInfo, {
-               losses: { $set: newIncorrect }
-            }, () => { console.log("Updating the state", this.state.userInfo) })
-         });
+         }, () => {
+            this.setState({
+               userInfo: update(this.state.userInfo, {
+                  losses: { $set: newIncorrect }
+               }, () => { console.log("Updating the state", this.state.userInfo) })
+            })
+         }, () => { console.log("Updating the state", this.state.userInfo) })
+
       }
    }
 
@@ -153,13 +180,15 @@ class SinglePlayerGameContainer extends Component {
 
 
       //This variable is checking to see what the next index value will be
+      this.stopTimer();
       nextIndex = (this.state.index + 1);
 
       //if the next index value is equal to the total amount of questions then stop the game
       //otherwise, keep going
       if (nextIndex === this.state.questionCount) {
-         console.log(this.state.questionCount);
-         console.log(this.state);
+         console.log("Question state", this.state.questionCount);
+         console.log("state ", this.state);
+         this.stopTimer();
          this.endGame();
       } else {
          this.setNextQuestion();
@@ -169,6 +198,7 @@ class SinglePlayerGameContainer extends Component {
    // button for Play again, updates the users scores and returns to the home page.
    handlePlayAgainBtn = (user) => {
       console.log("user details after click play again", user);
+      this.stopTimer();
       API.postGameDetails(user).then(res => {
          console.log(res);
          this.setState({ redirectTo: "/home" })
@@ -176,10 +206,12 @@ class SinglePlayerGameContainer extends Component {
 
    }
    checkforNextQuestion = () => {
+      this.timerID = setInterval(() => this.decrimentTime(), 1000);
       newIndex = this.state.index + 1;
-      console.log(newIndex, this.state.questionCount);
+      console.log("New index", newIndex, "questionCount", this.state.questionCount);
+      console.log();
       if (newIndex !== this.state.questionCount) {
-         this.setNextQuestion();
+         this.setNextQuestion(newIndex);
 
       }
       else {
@@ -189,7 +221,7 @@ class SinglePlayerGameContainer extends Component {
       }
    }
 
-   setNextQuestion = () => {
+   setNextQuestion = (newIndex) => {
 
       this.setState({
          index: newIndex,
@@ -210,28 +242,8 @@ class SinglePlayerGameContainer extends Component {
    endGame = () => {
       console.log("GAME OVER");
       console.log(this.state);
-      clearInterval(this.timerID);
-   }
+      this.stopTimer();
 
-   renderGameContent = () => {
-      // do some logic stuff to figure out what to show
-      return (
-         <div>
-            <h2>{this.state.question}</h2>
-            <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
-
-
-            {this.state.answers.map(answer => (
-               <GameCard
-                  id={answer}
-                  key={answer}
-                  answer={answer}
-                  correctAnswer={this.state.correctAnswer}
-                  handleSelection={this.handleSelection}
-               />
-            ))}
-         </div>
-      )
    }
 
 
@@ -244,6 +256,7 @@ class SinglePlayerGameContainer extends Component {
 
    render() {
       if (this.state.redirectTo) {
+         clearInterval(this.state.timer);
          return <Redirect to={this.state.redirectTo} />
       }
 
