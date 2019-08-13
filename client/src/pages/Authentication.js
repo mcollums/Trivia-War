@@ -13,14 +13,15 @@ class Authentication extends Component {
         picLink: "",
         email: "",
         password: "",
-        errorMessage: "",
+        loginErrorMessage: "",
+        registerErrorMessage: "",
         welcomeEmail: "",
         googleSigninUrl: "",
         redirectTo: null,
         loginOpen: false,
         registerOpen: false
     }
-    
+
 
     openModal = modal => {
         this.setState({ [modal]: true });
@@ -41,7 +42,7 @@ class Authentication extends Component {
     handleFormSubmit = event => {
         event.preventDefault()
         const { email, password } = this.state
-        axios.post('/login', {email, password})
+        axios.post('/login', { email, password })
             .then(result => {
                 // this.loadProfileInfo();
                 socketAPI.publishLogin(email);
@@ -49,7 +50,7 @@ class Authentication extends Component {
                 this.setState({ redirectTo: "/home" });
             })
             .catch(err => {
-                this.setState({ errorMessage: "Please enter a valid email or password" })
+                this.setState({ loginErrorMessage: "*Please enter a valid email or password" })
             })
     }
 
@@ -62,14 +63,18 @@ class Authentication extends Component {
                 //this.loadProfileInfo()
                 // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
-            }).catch(err => {
-                console.log(err)
-                if (!username || !picLink || !email || !password) {
-                    this.setState({ errorMessage: "Please fill in all fields" })
-                }
-                else if (password <= 6) {
-                    this.setState({ errorMessage: "Password needs to be at least 6 characters" })
-                }
+                console.log(result);
+            })
+            .catch(err => {
+                // this.setState({ errorMessage: err })
+
+                // res.json(err)
+                // if (!username || !picLink || !email || !password) {
+                //     this.setState({ errorMessage: "Please fill in all fields" })
+                // }
+                // else if (password <= 6) {
+                //     this.setState({ errorMessage: "Password needs to be at least 6 characters" })
+                // }
             })
     }
 
@@ -125,131 +130,134 @@ class Authentication extends Component {
 
         return (
 
-                <div className="logCon">
-                        <div className="logInCon">
-                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
-                                    
-                                    <Modal
-                                        ariaHideApp={false}
-                                        isOpen={this.state.loginOpen}
-                                        onAfterOpen={this.afterOpenModal}
-                                        onRequestClose={() => this.closeModal("loginOpen")}
-                                        // style={customStyles}
-                                        contentLabel="Example Modal"
-                                        id="loginModal"
-                                        style={{
-                                            overlay: {
-                                                position: 'fixed',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
-                                            },
-                                            content: {
-                                                width: "400px",
-                                                height: "200px",
-                                                border: '1px solid #ccc',
-                                                background: '#fff',
-                                                overflow: 'auto',
-                                                WebkitOverflowScrolling: 'touch',
-                                                borderRadius: '4px',
-                                                outline: 'none',
-                                                padding: '20px'
-                                            }
-                                        }}
-                                    >
-                                        <form>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
-                                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
+            <div className="logCon">
+                <div className="logInCon">
 
-                                            <button type="submit" style={{ marginTop: "15px", marginLeft: "40%" }} className="btn btn-dark" onClick={this.handleFormSubmit}>Login</button>
+                    {/* Login button */}
+                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
 
-                                        </form>
-                                    </Modal>
-                                    
+                    {/* Login Modal */}
+                    <Modal
+                        ariaHideApp={false}
+                        isOpen={this.state.loginOpen}
+                        onAfterOpen={this.afterOpenModal}
+                        onRequestClose={() => this.closeModal("loginOpen")}
+                        // style={customStyles}
+                        contentLabel="Example Modal"
+                        id="loginModal"
+                        style={{
+                            overlay: {
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
+                            },
+                            content: {
+                                width: "350px",
+                                height: "200px",
+                                border: '1px solid #ccc',
+                                background: '#fff',
+                                overflow: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                borderRadius: '4px',
+                                outline: 'none',
+                                padding: '20px'
+                            }
+                        }}
+                    >
+                        {/* Form inputs */}
+                        <form>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
+                            {this.state.loginErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.loginErrorMessage}</div> : null}
 
-                             
-                                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
+                            <button type="submit" style={{ marginTop: "15px", marginLeft: "40%" }} className="btn btn-dark" onClick={this.handleFormSubmit}>Login</button>
 
-                                    <Modal
-                                        ariaHideApp={false}
-                                        isOpen={this.state.registerOpen}
-                                        onAfterOpen={this.afterOpenModal}
-                                        onRequestClose={() => this.closeModal("registerOpen")}
-                                        // style={customStyles}
-                                        contentLabel="Example Modal"
-                                        id="registerModal"
-                                        style={{
-                                            overlay: {
-                                                position: 'fixed',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
-                                            },
-                                            content: {
-                                                width: "400px",
-                                                height: "300px",
-                                                border: '1px solid #ccc',
-                                                background: '#fff',
-                                                overflow: 'auto',
-                                                WebkitOverflowScrolling: 'touch',
-                                                borderRadius: '4px',
-                                                outline: 'none',
-                                                padding: '20px'
-                                            }
-                                        }}
-                                    >
+                        </form>
+                    </Modal>
 
-                                        <form>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
-                                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
-                                            {this.state.errorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.errorMessage}</div> : null}
 
-                                            <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
+                    {/* Register button */}
+                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
 
-                                        </form>
-                                    </Modal>
+                    {/* Register modal */}
+                    <Modal
+                        ariaHideApp={false}
+                        isOpen={this.state.registerOpen}
+                        onAfterOpen={this.afterOpenModal}
+                        onRequestClose={() => this.closeModal("registerOpen")}
+                        // style={customStyles}
+                        contentLabel="Example Modal"
+                        id="registerModal"
+                        style={{
+                            overlay: {
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: 'rgba(52, 58, 64, 0.56)'
+                            },
+                            content: {
+                                width: "350px",
+                                height: "300px",
+                                border: '1px solid #ccc',
+                                background: '#fff',
+                                overflow: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                borderRadius: '4px',
+                                outline: 'none',
+                                padding: '20px'
+                            }
+                        }}
+                    >
+                        {/* Form inputs */}
+                        <form>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="registerEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
+                            <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
+                            {this.state.registerErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.registerErrorMessage}</div> : null}
 
-                               
+                            <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
 
-                        </div>
-                        
-                   
-                        <Jumbotron jumboHeight="80%">
-                            <h4>LEADER BOARD</h4>
-                            <table className="table">
-                                <thead className="thead-dark">
-                                    <tr>
-                                        <th scope="col">Ranking</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Wins</th>
-                                        <th scope="col">Losses</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        this.state.users.slice(0, 5).map((user, index) => {
-                                            return (
-                                                <tr key={index + 1}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{user.username}</td>
-                                                    <td>{user.totalWins}</td>
-                                                    <td>{user.totalLosses}</td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        </Jumbotron>
-        
-                 </div>
+                        </form>
+                    </Modal>
+                </div>
+
+                {/* Leader board */}
+                <Jumbotron style={{height:"auto"}}>
+                    <h4>LEADER BOARD</h4>
+                    <table className="table">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th scope="col">Ranking</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Wins</th>
+                                <th scope="col">Losses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* Map each user data to leader board */}
+                            {
+                                this.state.users.slice(0, 5).map((user, index) => {
+                                    return (
+                                        <tr key={index + 1}>
+                                            <td>{index + 1}</td>
+                                            <td>{user.username}</td>
+                                            <td>{user.totalWins}</td>
+                                            <td>{user.totalLosses}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </Jumbotron>
+
+            </div>
         )
     }
 }

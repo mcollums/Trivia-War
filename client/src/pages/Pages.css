@@ -114,7 +114,10 @@
     height: 75px;
     width: 330px;
     background-color: #62cbc2;
-    /* margin-top: 165px; */ 
+    text-align: center;
+    padding-top:25px;
+    /* margin-top: 165px; */
+    
 }
 
 .mcategory {

@@ -53,7 +53,7 @@ class GameContainer extends Component {
                 //Grab the session info from the server
                 //Then set the state with the session info
                 socketAPI.subscribeSessionInfo((info) => {
-                    // console.log("Subcribe Session Info" + JSON.stringify(info));
+                    console.log("Subcribe Session Info" + JSON.stringify(info));
                     let userPosition = "";
                     let oppInfo = "";
 
@@ -76,7 +76,7 @@ class GameContainer extends Component {
                                 this.setState({
                                     oppInfo: res.data
                                 }, () => {
-                                    // console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
+                                    console.log("OPPONENT: " + JSON.stringify(this.state.oppInfo));
                                 })
                             })
                             .catch(err => {
