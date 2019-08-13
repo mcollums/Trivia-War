@@ -25,7 +25,7 @@ class App extends Component {
 
   componentDidMount = () => {
     socketAPI.subscribeAuthorized((message) => {
-      console.log("AUTHORIZED", message);
+      // console.log("AUTHORIZED", message);
       if(message === true){
         this.setState({
           authorized: true

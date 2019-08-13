@@ -8,7 +8,7 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import update from 'immutability-helper';
 import { Redirect } from "react-router-dom";
-const timer = require('react-native-timer');
+// const timer = require('react-native-timer');
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -291,13 +291,13 @@ class SinglePlayerGameContainer extends Component {
                                  this.state.counter
                                     ?
                                     <div>
-                                       <h4>Your are Correct..!!! </h4>
+                                       <h4>You are Correct!!! </h4>
                                        <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question</button>
                                     </div>
                                     :
 
                                     <div>
-                                       <h4> Correct Answer {this.state.correctAnswer}</h4>
+                                       <h4> Correct Answer: {this.state.correctAnswer}</h4>
                                        <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question </button>
                                     </div>
                               )
@@ -341,7 +341,7 @@ class SinglePlayerGameContainer extends Component {
                   </Col>
                   <Col size="6" id="player2">
                      <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsdown} />
-                     <h5 style={{ color: "white" }}>InCorrect {this.state.incorrect}</h5>
+                     <h5 style={{ color: "white" }}>Incorrect {this.state.incorrect}</h5>
                   </Col>
                   <Col size="3"></Col>
                </Row>
