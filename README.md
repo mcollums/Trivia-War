@@ -36,5 +36,6 @@ If you've chosen multiplayer, you will be automatically added to matchmaking. Ou
 [Trivia War Demo - Youtube](https://www.youtube.com/watch?v=73ksJEpYj_U)
 
 ### Guest Login
- guest@guest.com
- guest1234
+https://immense-spire-76883.herokuapp.com \
+ Name: guest@guest.com\
+ PW: guest1234
