@@ -32,4 +32,4 @@ If you've chosen multiplayer, you will be automatically added to matchmaking. Ou
 
 
 ## DEMO
-[![Trivia War Demo](https://img.youtube.com/vi/v=73ksJEpYj_U.jpg)](https://www.youtube.com/watch?v=73ksJEpYj_U)
+[![Trivia War Demo - Youtube]](https://www.youtube.com/watch?v=73ksJEpYj_U)
