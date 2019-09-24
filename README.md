@@ -31,4 +31,5 @@ If you've chosen single player, your game will start immediately. Your score wil
 If you've chosen multiplayer, you will be automatically added to matchmaking. Our server will connect you with the first person to select the same category as you. After you've found a partner, it's time to play! The person who gets the most points wins.
 
 
-![](images/categories.png)
+## DEMO
+[![Trivia War Demo](https://img.youtube.com/vi/v=73ksJEpYj_U.jpg)](https://www.youtube.com/watch?v=73ksJEpYj_U)
