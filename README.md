@@ -19,12 +19,16 @@ To run this app on your local machine, first run 'npm run seed' in order to get 
 
 You can then run 'npm start' to get the react app running on the local host. Once you have the app running you can log in, or register if you don't have an account yet, and will be taken to the user page with your stats printed on the left and the overall leaderboard on the right.
 
-## How to Use our App
-
 ![](images/userp.png)
+## How to Use our App
+### Log on!
+After you create an account, from your homepage, you can choose to start a new game. Here, you'll be able to select what mode you'd like to play in.
 
-From the user page you can click on the play game option and choose between either the multiplayer or single player game mode. 
+ ### Single Player
+If you've chosen single player, your game will start immediately. Your score will be counted as a win only if you get 70% or higher correct. 
 
-All that is left is to choose between any of the various categories avialble and get your trivia mojo on!
+### Multiplayer
+If you've chosen multiplayer, you will be automatically added to matchmaking. Our server will connect you with the first person to select the same category as you. After you've found a partner, it's time to play! The person who gets the most points wins.
+
 
 ![](images/categories.png)
