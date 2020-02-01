@@ -1,9 +1,8 @@
 {
   "name": "project3",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "proxy": "http://localhost:3001",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "Trivia War - A Multiplayer Trivia Game!",
   "main": "server.js",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",

@@ -36,7 +36,6 @@
 .logInCon {
   height: 250px;
   width: 400px;
-  background-color: blue;
   display: flex;
   justify-content: space-around;
   padding-top: 100px;
@@ -80,16 +79,6 @@
   text-align: center;
   margin-top: 100px;
   padding-top: 10px;
-}
-
-.leaderB {
-  height: 400px;
-  width: 450px;
-  background-color: #62cbc2;
-  margin-top: 100px;
-  border-radius: 7%;
-  text-align: center;
-  padding-top: 25px;
 }
 
 

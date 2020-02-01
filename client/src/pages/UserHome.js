@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { withRouter, Redirect } from "react-router-dom";
 import API from "../utils/API"
 
+import Leaderboard from "../components/Leaderboard"
+
 class UserHome extends Component {
     constructor(props) {
         super(props);
@@ -102,8 +104,12 @@ class UserHome extends Component {
                             <button className="btn btn-primary btn-dark" style={{marginBottom: "20px"}} onClick={() => this.handlePlayNowBtn()}>Play Game</button>
                                
                         </div>
+
+                        <Leaderboard
+                            leaders={this.state.users}
+                        />
                     
-                        <div className="leaderB">
+                        {/* <div className="leaderB">
                             <h4 style={{marginTop: "15px"}}>LEADER BOARD</h4>
                             <table className="table">
                                 <thead className="thead-dark">
@@ -129,7 +135,7 @@ class UserHome extends Component {
                                     }
                                 </tbody>
                             </table>
-                        </div>
+                        </div> */}
                     
                 
             </div>

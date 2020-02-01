@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { withRouter, Redirect } from 'react-router-dom'
-import Jumbotron from "../components/Jumbotron";
+// import Jumbotron from "../components/Jumbotron";
+import Leaderboard from "../components/Leaderboard";
+
 import Modal from 'react-modal';
 import axios from 'axios';
 import API from "../utils/API.js";
@@ -19,8 +21,7 @@ class Authentication extends Component {
         googleSigninUrl: "",
         redirectTo: null,
         loginOpen: false,
-        registerOpen: false,
-
+        registerOpen: false
     }
 
 
@@ -39,15 +40,13 @@ class Authentication extends Component {
         })
     }
 
-    // let's try and login   
+    // Login and redirect 
     handleFormSubmit = event => {
         event.preventDefault();
         const { email, password } = this.state
         axios.post('/login', { email, password })
             .then(result => {
-                // this.loadProfileInfo();
                 socketAPI.publishLogin(email);
-                // this.props.history.push("/home")
                 this.setState({ redirectTo: "/home" });
             })
             .catch(err => {
@@ -55,10 +54,11 @@ class Authentication extends Component {
             })
     }
 
+    //User registration and redirect
     handleFormRegister = event => {
         event.preventDefault();
         const { username, picLink, email, password } = this.state
-        const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        const emailReg = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
         if (!username || !picLink || !email || !password) {
             this.setState({ registerErrorMessage: "*Please fill in all fields" })
         }
@@ -71,12 +71,7 @@ class Authentication extends Component {
         else {
             axios.post("/register", { username, picLink, email, password })
                 .then(result => {
-                    // console.log(result.data)
-                    //this.loadProfileInfo()
-                    // this.props.history.push("/home")
-                    // this.setState({ redirectTo: "/home" });
                     window.location.href="/";
-                    console.log(result);
                 })
                 .catch(err => {
                     this.setState({ registerErrorMessage: "*Email is already in use" })
@@ -85,11 +80,10 @@ class Authentication extends Component {
     }
 
     handleFormLogout = event => {
-        event.preventDefault()
+        event.preventDefault();
         API.logout().then(result => {
-            // console.log(result.data)
             this.setState({ welcomeEmail: "" })
-        })
+        });
     }
 
     loadProfileInfo = () => {
@@ -101,28 +95,29 @@ class Authentication extends Component {
                 // axios.get("/api/google/url").then(response => {
                 //     this.setState({ googleSigninUrl: response.data.url })
                 // })
-            })
+            });
     };
 
     componentDidMount() {
         // Mostly just for developing locally
-        if (window.location.pathname === "/api/google/callback") {
-            const searchParams = new URLSearchParams(window.location.search);
-            axios.post("/api/google/code", { code: searchParams.get('code') }).then(() => {
-                this.setState({ redirectTo: "/" });
-            })
-        } else {
-            // this.loadProfileInfo()
-        }
+        // if (window.location.pathname === "/api/google/callback") {
+        //     const searchParams = new URLSearchParams(window.location.search);
+        //     axios.post("/api/google/code", { code: searchParams.get('code') }).then(() => {
+        //         this.setState({ redirectTo: "/" });
+        //     })
+        // } else {
+        //     // this.loadProfileInfo()
+        // }
+
+        //Load top scores on mount
         this.loadUsers();
     };
 
     loadUsers() {
         API.getUsers()
             .then(res => {
-                // console.log(res.data)
                 this.setState({
-                    users: res.data,
+                    users: res.data
                 })
             })
             .catch(err => console.log(err));
@@ -232,35 +227,11 @@ class Authentication extends Component {
                     </Modal>
                 </div>
 
-                {/* Leader board */}
-                <Jumbotron style={{ height: "auto" }}>
-                    <h4>LEADER BOARD</h4>
-                    <table className="table">
-                        <thead className="thead-dark">
-                            <tr>
-                                <th scope="col">Ranking</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Wins</th>
-                                <th scope="col">Losses</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Map each user data to leader board */}
-                            {
-                                this.state.users.slice(0, 5).map((user, index) => {
-                                    return (
-                                        <tr key={index + 1}>
-                                            <td>{index + 1}</td>
-                                            <td>{user.username}</td>
-                                            <td>{user.totalWins}</td>
-                                            <td>{user.totalLosses}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </Jumbotron>
+                <Leaderboard
+                    leaders={this.state.users}
+                    height='auto'
+                    width='40%'
+                />
 
             </div>
         )
