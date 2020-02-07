@@ -7,6 +7,7 @@ const passport = require("../config/passport");
 // API Routes
 router.use("/api", apiRoutes);
 
+//Login / Register Routes
 router.post("/register",(req,res)=>{
   db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password})
   .then((newUser)=>{
@@ -33,22 +34,6 @@ router.get('/logout', (req, res) => {
   res.sendStatus(200);
 });
 
-router.get('/user/me', function(req, res){
-  // console.log(chalk.red("req.user= " + JSON.stringify(req.user)));
-  if(req.user){
-      res.json({
-          email: req.user.email,
-          name: req.user.name,
-          picLink: req.user.picLink,
-          name:req.user.username,
-          wins: req.user.totalWins,
-          losses: req.user.totalLosses,
-          id: req.user._id
-      })
-  } else {
-      res.status(401).json({})
-  }
-})
 // If no API routes are hit, send the React app
 router.use(function(req, res) {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));

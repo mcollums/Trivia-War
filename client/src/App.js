@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import socketAPI from './utils/socketAPI';
-import Nav from "./components/Nav";
-import './App.css';
+import Navbar from "./components/Navbar";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/App.scss';
 import PlayNow from "./pages/PlayNow";
 import Authentication from "./pages/Authentication";
 import UserHome from "./pages/UserHome";
@@ -11,6 +12,7 @@ import SingleGameContainer from "./pages/SPGameContainer";
 import NoMatch from "./pages/NoMatch";
 import SingleCategory from "./pages/SingleCategory";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 
 
 class App extends Component {
@@ -40,8 +42,8 @@ class App extends Component {
     console.log("RENDER PARTY");
     return (
       <Router>
-        <div>
-          <Nav />
+        <div id="appCont">
+          <Navbar />
           <Switch>
             <Route exact path="/" component={Authentication} />
             <Route exact path="/home" component={() => <UserHome publishLogin={this.publishLogin} 

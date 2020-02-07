@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { withRouter, Redirect } from 'react-router-dom'
 // import Jumbotron from "../components/Jumbotron";
 import Leaderboard from "../components/Leaderboard";
+import Button from "../components/Button/Button";
 
 import Modal from 'react-modal';
 import axios from 'axios';
 import API from "../utils/API.js";
 import socketAPI from "../utils/socketAPI";
+import '../styles/Authentication.scss'
 
 class Authentication extends Component {
     state = {
@@ -129,12 +131,31 @@ class Authentication extends Component {
         }
 
         return (
-
-            <div className="logCon">
-                <div className="logInCon">
-
+            <div className="auth-main-con">
+                <div className="log-in-con">
+                    <h3>Welcome to Trivia War!</h3>
+                    <p>Please feel free to create an account or use our guest login. guest@guest.com | password123</p>
                     {/* Login button */}
-                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("loginOpen")} data-target="#loginModal">Login</button>
+                    <button className="btn btn-dark authB" 
+                            // id="authB" 
+                            onClick={() => this.openModal("loginOpen")} 
+                            data-target="#loginModal">Login
+                    </button>
+
+                    {/* Register button */}
+                    <button className="btn btn-dark authB" 
+                            // id="authB" 
+                            onClick={() => this.openModal("registerOpen")} 
+                            data-target="#registerModal">Register
+                    </button>
+
+                    {/* <Button
+                        // onClick={()=> this.openModal("loginOpen")}
+                        onClick={() => this.openModal("loginOpen")}
+                        className="btn btn-dark"
+                        data-target="#loginModal"
+                    >Login</Button> */}
+
 
                     {/* Login Modal */}
                     <Modal
@@ -178,10 +199,6 @@ class Authentication extends Component {
                         </form>
                     </Modal>
 
-
-                    {/* Register button */}
-                    <button className="btn btn-dark" id="authB" onClick={() => this.openModal("registerOpen")} data-target="#registerModal">Register</button>
-
                     {/* Register modal */}
                     <Modal
                         ariaHideApp={false}
@@ -222,7 +239,6 @@ class Authentication extends Component {
                             {this.state.registerErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.registerErrorMessage}</div> : null}
 
                             <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
-
                         </form>
                     </Modal>
                 </div>

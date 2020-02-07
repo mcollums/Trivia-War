@@ -2,8 +2,24 @@ const router = require("express").Router();
 const userController = require("../../controllers/userController");
 
 // Matches with "/api/user"
-router.route("/")
-  .get(userController.findAll);
+// router.route("/")
+//   .get(userController.findAll);
+
+router.get('/me', function(req, res){
+  if(req.user){
+      res.json({
+          email: req.user.email,
+          name: req.user.name,
+          picLink: req.user.picLink,
+          name:req.user.username,
+          wins: req.user.totalWins,
+          losses: req.user.totalLosses,
+          id: req.user._id
+      })
+  } else {
+      res.status(401).json({})
+  }
+})
 
 // Matches with "/api/user/:email"
 router.route("/email/:email")
@@ -27,6 +43,7 @@ router.route("/:id")
 // matches with "/api/user/:user"
 router.route("/")
   .post(userController.updateOne)
+  .get(userController.findAll);
 //Matched with api/user/update/:id
 
 

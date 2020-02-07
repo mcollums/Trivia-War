@@ -1,0 +1,46 @@
+@import './variables.scss';
+@import url('https://fonts.googleapis.com/css?https://fonts.googleapis.com/css?family=Arvo:400,700,700i|Kalam|Quicksand:300,400,600&display=swap=Kalam|Ultra&display=swap|Roboto');
+
+.auth-main-con {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    justify-content: space-evenly;
+    position: absolute;
+    flex-wrap: wrap;
+  }
+
+.log-in-con {
+    font-family: $font-main;
+    color: $font-main-color;
+    width: 30%;
+    height: 40%;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 20px;
+    background-color: $secondary-color;
+}
+
+.log-in-con h3 {
+    font-family: $font-heading;
+    font-weight: 600;
+}
+
+.log-in-con button {
+    // display: flex;
+    // justify-content: space-around;
+}
+
+#loginModal {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+}
+
+#registerModal {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+  }

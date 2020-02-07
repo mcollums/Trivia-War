@@ -1,19 +1,24 @@
+@import './variables.scss';
+
 body {
-  background-color: #f6f7fa;
-  background-image: url("images/background-main-01.png");
+  background-color: $white-color;
+  background-image: url('../images/background-main-01.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: cover;
+  background-size: fit;
   background-position: bottom;
 }
+
 .App {
   text-align: center;
 }
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
   pointer-events: none;
 }
+
 .App-header {
   background-color: lightblue;
   min-height: 100vh;
@@ -24,9 +29,11 @@ body {
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 .App-link {
   color: #61dafb;
 }
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,3 +42,12 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
