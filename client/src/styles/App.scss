@@ -1,6 +1,8 @@
 @import './variables.scss';
 
 body {
+  color: $font-main-color;
+  font-family: $font-main;
   background-color: $white-color;
   background-image: url('../images/background-main-01.png');
   background-repeat: no-repeat;
@@ -9,38 +11,12 @@ body {
   background-position: bottom;
 }
 
-.App {
-  text-align: center;
+.footer {
+  background-color: $accent-color;
 }
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: lightblue;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer-logo {
+  font-family: $font-heading;
+  text-transform: uppercase;
 }
 
 .float-left {

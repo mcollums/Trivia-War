@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import API from "../../utils/API.js";
-import { Link } from "react-router-dom";
 import './navStyle.scss';
-
+//Component imports
+import { Link } from "react-router-dom";
 import { Nav } from 'react-bootstrap';
+//API imports
+import API from "../../utils/API.js";
 
-class NavBar extends Component {
+
+class NavBarCustom extends Component {
 
   handleLogout = () => {
     API.logout().catch(err => console.log(err));
@@ -45,4 +47,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+export default NavBarCustom;

@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import "./style.scss";
 
 const Leaderboard = (props) => {
     return (
@@ -7,7 +7,7 @@ const Leaderboard = (props) => {
             height: props.height,
             width: props.width
         }}>
-            <h4 className="leadHeading">LEADER BOARD</h4>
+            <h4 className="leadHeading">LEADERBOARD</h4>
             <table className="table">
                 <thead className="thead-dark">
                     <tr>
