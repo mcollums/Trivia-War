@@ -38,28 +38,29 @@ class App extends Component {
   }
 
   publishLogin = (email) => {
-    console.log("login");
+    // console.log("login");
     socketAPI.publishLogin(email);
   }
 
   render() {
-    console.log("RENDER PARTY");
+    // console.log("RENDER PARTY");
     return (
       <Router>
         <div id="appCont">
           <NavBarCustom />
           <Switch>
-            <Route exact path="/" component={Authentication} />
-            <Route exact path="/home" component={() => <UserHome publishLogin={this.publishLogin}
-              authorized={this.state.authorized} />} />
-            <Route exact path="/play" component={PlayNow} />
-            <Route exact path="/game" component={GameContainer} />
-            <Route exact path="/singlegame" component={SingleGameContainer} />
-            <Route exact path="/multi" component={MultiPlayerCat} />
-            <Route exact path="/single" component={SingleCategory} />
-            <Route component={NoMatch} />
+            <Route exact path="/" component={ Authentication } />
+            <Route exact path="/home" component={() => <UserHome 
+              publishLogin={ this.publishLogin } 
+              authorized={ this.state.authorized } />} />
+            <Route exact path="/play" component={ PlayNow } />
+            <Route exact path="/game" component={ GameContainer } />
+            <Route exact path="/singlegame" component={ SingleGameContainer } />
+            <Route exact path="/multi" component={ MultiPlayerCat } />
+            <Route exact path="/single" component={ SingleCategory } />
+            <Route component={ NoMatch } />
           </Switch>
-          <Navbar className="footer">
+          <Navbar className="footer" sticky="bottom">
             <Navbar.Brand className="footer-logo">Trivia War</Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">

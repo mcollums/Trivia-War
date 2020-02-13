@@ -11,7 +11,7 @@ body {
   background-image: url('../images/background-main-01.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: fit;
+  background-size: cover;
   background-position: bottom;
 }
 
@@ -26,12 +26,7 @@ body {
 }
 
 .footer {
-  height: 70px;
   background-color: $accent-color;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: -10px;
 }
 
 .footer-logo {
@@ -39,11 +34,41 @@ body {
   text-transform: uppercase;
 }
 
-.float-left {
-  float: left;
+.btn-custom-primary {
+  color: $white-color;
+  background-color: $main-color-dark;
+  border-color: $main-color-dark
 }
 
-.float-right {
-  float: right;
+.btn-custom-primary:hover {
+  color: $white-color;
+  background-color: $main-color-light;
+  border-color: $main-color-light;
 }
 
+.btn-custom-primary:active {
+  color: $white-color;
+  background-color: $main-color-light;
+  border-color: $main-color-dark;
+}
+
+.Modal {
+  width: 350px;
+  height: 300px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(52, 58, 64, 0.56);
+}
