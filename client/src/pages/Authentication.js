@@ -181,11 +181,11 @@ class Authentication extends Component {
                                         backgroundColor: 'rgba(52, 58, 64, 0.56)'
                                     },
                                     content: {
-                                        width: "350px",
-                                        height: "200px",
+                                        width: "30%",
+                                        height: "fit-content",
                                         border: '1px solid #ccc',
                                         background: '#fff',
-                                        overflow: 'auto',
+                                        overflow: 'none',
                                         WebkitOverflowScrolling: 'touch',
                                         borderRadius: '4px',
                                         outline: 'none',
@@ -193,13 +193,19 @@ class Authentication extends Component {
                                     }
                                 }}
                             >
+                                <p>Welcome! Please enter your username and password.</p>
                                 {/* Form inputs */}
                                 <form>
                                     <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="email" value={this.state.email} type="email" className="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email"></input>
                                     <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="loginPassword" placeholder="Password"></input>
                                     {this.state.loginErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.loginErrorMessage}</div> : null}
 
-                                    <button type="submit" style={{ marginTop: "15px", marginLeft: "40%" }} className="btn btn-dark" onClick={this.handleFormSubmit}>Login</button>
+                                    <Button type="submit" 
+                                            style={{ marginTop: "15px", marginLeft: "40%" }} 
+                                            className="btn-custom-primary" 
+                                            onClick={this.handleFormSubmit}>
+                                            Login
+                                    </Button>
 
                                 </form>
                             </Modal>
@@ -222,8 +228,8 @@ class Authentication extends Component {
                                         backgroundColor: 'rgba(52, 58, 64, 0.56)'
                                     },
                                     content: {
-                                        width: "350px",
-                                        height: "300px",
+                                        width: "30%",
+                                        height: "fit-content",
                                         border: '1px solid #ccc',
                                         background: '#fff',
                                         overflow: 'auto',
@@ -235,6 +241,7 @@ class Authentication extends Component {
                                 }}
                             >
                                 {/* Form inputs */}
+                                <p>Please fill out the form below:</p>
                                 <form>
                                     <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="username" value={this.state.username} type="text" className="form-control" id="registerName" aria-describedby="emailHelp" placeholder="Enter Your Name"></input>
                                     <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="picLink" value={this.state.picLink} type="text" className="form-control" id="registerImage" aria-describedby="emailHelp" placeholder="Link to your image"></input>
@@ -242,7 +249,12 @@ class Authentication extends Component {
                                     <input onChange={this.handleInput} style={{ marginTop: "10px" }} name="password" value={this.state.password} type="password" className="form-control" id="registerPassword" placeholder="Password"></input>
                                     {this.state.registerErrorMessage ? <div style={{ marginTop: "5px", color: "red", fontSize: "10px" }} className="fail">{this.state.registerErrorMessage}</div> : null}
 
-                                    <button type="submit" className="btn btn-dark" style={{ marginTop: "20px", marginLeft: "38%" }} onClick={this.handleFormRegister}>Register</button>
+                                    <Button variant="info"
+                                            type="submit" 
+                                            style={{ marginTop: "15px", marginLeft: "40%" }} 
+                                            className="btn-custom-primary" 
+                                            onClick={this.handleFormRegister}>Register
+                                    </Button>
                                 </form>
                             </Modal>
                         </Col>
