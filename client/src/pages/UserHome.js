@@ -101,15 +101,16 @@ class UserHome extends Component {
                                     <h5><strong>Wins:</strong> {this.state.userInfoFromDB.totalWins}</h5>
                                     <h5><strong>Losses:</strong> {this.state.userInfoFromDB.totalLosses}</h5>
                                     <h5><strong>Ranking:</strong> {this.state.ranking}</h5>
-                                    <Button className="btn btn-primary"
-                                        style={{ marginBottom: "20px" }}
-                                        onClick={() => this.handlePlayNowBtn()}>
-                                        Play New Game
+                                    <Button variant="info" 
+                                            className="btn-custom-primary"
+                                            onClick={() => this.handlePlayNowBtn()}>
+                                            Play New Game
                                     </Button>
                                 </Col>
                             </Row>
                         </Col>
                         <Col>
+                            {/* TODO: Add route that gets most recent message from the user to the database */}
                             <h2>Messages: </h2>
                             <p>
                                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
@@ -118,18 +119,21 @@ class UserHome extends Component {
                     </Row>
                     <Row className="my-5">
                         <Col md="4">
+                            {/* TODO: Route to retrieve the topscore for users in MP and SP */}
                             <h1>Highscores</h1>
                             <p>
                                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
                             </p>
                         </Col>
                         <Col md="4">
+                            {/* TODO: Route to retrieve previous match info */}
                             <h1>Previous Game</h1>
                             <p>
                                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
                             </p>
                         </Col>
                         <Col md="4">
+                            {/* TBD */}
                             <h1>Info</h1>
                             <p>
                                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
