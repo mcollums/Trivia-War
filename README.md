@@ -1,4 +1,5 @@
 ## Trivia Wars
+[Link to deployed site](https://boiling-earth-81626.herokuapp.com/)<br/>
 What is 1 mile converted to kilometers? 
 How deep is the deepest point of the Pacific Ocean?
 How old is the world's longest living cat?
@@ -36,6 +37,6 @@ If you've chosen multiplayer, you will be automatically added to matchmaking. Ou
 [Trivia War Demo - Youtube](https://www.youtube.com/watch?v=73ksJEpYj_U)
 
 ### Guest Login
-https://immense-spire-76883.herokuapp.com \
+https://boiling-earth-81626.herokuapp.com/ \
  Name: guest@guest.com\
- PW: guest1234
+ PW: password
