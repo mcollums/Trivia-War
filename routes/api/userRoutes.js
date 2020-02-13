@@ -5,22 +5,6 @@ const userController = require("../../controllers/userController");
 // router.route("/")
 //   .get(userController.findAll);
 
-router.get('/me', function(req, res){
-  if(req.user){
-      res.json({
-          email: req.user.email,
-          name: req.user.name,
-          picLink: req.user.picLink,
-          name:req.user.username,
-          wins: req.user.totalWins,
-          losses: req.user.totalLosses,
-          id: req.user._id
-      })
-  } else {
-      res.status(401).json({})
-  }
-})
-
 // Matches with "/api/user/:email"
 router.route("/email/:email")
   .get(userController.findOneByEmail)

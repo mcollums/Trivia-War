@@ -41,7 +41,7 @@ class NavBarCustom extends Component {
           </Nav.Item>
         </Nav>
 
-        <hr class="nav-hr" />
+        <hr className="nav-hr" />
       </>
     );
   }

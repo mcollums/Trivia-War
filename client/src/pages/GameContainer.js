@@ -359,7 +359,7 @@ class GameContainer extends Component {
                     <Row>
 
                         <GameCol size="12">
-                            <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
+                            <Jumbotron jumboWidth="800px" className="userData text-center" jumboHeight="80%">
                                 <h2>Get Ready for Trivia!</h2>
                                 <h5>Instructions:</h5>
                                 <p> Both players will have 15 seconds to answer each of the 10 questions. Don't let time run out or
@@ -402,7 +402,7 @@ class GameContainer extends Component {
                         <Row>
 
                             <GameCol size="12">
-                                <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+                                <Jumbotron jumboWidth="800px" className="userData" jumboHeight="80%">
                                     <h2>{this.state.question}</h2>
                                     <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
                                     {this.state.answers.map(answer => (
@@ -448,7 +448,7 @@ class GameContainer extends Component {
                     <Row>
 
                         <GameCol size="12">
-                            <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
+                            <Jumbotron jumboWidth="800px" className="userData text-center" jumboHeight="80%">
                                 <h2>Final Score</h2>
                                 <Row>
                                     <Col size="6">

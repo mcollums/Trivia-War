@@ -1,5 +1,9 @@
 @import './variables.scss';
 
+#appCont {
+  min-height: 100vh;
+}
+
 body {
   color: $font-main-color;
   font-family: $font-main;
@@ -11,9 +15,25 @@ body {
   background-position: bottom;
 }
 
-.footer {
-  background-color: $accent-color;
+.leaderboard-cont {
+  margin-top: 80px;
+  padding: 0;
 }
+
+.leaderboard-jumbo {
+  padding: 0;
+  background-color: $secondary-color;
+}
+
+.footer {
+  height: 70px;
+  background-color: $accent-color;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+}
+
 .footer-logo {
   font-family: $font-heading;
   text-transform: uppercase;

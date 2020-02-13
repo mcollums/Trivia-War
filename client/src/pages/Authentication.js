@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { withRouter, Redirect } from 'react-router-dom'
 import { Container, Row, Col, Button, Jumbotron } from 'react-bootstrap';
-// import Jumbotron from "../components/Jumbotron";
 import Leaderboard from "../components/Leaderboard";
-// import Button from "../components/Button/Button";
 import mainImg from "../images/friends.svg";
 
 
@@ -12,7 +10,6 @@ import axios from 'axios';
 import API from "../utils/API.js";
 import socketAPI from "../utils/socketAPI";
 import '../styles/Authentication.scss'
-// import { Container } from "../components/Grid";
 
 class Authentication extends Component {
     state = {
@@ -64,6 +61,7 @@ class Authentication extends Component {
     handleFormRegister = event => {
         event.preventDefault();
         const { username, picLink, email, password } = this.state
+        console.log(this.state);
         const emailReg = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
         if (!username || !picLink || !email || !password) {
             this.setState({ registerErrorMessage: "*Please fill in all fields" })
@@ -77,6 +75,7 @@ class Authentication extends Component {
         else {
             axios.post("/register", { username, picLink, email, password })
                 .then(result => {
+                    console.log("AFTER REGISTRATION POST REQUEST IN AUTHENTICATION.JS " + result)
                     window.location.href = "/";
                 })
                 .catch(err => {
@@ -93,7 +92,7 @@ class Authentication extends Component {
     }
 
     loadProfileInfo = () => {
-        axios.get('/user/me')
+        axios.get('/api/user/me')
             .then(response => {
                 this.setState({ welcomeEmail: response.data.email })
             })
@@ -141,23 +140,26 @@ class Authentication extends Component {
                         <Col className="auth-col" md="5">
                             <h3>Welcome to Trivia War!</h3>
                             <p>Please feel free to create an account or use our guest login. guest@guest.com | password123</p>
-                            {/* Login button */}
-                            <Col>
-                                <Button className="btn-dark authB"
-                                    id="login-btn"
-                                    onClick={() => this.openModal("loginOpen")}
-                                    data-target="#loginModal">
-                                    Login
-                                    </Button>
-
-                                {/* Register button */}
-                                <Button className="btn-dark authB"
-                                    id="register-btn"
-                                    onClick={() => this.openModal("registerOpen")}
-                                    data-target="#registerModal">
-                                    Register
-                                     </Button>
-                            </Col>
+                            <Row className="d-flex justify-content-around">
+                                {/* Login button */}
+                                <Col>
+                                    <Button className="btn-dark authB"
+                                        id="login-btn"
+                                        onClick={() => this.openModal("loginOpen")}
+                                        data-target="#loginModal">
+                                        Login
+                                        </Button>
+                                </Col>
+                                <Col>
+                                    {/* Register button */}
+                                    <Button className="btn-dark authB"
+                                        id="register-btn"
+                                        onClick={() => this.openModal("registerOpen")}
+                                        data-target="#registerModal">
+                                        Register
+                                        </Button>
+                                </Col>
+                            </Row>
 
                             {/* Login Modal */}
                             <Modal
@@ -279,7 +281,6 @@ class Authentication extends Component {
                         </Col>
                     </Row>
                 </Container>
-
             </>
         )
     }
