@@ -48,8 +48,8 @@ class GameContainer extends Component {
                 // this runs if the user is logged in
                 this.setState({ userInfo: response.data }, () => {
                     setTimeout(() => {
-                    socketAPI.publishGCMount();                        
-                    }, 200);
+                        socketAPI.publishGCMount();
+                    }, 500);
                 });
                 //Grab the session info from the server
                 //Then set the state with the session info
@@ -165,14 +165,25 @@ class GameContainer extends Component {
             let obj = {}
             obj[userResult] = true;
 
-            API.updateUserScore(this.state.userInfo.id, obj)
-                .then(res => {
-                    // console.log(res);
-                    this.setState({
-                        gameOver: true
+            setTimeout(() => {
+                API.updateUserScore(this.state.userInfo.id, obj)
+                    .then(res => {
+                        // console.log(res);
+                        this.setState({
+                            gameOver: true
+                        })
+                        this.startEndTimer();
                     })
-                    this.startEndTimer();
-                })
+            }, 500);
+
+            // API.updateUserScore(this.state.userInfo.id, obj)
+            //     .then(res => {
+            //         // console.log(res);
+            //         this.setState({
+            //             gameOver: true
+            //         })
+            //         this.startEndTimer();
+            //     })
             // this.setState({ redirectTo: "/home" });
         })
     }
@@ -322,14 +333,16 @@ class GameContainer extends Component {
         }, () => {
             if (this.state.position === "p1") {
                 console.log("Player One sending Game Data to server");
-                socketAPI.publishEndGame();
+                setTimeout(() => {
+                    socketAPI.publishEndGame();
+                }, 500);
             } else {
                 console.log("Player 2 waiting on score");
             }
         })
     }
 
-    
+
     render() {
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
@@ -346,7 +359,7 @@ class GameContainer extends Component {
                     <Row>
 
                         <GameCol size="12">
-                            <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
+                            <Jumbotron jumboWidth="800px" className="userData text-center" jumboHeight="80%">
                                 <h2>Get Ready for Trivia!</h2>
                                 <h5>Instructions:</h5>
                                 <p> Both players will have 15 seconds to answer each of the 10 questions. Don't let time run out or
@@ -389,7 +402,7 @@ class GameContainer extends Component {
                         <Row>
 
                             <GameCol size="12">
-                                <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+                                <Jumbotron jumboWidth="800px" className="userData" jumboHeight="80%">
                                     <h2>{this.state.question}</h2>
                                     <h4>Tick Tock <strong>{this.state.timer}s</strong> left</h4>
                                     {this.state.answers.map(answer => (
@@ -435,7 +448,7 @@ class GameContainer extends Component {
                     <Row>
 
                         <GameCol size="12">
-                            <Jumbotron jumboWidth="800px" addClass="userData text-center" jumboHeight="80%">
+                            <Jumbotron jumboWidth="800px" className="userData text-center" jumboHeight="80%">
                                 <h2>Final Score</h2>
                                 <Row>
                                     <Col size="6">

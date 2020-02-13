@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import socketAPI from './utils/socketAPI';
-import Nav from "./components/Nav";
-import './App.css';
+import NavBarCustom from "./components/Navbar";
+import { Navbar } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/App.scss';
+
+//Page imports and Router
 import PlayNow from "./pages/PlayNow";
 import Authentication from "./pages/Authentication";
 import UserHome from "./pages/UserHome";
@@ -13,6 +17,7 @@ import SingleCategory from "./pages/SingleCategory";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 
+
 class App extends Component {
   state = {
     userEmail: "",
@@ -22,12 +27,13 @@ class App extends Component {
 
   componentDidMount = () => {
     socketAPI.subscribeAuthorized((message) => {
-      if(message === true){
+      if (message === true) {
         this.setState({
           authorized: true
         }
           // () => {console.log("Application State: " + this.state)}
-        )} else {console.log("State not updated")}
+        )
+      } else { console.log("State not updated") }
     })
   }
 
@@ -40,12 +46,12 @@ class App extends Component {
     console.log("RENDER PARTY");
     return (
       <Router>
-        <div>
-          <Nav />
+        <div id="appCont">
+          <NavBarCustom />
           <Switch>
             <Route exact path="/" component={Authentication} />
-            <Route exact path="/home" component={() => <UserHome publishLogin={this.publishLogin} 
-                  authorized={this.state.authorized} />} />
+            <Route exact path="/home" component={() => <UserHome publishLogin={this.publishLogin}
+              authorized={this.state.authorized} />} />
             <Route exact path="/play" component={PlayNow} />
             <Route exact path="/game" component={GameContainer} />
             <Route exact path="/singlegame" component={SingleGameContainer} />
@@ -53,6 +59,15 @@ class App extends Component {
             <Route exact path="/single" component={SingleCategory} />
             <Route component={NoMatch} />
           </Switch>
+          <Navbar className="footer">
+            <Navbar.Brand className="footer-logo">Trivia War</Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <Navbar.Text>
+                Built and Maintained by Michelle Collums
+              </Navbar.Text>
+            </Navbar.Collapse>
+          </Navbar>
         </div>
       </Router>
     )

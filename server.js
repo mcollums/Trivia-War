@@ -16,8 +16,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
 
 //OAuth
 //============================================================================

@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { withRouter, Redirect } from "react-router-dom";
 import API from "../utils/API"
 
+import '../styles/UserHome.scss'
+import { Container, Row, Col, Button, Jumbotron } from 'react-bootstrap';
+import Leaderboard from "../components/Leaderboard"
+
 class UserHome extends Component {
     constructor(props) {
         super(props);
@@ -29,27 +33,15 @@ class UserHome extends Component {
             .catch(err => console.log(err));
     }
 
-    findRanking = () => {
-        let ranking = 0;
-        let allUsers = this.state.users;
-        // console.log(allUsers);
-        for (let i = 0; i < allUsers.length; i++) {
-            if(allUsers[i]._id === this.state.userInfo.id){
-                ranking = (i + 1);
-                break;
-            }
-            // console.log(allUsers[i]);
-        }
-        this.setState({
-            ranking: ranking
-        })
-    }
-    
-    loadUserData(){
+    loadUserData() {
         API.checkAuth()
             .then(response => {
                 // this runs if the user is logged in
-                this.setState({userInfo:response.data}, this.loadUsers);
+                this.setState({
+                    userInfo: response.data
+                },
+                    this.loadUsers
+                );
                 this.loadUserById();
             })
             .catch(err => {
@@ -61,13 +53,26 @@ class UserHome extends Component {
     loadUsers() {
         API.getUsers()
             .then(res => {
-                // console.log("All users",res.data);
                 this.setState({
                     users: res.data,
-                }, 
-                this.findRanking)
+                },
+                    this.findRanking)
             })
             .catch(err => console.log(err));
+    }
+
+    findRanking = () => {
+        let ranking = 0;
+        let allUsers = this.state.users;
+        for (let i = 0; i < allUsers.length; i++) {
+            if (allUsers[i]._id === this.state.userInfo.id) {
+                ranking = (i + 1);
+                break;
+            }
+        }
+        this.setState({
+            ranking: ranking
+        })
     }
 
     handlePlayNowBtn = () => {
@@ -80,60 +85,40 @@ class UserHome extends Component {
             return <Redirect to={this.state.redirectTo} />
         }
         return (
-            <div className="playnowContain">
-                
-                        <div addclass="userData" id="userCon">
-                            {/* User image goes here */}
-                            <img style={{maxWidth:"300px", maxHeight:"200px", borderRadius:"7%"}} alt={""} src={this.state.userInfoFromDB.picLink} />
-                            <div className="name" style={{paddingTop: "25px"}}>
-                                <strong>Name: </strong> {this.state.userInfoFromDB.username}
-                            </div>
-                            <div>
-                                <strong>Wins:</strong> {this.state.userInfoFromDB.totalWins}
-                            </div>
-                            <div>
-                                <strong>Losses:</strong> {this.state.userInfoFromDB.totalLosses}
-                            </div>
-                            <div className="ranking" style={{paddingBottom: "20px"}}>
-                                <strong>Ranking:</strong> {this.state.ranking}
-                            </div>
-                          
-                                
-                            <button className="btn btn-primary btn-dark" style={{marginBottom: "20px"}} onClick={() => this.handlePlayNowBtn()}>Play Game</button>
-                               
-                        </div>
-                    
-                        <div className="leaderB">
-                            <h4 style={{marginTop: "15px"}}>LEADER BOARD</h4>
-                            <table className="table">
-                                <thead className="thead-dark">
-                                    <tr>
-                                        <th scope="col">Ranking</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Wins</th>
-                                        <th scope="col">Losses</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        this.state.users.slice(0,5).map((user, index) => {
-                                            return (
-                                                <tr key={index + 1}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{user.username}</td>
-                                                    <td>{user.totalWins}</td>
-                                                    <td>{user.totalLosses}</td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    
-                
-            </div>
-
+            <>
+                <Container id="userHome-cont">
+                    <Row>
+                        <Col id="user-col">
+                            <h2>Welcome, {this.state.userInfoFromDB.username}!</h2>
+                            <Row id="user-info-row" className="d-flex justify-content-around">
+                                <Col className="p-3" md="4">
+                                    <img
+                                        alt={"user's profile image"}
+                                        src={this.state.userInfoFromDB.picLink} />
+                                </Col>
+                                <Col className="p-3" md="4">
+                                    <h5><strong>Name: </strong> {this.state.userInfoFromDB.username}</h5>
+                                    <h5><strong>Wins:</strong> {this.state.userInfoFromDB.totalWins}</h5>
+                                    <h5><strong>Losses:</strong> {this.state.userInfoFromDB.totalLosses}</h5>
+                                    <h5><strong>Ranking:</strong> {this.state.ranking}</h5>
+                                    <Button className="btn btn-primary btn-dark"
+                                        style={{ marginBottom: "20px" }}
+                                        onClick={() => this.handlePlayNowBtn()}>
+                                        Play Game
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col>
+                            <Jumbotron id="userHome-leaderboard" className="leaderboard-jumbo">
+                                <Leaderboard
+                                    leaders={this.state.users}
+                                />
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                </Container>
+            </>
         )
     }
 }

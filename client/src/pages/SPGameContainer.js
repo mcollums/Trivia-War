@@ -315,7 +315,7 @@ class SinglePlayerGameContainer extends Component {
                </Row>
                <Row>
                   <GameCol size="12">
-                     <Jumbotron jumboWidth="800px" addClass="userData" jumboHeight="80%">
+                     <Jumbotron jumboWidth="800px" className="userData" jumboHeight="80%">
 
                         {
                            this.state.click && !this.state.outcome

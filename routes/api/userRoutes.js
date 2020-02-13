@@ -2,8 +2,8 @@ const router = require("express").Router();
 const userController = require("../../controllers/userController");
 
 // Matches with "/api/user"
-router.route("/")
-  .get(userController.findAll);
+// router.route("/")
+//   .get(userController.findAll);
 
 // Matches with "/api/user/:email"
 router.route("/email/:email")
@@ -27,6 +27,7 @@ router.route("/:id")
 // matches with "/api/user/:user"
 router.route("/")
   .post(userController.updateOne)
+  .get(userController.findAll);
 //Matched with api/user/update/:id
 
 

@@ -7,14 +7,19 @@ const passport = require("../config/passport");
 // API Routes
 router.use("/api", apiRoutes);
 
-router.post("/register",(req,res)=>{
-  db.User.create({username:req.body.username, picLink:req.body.picLink, email:req.body.email,password:req.body.password})
+//Login / Register Routes
+router.post("/register", (req,res)=>{
+  db.User.create({
+    username: req.body.username, 
+    picLink: req.body.picLink, 
+    email: req.body.email,
+    password: req.body.password})
   .then((newUser)=>{
     res.redirect(307, "/login")
   })
   .catch((err)=>{
     if (err.code === 11000) {
-      console.log("duplicate email")
+      // console.log("duplicate email")
       res.status(401).json({ error: "That email already exists." })
     }
     else {
@@ -23,18 +28,18 @@ router.post("/register",(req,res)=>{
   })
 });
 
-router.post('/login', passport.authenticate("local"),  (req, res) => {
+router.post('/login', passport.authenticate("local"), (req, res) => {
   res.json(req.user);
 });
 
 router.get('/logout', (req, res) => {
-  console.log("logged out user")
+  // console.log("logged out user")
   req.logout();
   res.sendStatus(200);
 });
 
+
 router.get('/user/me', function(req, res){
-  // console.log(chalk.red("req.user= " + JSON.stringify(req.user)));
   if(req.user){
       res.json({
           email: req.user.email,
@@ -49,6 +54,7 @@ router.get('/user/me', function(req, res){
       res.status(401).json({})
   }
 })
+
 // If no API routes are hit, send the React app
 router.use(function(req, res) {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
