@@ -143,21 +143,23 @@ class Authentication extends Component {
                             <Row className="d-flex justify-content-around">
                                 {/* Login button */}
                                 <Col>
-                                    <Button className="btn-dark authB"
-                                        id="login-btn"
-                                        onClick={() => this.openModal("loginOpen")}
-                                        data-target="#loginModal">
-                                        Login
-                                        </Button>
+                                    <Button className="btn-custom-primary ml-3"
+                                            variant="info" 
+                                            id="login-btn"
+                                            onClick={() => this.openModal("loginOpen")}
+                                            data-target="#loginModal">
+                                            Login
+                                    </Button>
                                 </Col>
                                 <Col>
                                     {/* Register button */}
-                                    <Button className="btn-dark authB"
-                                        id="register-btn"
-                                        onClick={() => this.openModal("registerOpen")}
-                                        data-target="#registerModal">
-                                        Register
-                                        </Button>
+                                    <Button className="btn-custom-primary"
+                                            variant="info" 
+                                            id="register-btn"
+                                            onClick={() => this.openModal("registerOpen")}
+                                            data-target="#registerModal">
+                                            Register
+                                    </Button>
                                 </Col>
                             </Row>
 
@@ -167,7 +169,6 @@ class Authentication extends Component {
                                 isOpen={this.state.loginOpen}
                                 onAfterOpen={this.afterOpenModal}
                                 onRequestClose={() => this.closeModal("loginOpen")}
-                                // style={customStyles}
                                 contentLabel="Example Modal"
                                 id="loginModal"
                                 style={{
@@ -209,7 +210,6 @@ class Authentication extends Component {
                                 isOpen={this.state.registerOpen}
                                 onAfterOpen={this.afterOpenModal}
                                 onRequestClose={() => this.closeModal("registerOpen")}
-                                // style={customStyles}
                                 contentLabel="Example Modal"
                                 id="registerModal"
                                 style={{
@@ -248,8 +248,8 @@ class Authentication extends Component {
                         </Col>
                         <Col md="auto" />
                         <Col className="img-col" md="6">
-                            <img id="home-img" src={mainImg} alt="" />
-                            <p>Get ready to compete with friends for ultimate trivia bragging rights!</p>
+                            <img className="w-100" src={mainImg} alt="Girl standing next to circular-shaped images on her friends" />
+                            <p className="mt-3 ml-5">"Get ready to compete with friends for ultimate trivia bragging rights!</p>
                         </Col>
                     </Row>
                 </Container>
