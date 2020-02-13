@@ -86,29 +86,58 @@ class UserHome extends Component {
         }
         return (
             <>
-                <Container id="userHome-cont">
-                    <Row>
+                <Container id="userHome-cont" className="my-5">
+                    <Row className="my-5">
                         <Col id="user-col">
                             <h2>Welcome, {this.state.userInfoFromDB.username}!</h2>
                             <Row id="user-info-row" className="d-flex justify-content-around">
-                                <Col className="p-3" md="4">
+                                <Col md="4">
                                     <img
                                         alt={"user's profile image"}
                                         src={this.state.userInfoFromDB.picLink} />
                                 </Col>
-                                <Col className="p-3" md="4">
+                                <Col md="4">
                                     <h5><strong>Name: </strong> {this.state.userInfoFromDB.username}</h5>
                                     <h5><strong>Wins:</strong> {this.state.userInfoFromDB.totalWins}</h5>
                                     <h5><strong>Losses:</strong> {this.state.userInfoFromDB.totalLosses}</h5>
                                     <h5><strong>Ranking:</strong> {this.state.ranking}</h5>
-                                    <Button className="btn btn-primary btn-dark"
+                                    <Button className="btn btn-primary"
                                         style={{ marginBottom: "20px" }}
                                         onClick={() => this.handlePlayNowBtn()}>
-                                        Play Game
+                                        Play New Game
                                     </Button>
                                 </Col>
                             </Row>
                         </Col>
+                        <Col>
+                            <h2>Messages: </h2>
+                            <p>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row className="my-5">
+                        <Col md="4">
+                            <h1>Highscores</h1>
+                            <p>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
+                            </p>
+                        </Col>
+                        <Col md="4">
+                            <h1>Previous Game</h1>
+                            <p>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
+                            </p>
+                        </Col>
+                        <Col md="4">
+                            <h1>Info</h1>
+                            <p>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque sint nisi nesciunt dolorem qui similique quidem amet tempore maiores incidunt asperiores fugiat eligendi nobis atque ex nostrum, facilis, consequatur repellendus.
+                            </p>
+                        </Col>
+
+                    </Row>
+                    <Row className="my-3">
                         <Col>
                             <Jumbotron id="userHome-leaderboard" className="leaderboard-jumbo">
                                 <Leaderboard
