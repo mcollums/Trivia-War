@@ -50,18 +50,16 @@ class PlayNow extends Component {
                     </Row>
                     <Row className="py-5 mx-0">
                         <Col>
-                            {/* <div className="playnowContain"> */}
-                            <div className="play-type-card" onClick={() => this.handleSinglePlay()}>
-                                <h1 className="ml8">
+                            <div className="play-type-card" 
+                                 onClick={() => this.handleSinglePlay()
+                                }>
+                                <h1>
                                     <span className="letters-container">
-                                        <span className="letters letters-left">Single Player</span>
-                                        {/* <span className="letters bang">!</span> */}
+                                        <span className="letters">Single</span>
+                                        <span className="letters">Player</span>
                                     </span>
                                     <span className="circle circle-white"></span>
                                     <span className="circle circle-dark"></span>
-                                    <span className="circle circle-container">
-                                        <span className="circle circle-dark-dashed"></span>
-                                    </span>
                                 </h1>
 
                             </div>
@@ -70,19 +68,15 @@ class PlayNow extends Component {
                             <div className="play-type-card"
                                 onClick={() => this.handleMultiPlay()
                                 }>
-                                <h1 className="ml8">
+                                <h1>
                                     <span className="letters-container">
-                                        <span className="letters letters-left">Multi-Player</span>
-                                        {/* <span className="letters bang">!</span> */}
+                                        <span className="letters">Multi</span>
+                                        <span className="letters">Player</span>
                                     </span>
                                     <span className="circle circle-white"></span>
                                     <span className="circle circle-dark"></span>
-                                    <span className="circle circle-container">
-                                        <span className="circle circle-dark-dashed"></span>
-                                    </span>
                                 </h1>
                             </div>
-                            {/* </div> */}
                         </Col>
                     </Row>
                 </Container>
