@@ -280,16 +280,22 @@ class Authentication extends Component {
                 <Container className="info-container" fluid="true">
                     <Row className="info-row d-flex justify-content-around">
                         <Col className="p-3">
-                            <h3>How to play?</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi cumque molestiae deserunt incidunt similique. Quas natus sapiente, corporis doloremque ipsa voluptatum consectetur tempore itaque necessitatibus, sint sequi amet quam voluptates. </p>
+                            <h3>About Trivia War</h3>
+                            <p>
+                                Welcome to Trivia War! Here, you can play multiple categories of trivia against yourself or other players. In order to start playing, create and account, and click "Play New Game" on your homepage. You'll have the option to play single or multiplayer sessions. You'll gave a few seconds to answer each question, so be quick!
+                            </p>
                         </Col>
                         <Col className="p-3">
-                            <h3>How to play?</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi cumque molestiae deserunt incidunt similique. Quas natus sapiente, corporis doloremque ipsa voluptatum consectetur tempore itaque necessitatibus, sint sequi amet quam voluptates. </p>
+                            <h3>Rules</h3>
+                            <p>
+                                In single or multiplayer, users will have 20 seconds to answer each question. In single player, you must have 70% or higher in order for the session to be considered a "victory", in multiplayer, players must score more than their opponent.
+                            </p>
                         </Col>
                         <Col className="p-3">
-                            <h3>How to play?</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi cumque molestiae deserunt incidunt similique. Quas natus sapiente, corporis doloremque ipsa voluptatum consectetur tempore itaque necessitatibus, sint sequi amet quam voluptates. </p>
+                            <h3>Upcoming Updates</h3>
+                            <p>
+                                Currently, the entire front end is being rebuilt to react-friendly components and SCSS styling. I plan on adding more user interfaces to the Userhome page as well as additional trivia quizzes! 
+                            </p>
                         </Col>
                     </Row>
                 </Container>
