@@ -20,7 +20,12 @@ To run this app on your local machine, first run 'npm run seed' in order to get 
 
 You can then run 'npm start' to get the react app running on the local host. Once you have the app running you can log in, or register if you don't have an account yet, and will be taken to the user page with your stats printed on the left and the overall leaderboard on the right.
 
+### After Redesign
+![](images/home.png)
+### Before Redesign
 ![](images/userp.png)
+
+
 ## How to Use our App
 ### Log on!
 After you create an account, from your homepage, you can choose to start a new game. Here, you'll be able to select what mode you'd like to play in.
@@ -39,4 +44,4 @@ If you've chosen multiplayer, you will be automatically added to matchmaking. Ou
 ### Guest Login
 https://boiling-earth-81626.herokuapp.com/ \
  Name: guest@guest.com\
- PW: password
+ PW: password123
