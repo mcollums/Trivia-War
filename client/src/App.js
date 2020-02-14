@@ -30,20 +30,16 @@ class App extends Component {
       if (message === true) {
         this.setState({
           authorized: true
-        }
-          // () => {console.log("Application State: " + this.state)}
-        )
+        })
       } else { console.log("State not updated") }
     })
   }
 
   publishLogin = (email) => {
-    // console.log("login");
     socketAPI.publishLogin(email);
   }
 
   render() {
-    // console.log("RENDER PARTY");
     return (
       <Router>
         <div id="appCont">

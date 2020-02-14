@@ -1,0 +1,15 @@
+@import './variables.scss';
+
+#play-now-cont {
+    margin-bottom: 100px;
+}
+
+.play-type-card {
+    border-radius: 10%;
+    border: solid 10px;
+    width: 450px;
+    height: 400px;
+    background-color: $main-color-light;
+    border: white 3px solid;  
+    position: relative;
+}
