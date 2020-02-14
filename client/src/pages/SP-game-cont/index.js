@@ -298,22 +298,31 @@ class SinglePlayerGameContainer extends Component {
             <Container id="sp-game-cont" fluid="true">
                <Row>
                   <Col className="game-col p-5 mt-4" md={{ span: 8, offset: 2 }} style={{ textAlign: "center" }}>
-                        {
-                           this.state.click && !this.state.outcome
+                        { this.state.click && !this.state.outcome
                               ?
                               (
                                  this.state.counter
                                     ?
-                                    <div>
-                                       <h4>You are Correct!!!</h4>
-                                       <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question</button>
-                                    </div>
+                                    <Row className="mt-5">
+                                       <Col>
+                                          <h2>You are Correct!</h2>
+                                          <button className="mt-5 btn btn-custom-primary" 
+                                                onClick={this.checkforNextQuestion}>
+                                                   Next Question
+                                          </button>
+                                       </Col>
+                                    </Row>
                                     :
 
-                                    <div>
-                                       <h4> Correct Answer: {this.state.correctAnswer}</h4>
-                                       <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question </button>
-                                    </div>
+                                    <Row className="mt-5">
+                                       <Col>
+                                       <h2>Incorrect. Keep Trying!</h2>
+                                       <button className="mt-5 btn btn-custom-primary" 
+                                               onClick={this.checkforNextQuestion}>
+                                                Next Question 
+                                       </button>
+                                       </Col>
+                                    </Row>
                               )
                               :
                               (
@@ -338,7 +347,7 @@ class SinglePlayerGameContainer extends Component {
                                        <Row>
                                           <Col>
                                              <h5><strong>{"Game Over"}</strong></h5>
-                                             <button className="btn-custom-primary" 
+                                             <button className="btn btn-custom-primary" 
                                                    onClick={() => this.handlePlayAgainBtn(this.state.userInfo)}>
                                                       Play Again
                                              </button>
