@@ -349,12 +349,11 @@ class SinglePlayerGameContainer extends Component {
                </Row>
 
                <Row>
-
-                  <Col size="6" id="player1">
+                  <Col md="6" id="player1">
                      <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsup} />
                      <h5 style={{ color: "white" }}>Correct  {this.state.correct}</h5>
                   </Col>
-                  <Col size="6" id="player2">
+                  <Col md="6" id="player2">
                      <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsdown} />
                      <h5 style={{ color: "white" }}>Incorrect {this.state.incorrect}</h5>
                   </Col>
