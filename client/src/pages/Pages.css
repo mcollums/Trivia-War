@@ -12,13 +12,13 @@
 }
 
 
-.scategory {
+/* .scategory {
     width: 340px;
     height: 250px;
     background-color: white;
     margin-top: 15px;
     border: #62cbc2 solid 5px;  
-}
+} */
 
 .scatcat {
     height: 75px;
@@ -45,20 +45,14 @@
     margin-top: 165px;
 }
 
-.scategory:hover {
+/* .scategory:hover {
     transform: scale(1.1)
-}
+} */
 
 .mcategory:hover {
     transform: scale(1.1)
 }
 
-.scatContain {
-    display: flex;
-    align-content: space-between;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
 
 .gif {
     width: 100%;
