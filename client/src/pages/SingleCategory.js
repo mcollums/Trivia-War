@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-// import './Pages.css';
-
-
 import '../styles/Authentication.scss'
 import { Container, Row } from 'react-bootstrap';
 import API from "../utils/API";
@@ -12,7 +9,7 @@ import SPGameContainer from './SP-game-cont';
 class SingleCategory extends Component {
     state = {
         cat: [],
-        id: ""
+        id: "5d51e88288f77f973b8e7908"
     };
 
     componentDidMount() {
