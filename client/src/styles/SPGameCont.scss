@@ -1,13 +1,7 @@
 @import './variables.scss';
 
-#sp-game-cont {
-    .game-col {
-        background-color: $light-grey-color;
-        // display: flex;
-        // flex: 1;
-        // flex-wrap: wrap;
-        // justify-content: space-around;
-        // align-content:flex-start;
-        // overflow: auto;
-    }
+
+.game-col {
+    background-color: $secondary-color;
+    border-radius: 10px;
 }

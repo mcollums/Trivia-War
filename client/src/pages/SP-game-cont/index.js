@@ -295,7 +295,7 @@ class SinglePlayerGameContainer extends Component {
       return (
             <Container id="sp-game-cont" fluid="true">
                <Row>
-                  <Col className="game-col p-5 mt-4" md={{ span: 8, offset: 2 }}>
+                  <Col className="game-col p-5 mt-4" md={{ span: 8, offset: 2 }} style={{ textAlign: "center" }}>
                         {
                            this.state.click && !this.state.outcome
                               ?
