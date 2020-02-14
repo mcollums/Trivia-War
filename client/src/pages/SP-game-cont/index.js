@@ -1,15 +1,12 @@
 import React, { Component } from "react";
-import API from "../utils/API";
-import GameCard from "../components/GameCard";
-import thumpsup from "../images/thumpsup.jpg";
-import thumpsdown from "../images/thumpsdown.png"
-import GameCol from "../components/GameCol";
-import { Col, Row, Container } from "../components/Grid";
-import Jumbotron from "../components/Jumbotron";
-import update from 'immutability-helper';
+import API from "../../utils/API";
+import GameCard from "../../components/GameCard";
+import thumpsup from "../../images/thumpsup.jpg";
+import thumpsdown from "../../images/thumpsdown.png"
+import GameCol from "../../components/GameCol";
+import { Col, Row, Container } from "../../components/Grid";
+import Jumbotron from "../../components/Jumbotron";
 import { Redirect } from "react-router-dom";
-import clicksound from "../sound/352804__josepharaoh99__timer-click-track.wav";
-import { UserRefreshClient } from "google-auth-library";
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -41,14 +38,12 @@ class SinglePlayerGameContainer extends Component {
    };
 
    play = () => {
-      this.audio = new Audio(clicksound);
       this.setState({ play: true, pause: false })
-      this.audio.play();
+      // this.audio.play();
    }
 
    pause = () => {
       this.setState({ play: false, pause: true })
-      this.audio.pause();
    }
 
 

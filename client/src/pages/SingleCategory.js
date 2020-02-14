@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import './Pages.css';
+// import './Pages.css';
 
 
 import '../styles/Authentication.scss'
-import { Container, Row, Col, Button, Jumbotron } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import API from "../utils/API";
 import SPGameCard from "../components/SPGameCard";
-import SPGameContainer from './SPGameContainer';
+import SPGameContainer from './SP-game-cont';
 
 
 class SingleCategory extends Component {
@@ -32,7 +32,9 @@ class SingleCategory extends Component {
     render() {
         return (
             <>
-                {this.state.id === "" ? (
+                {this.state.id === "" 
+                // If there is no category selected, show all the available catagories.
+                ? (
                     <Container className="scatContain">
                         <Row className="d-flex justify-content-around">
                         {this.state.cat.map((c, i) => (
@@ -47,11 +49,10 @@ class SingleCategory extends Component {
                         </Row>
                     </Container>
                 ) 
-                : 
-                (<SPGameContainer id={this.state.id} />)}
+                // Otherwise, show the game container
+                : (<SPGameContainer id={this.state.id} />)}
             </>
         )
-
     };
 
 }
