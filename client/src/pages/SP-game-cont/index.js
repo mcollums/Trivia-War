@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import API from "../utils/API";
-import GameCard from "../components/GameCard";
-import thumpsup from "../images/thumpsup.jpg";
-import thumpsdown from "../images/thumpsdown.png"
-import GameCol from "../components/GameCol";
-import { Col, Row, Container } from "../components/Grid";
-import Jumbotron from "../components/Jumbotron";
-import update from 'immutability-helper';
+import API from "../../utils/API";
+import GameCard from "../../components/GameCard";
+import thumpsup from "../../images/thumpsup.jpg";
+import thumpsdown from "../../images/thumpsdown.png"
+import GameCol from "../../components/GameCol";
+import { Container, Row, Col, Jumbotron } from 'react-bootstrap';
+
+// import Jumbotron from "../../components/Jumbotron";
 import { Redirect } from "react-router-dom";
-import clicksound from "../sound/352804__josepharaoh99__timer-click-track.wav";
-import { UserRefreshClient } from "google-auth-library";
+import '../../styles/SPGameCont.scss';
 
 let quizQuestions = [];
 let nextIndex = 0;
@@ -41,24 +40,21 @@ class SinglePlayerGameContainer extends Component {
    };
 
    play = () => {
-      this.audio = new Audio(clicksound);
       this.setState({ play: true, pause: false })
-      this.audio.play();
    }
 
    pause = () => {
       this.setState({ play: false, pause: true })
-      this.audio.pause();
    }
 
 
    componentDidMount() {
 
-      setTimeout(() => {
-         this.setState({ showLoading: false });
-      }, 500);
+      // setTimeout(() => {
+      //    this.setState({ showLoading: false });
+      // }, 500);
 
-      this.timerID = setInterval(() => this.decrimentTime(), 1000);
+      // this.timerID = setInterval(() => this.decrimentTime(), 1000);
 
       this.getGame(this.props.id);
       this.getUserPic();
@@ -170,7 +166,6 @@ class SinglePlayerGameContainer extends Component {
    setUserAnswer = () => {
       //if the user didn't select an answer add to incorrect
       if (this.state.userSelect === "") {
-         // console.log("No answer selected");
 
          // stop the timer, and add to incorrect state
          let newIncorrect = this.state.incorrect + 1;
@@ -196,20 +191,17 @@ class SinglePlayerGameContainer extends Component {
          this.setState({
             correct: newCorrect,
             counter: true,
-         }, () => { console.log("Correct Answer", this.state.correct) })
-
+         })
       }
 
       //if the user selected the incorrect answer, add to incorrect
       else if (this.state.userSelect !== this.state.correctAnswer) {
-         // console.log("Incorrect Answer selected");
          let newIncorrect = this.state.incorrect + 1;
          this.stopTimer(this.timerID);
          this.setState({
             incorrect: newIncorrect,
             counter: false,
-         }, () => { console.log("incoreect Answer", this.state.incorrect) })
-
+         })
       }
    }
 
@@ -218,7 +210,6 @@ class SinglePlayerGameContainer extends Component {
       this.stopTimer();
       this.pause();
       nextIndex = (this.state.index + 1);
-
 
       //if the next index value is equal to the total amount of questions then stop the game
       //otherwise, keep going
@@ -238,7 +229,6 @@ class SinglePlayerGameContainer extends Component {
          if (this.state.correct >= 7) {
             API.addWin(user.id).then(() => this.setState({ redirectTo: "/home" }));
          }
-
          else {
             API.addLoss(user.id).then(() => this.setState({ redirectTo: "/home" }));
          }
@@ -269,7 +259,7 @@ class SinglePlayerGameContainer extends Component {
       allAnswers.push(quizQuestions.questions[newIndex].correctAnswer);
       //shuffle all questions
       let shuffledArr = this.shuffleQuestions(allAnswers);
-      // this.play();
+
       this.setState({
          index: newIndex,
          timer: 10,
@@ -278,13 +268,10 @@ class SinglePlayerGameContainer extends Component {
          correctAnswer: quizQuestions.questions[newIndex].correctAnswer,
          userSelect: "",
          click: false
-      }, () => {
-         // console.log(this.state);
       });
    }
 
    endGame = () => {
-      console.log("GAME OVER");
       this.stopTimer();
       this.pause();
    }
@@ -306,17 +293,9 @@ class SinglePlayerGameContainer extends Component {
       }
 
       return (
-         <div>
-            <Container fluid="-fluid">
+            <Container id="sp-game-cont" fluid="true">
                <Row>
-                  <Col size="12" id="titleCol">
-                     <h5 style={{ color: "white", marginTop: "100px", fontSize: "30px" }} className="text-center"> {this.state.title} </h5>
-                  </Col>
-               </Row>
-               <Row>
-                  <GameCol size="12">
-                     <Jumbotron jumboWidth="800px" className="userData" jumboHeight="80%">
-
+                  <Col className="game-col p-5 mt-4" md={{ span: 8, offset: 2 }} style={{ textAlign: "center" }}>
                         {
                            this.state.click && !this.state.outcome
                               ?
@@ -338,48 +317,49 @@ class SinglePlayerGameContainer extends Component {
                               (
                                  !this.state.outcome
                                     ? (
-                                       <div>
+                                       <>
                                           <h2>{this.state.question}</h2>
-                                          <h4>Tick Tock <strong>{this.state.timer}s </strong> left</h4>
-
-
-                                          {this.state.answers.map(answer => (
-                                             <GameCard
-                                                id={answer}
-                                                key={answer}
-                                                answer={answer}
-                                                correctAnswer={this.state.correctAnswer}
-                                                handleSelection={this.handleSelection}
-
-                                             />
-                                          ))}
-                                       </div>
+                                          <h4>Time Remaining: <strong>{this.state.timer}s </strong> left</h4>
+                                       <Row className="d-flex justify-content-center">
+                                             {this.state.answers.map(answer => (
+                                                <GameCard
+                                                   id={answer}
+                                                   key={answer}
+                                                   answer={answer}
+                                                   correctAnswer={this.state.correctAnswer}
+                                                   handleSelection={this.handleSelection}
+                                                />
+                                             ))}
+                                       </Row>
+                                       </>
                                     ) : (
-                                       <div>
-                                          <h5><strong>{"Game Over"}</strong></h5>
-                                          <button className="btn btn-primary btn-dark" onClick={() => this.handlePlayAgainBtn(this.state.userInfo)}>Play Again</button>
-                                       </div>
+                                       <Row>
+                                          <Col>
+                                             <h5><strong>{"Game Over"}</strong></h5>
+                                             <button className="btn btn-primary btn-dark" 
+                                                   onClick={() => this.handlePlayAgainBtn(this.state.userInfo)}>
+                                                      Play Again
+                                             </button>
+                                          </Col>
+                                       </Row>
                                     )
                               )
                         }
-                     </Jumbotron>
-                  </GameCol>
+                  </Col>
                </Row>
 
                <Row>
-
-                  <Col size="6" id="player1">
+                  <Col md="6" id="player1">
                      <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsup} />
                      <h5 style={{ color: "white" }}>Correct  {this.state.correct}</h5>
                   </Col>
-                  <Col size="6" id="player2">
+                  <Col md="6" id="player2">
                      <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsdown} />
                      <h5 style={{ color: "white" }}>Incorrect {this.state.incorrect}</h5>
                   </Col>
                   <Col size="3"></Col>
                </Row>
             </Container>
-         </div>
       )
    }
 

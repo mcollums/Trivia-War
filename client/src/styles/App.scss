@@ -1,9 +1,5 @@
 @import './variables.scss';
 
-#appCont {
-  min-height: 100vh;
-}
-
 body {
   color: $font-main-color;
   font-family: $font-main;
@@ -18,57 +14,39 @@ body {
 .leaderboard-cont {
   margin-top: 80px;
   padding: 0;
+  
+  .jumbotron {
+    background-color: $secondary-color;
+    padding: 0;
+  }
 }
 
-.leaderboard-jumbo {
-  padding: 0;
-  background-color: $secondary-color;
-}
 
 .footer {
   background-color: $accent-color;
+
+  .logo {
+    font-family: $font-heading;
+    text-transform: uppercase;
+  }
 }
 
-.footer-logo {
-  font-family: $font-heading;
-  text-transform: uppercase;
-}
+
 
 .btn-custom-primary {
   color: $white-color;
   background-color: $main-color-dark;
-  border-color: $main-color-dark
-}
-
-.btn-custom-primary:hover {
-  color: $white-color;
-  background-color: $main-color-light;
-  border-color: $main-color-light;
-}
-
-.btn-custom-primary:active {
-  color: $white-color;
-  background-color: $main-color-light;
   border-color: $main-color-dark;
-}
 
-.Modal {
-  width: 350px;
-  height: 300px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 4px;
-  outline: none;
-  padding: 20px;
-}
+  &:hover {
+    color: $white-color;
+    background-color: $main-color-light;
+    border-color: $main-color-light;
+  }
 
-.Overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(52, 58, 64, 0.56);
+  &:active {
+    color: $white-color;
+    background-color: $main-color-light !important;
+    border-color: $main-color-dark !important;
+  }
 }

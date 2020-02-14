@@ -1,15 +1,3 @@
-/* Play Now.js */
-.jumbotronz {
-    border-radius: 10%;
-    border: solid 10px;
-    width: 450px;
-    height: 400px;
-    background-color: #62cbc2;
-    border: white 3px solid;  
-    position: relative;
-    margin-top: 120px;
-}
-
 .tag {
   height: 400px;
   width: 450px;
@@ -21,15 +9,6 @@
     background-color: red;
     width: 600px;
     height: 400px;
-}
-
-
-.scategory {
-    width: 340px;
-    height: 250px;
-    background-color: white;
-    margin-top: 15px;
-    border: #62cbc2 solid 5px;  
 }
 
 .scatcat {
@@ -57,20 +36,10 @@
     margin-top: 165px;
 }
 
-.scategory:hover {
-    transform: scale(1.1)
-}
-
 .mcategory:hover {
     transform: scale(1.1)
 }
 
-.scatContain {
-    display: flex;
-    align-content: space-between;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
 
 .gif {
     width: 100%;
@@ -115,6 +84,7 @@
     
     animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
   }
+
   @keyframes lds-circle {
     0%, 100% {
       animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
@@ -137,72 +107,6 @@
     text-align: center;
   }
 
-  h1.ml8 {
-    font-weight: 900;
-    font-size: 4.5em;
-    color: #fff;
-    width: 3em;
-    height: 3em;
-  }
-  
-  .ml8 .letters-container {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    height: 2em;
-    text-align: center;
-  }
-  
-  .ml8 .letters {
-    position: relative;
-    z-index: 2;
-    /* display: inline-block; */
-    line-height: 0.7em;
-    right: -.05em;
-    top: -.2em;
-  }
-  
-  .ml8 .bang {
-    font-size: 1.4em;
-    top: -0.1em;
-    left: .06em;
-  }
-  
-  .ml8 .circle {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-  }
-  
-  .ml8 .circle-white {
-    width: 5em;
-    height: 5em;
-    border: 2px dashed white;
-    border-radius: 2em;
-  }
-  
-  .ml8 .circle-dark {
-    width: 4.2em;
-    height: 4.2em;
-    background-color: #272b2f;
-    border-radius: 3em;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .ml8 .circle-dark-dashed {
-    border-radius: 2.4em;
-    background-color: transparent;
-    border: 2px dashed purple;
-    width: 2.3em;
-    height: 2.3em;
-  }
+ 
 
 

@@ -11,7 +11,7 @@ import Authentication from "./pages/Authentication";
 import UserHome from "./pages/UserHome";
 import MultiPlayerCat from "./pages/MultiPlayerCategory";
 import GameContainer from "./pages/GameContainer";
-import SingleGameContainer from "./pages/SPGameContainer";
+import SingleGameContainer from "./pages/SP-game-cont";
 import NoMatch from "./pages/NoMatch";
 import SingleCategory from "./pages/SingleCategory";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -30,23 +30,19 @@ class App extends Component {
       if (message === true) {
         this.setState({
           authorized: true
-        }
-          // () => {console.log("Application State: " + this.state)}
-        )
+        })
       } else { console.log("State not updated") }
     })
   }
 
   publishLogin = (email) => {
-    // console.log("login");
     socketAPI.publishLogin(email);
   }
 
   render() {
-    // console.log("RENDER PARTY");
     return (
       <Router>
-        <div id="appCont">
+        <div id="app-cont">
           <NavBarCustom />
           <Switch>
             <Route exact path="/" component={ Authentication } />
@@ -61,7 +57,7 @@ class App extends Component {
             <Route component={ NoMatch } />
           </Switch>
           <Navbar className="footer" sticky="bottom">
-            <Navbar.Brand className="footer-logo">Trivia War</Navbar.Brand>
+            <Navbar.Brand className="logo">Trivia War</Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>
