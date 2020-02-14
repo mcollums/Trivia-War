@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
 import GameCard from "../../components/GameCard";
-import thumpsup from "../../images/thumpsup.jpg";
-import thumpsdown from "../../images/thumpsdown.png"
+import thumbsup from "../../images/thumpsup.jpg";
+import thumbsdown from "../../images/thumpsdown.png"
 import GameCol from "../../components/GameCol";
 import { Container, Row, Col, Jumbotron } from 'react-bootstrap';
 
@@ -282,7 +282,9 @@ class SinglePlayerGameContainer extends Component {
       if (this.state.showLoading) {
          return (
             <div className="circlecontainer">
-               <div class="lds-circle"><div></div></div>
+               <div class="lds-circle">
+                  <div></div>
+               </div>
             </div>
          );
       }
@@ -296,22 +298,31 @@ class SinglePlayerGameContainer extends Component {
             <Container id="sp-game-cont" fluid="true">
                <Row>
                   <Col className="game-col p-5 mt-4" md={{ span: 8, offset: 2 }} style={{ textAlign: "center" }}>
-                        {
-                           this.state.click && !this.state.outcome
+                        { this.state.click && !this.state.outcome
                               ?
                               (
                                  this.state.counter
                                     ?
-                                    <div>
-                                       <h4>You are Correct!!!</h4>
-                                       <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question</button>
-                                    </div>
+                                    <Row className="mt-5">
+                                       <Col>
+                                          <h2>You are Correct!</h2>
+                                          <button className="mt-5 btn btn-custom-primary" 
+                                                onClick={this.checkforNextQuestion}>
+                                                   Next Question
+                                          </button>
+                                       </Col>
+                                    </Row>
                                     :
 
-                                    <div>
-                                       <h4> Correct Answer: {this.state.correctAnswer}</h4>
-                                       <button className="btn btn-primary btn-dark" onClick={this.checkforNextQuestion}>Next Question </button>
-                                    </div>
+                                    <Row className="mt-5">
+                                       <Col>
+                                       <h2>Incorrect. Keep Trying!</h2>
+                                       <button className="mt-5 btn btn-custom-primary" 
+                                               onClick={this.checkforNextQuestion}>
+                                                Next Question 
+                                       </button>
+                                       </Col>
+                                    </Row>
                               )
                               :
                               (
@@ -336,7 +347,7 @@ class SinglePlayerGameContainer extends Component {
                                        <Row>
                                           <Col>
                                              <h5><strong>{"Game Over"}</strong></h5>
-                                             <button className="btn btn-primary btn-dark" 
+                                             <button className="btn btn-custom-primary" 
                                                    onClick={() => this.handlePlayAgainBtn(this.state.userInfo)}>
                                                       Play Again
                                              </button>
@@ -348,16 +359,26 @@ class SinglePlayerGameContainer extends Component {
                   </Col>
                </Row>
 
-               <Row>
-                  <Col md="6" id="player1">
-                     <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsup} />
-                     <h5 style={{ color: "white" }}>Correct  {this.state.correct}</h5>
+               <Row className="my-5">
+                  <Col className="justify-content-center" md={{ span: 2, offset: 4 }} >
+                     <img 
+                        style={{ 
+                           width: "100px", 
+                           height: "100px", 
+                           borderRadius: "50%" }} 
+                        alt={`Correct Score is ${this.state.correct}`} 
+                        src={thumbsup} />
+                     <h5> Correct {this.state.correct}</h5>
                   </Col>
-                  <Col md="6" id="player2">
-                     <img style={{ marginTop: "50px", width: "100px", height: "100px", backgroundColor: "white", borderRadius: "50%" }} alt={"player1"} src={thumpsdown} />
-                     <h5 style={{ color: "white" }}>Incorrect {this.state.incorrect}</h5>
+                  <Col className="justify-content-center" md={{ span: 2, offset: 1 }} >
+                     <img style={{ 
+                        width: "100px", 
+                        height: "100px", 
+                        borderRadius: "50%" }} 
+                        alt={`Incorrect Score is ${this.state.incorrect}`} 
+                        src={thumbsdown} />
+                     <h5>Incorrect {this.state.incorrect}</h5>
                   </Col>
-                  <Col size="3"></Col>
                </Row>
             </Container>
       )
