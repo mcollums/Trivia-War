@@ -267,7 +267,7 @@ class Authentication extends Component {
                 </Container>
 
                 <Container className="leaderboard-cont" fluid="true">
-                    <Jumbotron className="leaderboard-jumbo" fluid="true">
+                    <Jumbotron fluid="true">
                         <Leaderboard
                             id="main-leaderboard"
                             leaders={this.state.users}

@@ -42,7 +42,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div id="appCont">
+        <div id="app-cont">
           <NavBarCustom />
           <Switch>
             <Route exact path="/" component={ Authentication } />
@@ -57,7 +57,7 @@ class App extends Component {
             <Route component={ NoMatch } />
           </Switch>
           <Navbar className="footer" sticky="bottom">
-            <Navbar.Brand className="footer-logo">Trivia War</Navbar.Brand>
+            <Navbar.Brand className="logo">Trivia War</Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>
