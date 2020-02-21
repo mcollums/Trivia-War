@@ -109,7 +109,7 @@ class UserHome extends Component {
                                 </Col>
                             </Row>
                         </Col>
-                        <Col>
+                        <Col id="mess-col">
                             {/* TODO: Add route that gets most recent message from the user to the database */}
                             <h2>Messages: </h2>
                             <p>
@@ -117,7 +117,7 @@ class UserHome extends Component {
                             </p>
                         </Col>
                     </Row>
-                    <Row className="my-5">
+                    <Row id="user-message-row">
                         <Col md="4">
                             {/* TODO: Route to retrieve the topscore for users in MP and SP */}
                             <h1>Highscores</h1>
@@ -141,7 +141,7 @@ class UserHome extends Component {
                         </Col>
 
                     </Row>
-                    <Row className="my-3">
+                    <Row id="user-lb-row">
                         <Col>
                             <Jumbotron id="userHome-leaderboard" className="leaderboard-jumbo">
                                 <Leaderboard
